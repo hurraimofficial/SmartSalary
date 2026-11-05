@@ -1,312 +1,2879 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#101827"><meta name="description" content="SmartSalary helps you plan your salary, track expenses and build savings."><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon.svg" type="image/svg+xml"><title>SmartSalary 3.4.3 Free Offline — Hurraim Khan</title>
-<style>
-/* SmartSalary 3.4 — offline-first personal budgeting */
-.menu-trigger{position:fixed;top:14px;left:14px;background:#ffffff20;color:white;border:1px solid #ffffff45;border-radius:12px;font-size:22px;padding:7px 13px;z-index:1500}
-.drawer-backdrop{position:fixed;inset:0;background:#0b1220a8;z-index:1000;display:none}
-.drawer{position:fixed;top:0;left:0;bottom:0;width:min(340px,88vw);background:#fff;padding:22px;overflow:auto;box-shadow:12px 0 40px #0002}
-.drawer h2{margin:8px 0 16px}.drawer button{width:100%;text-align:left;margin:5px 0}.drawer .close-drawer{width:auto;float:right}
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="description" content="SmartSalary 3.6.0 Free Offline — Your personal budgeting, expense tracker and payroll management system.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <title>SmartSalary 3.6.0 Free Offline — Hurraim Khan</title>
+  <style>
+    :root {
+      --navy: #0f172a;
+      --navy-light: #1e293b;
+      --gold: #f59e0b;
+      --gold-hover: #d97706;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --ink: #0f172a;
+      --ink-muted: #64748b;
+      --line: #e2e8f0;
+      --green: #10b981;
+      --green-bg: #ecfdf5;
+      --red: #ef4444;
+      --red-bg: #fef2f2;
+      --blue: #2563eb;
+      --blue-bg: #eff6ff;
+      --radius: 14px;
+      --radius-lg: 20px;
+    }
 
-:root{--navy:#101827;--gold:#f4c84a;--bg:#f3f5f9;--ink:#182235;--muted:#778196;--line:#e7ebf2;--green:#16865d}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,Arial}
-header{background:linear-gradient(135deg,#101827,#263c58);color:white;padding:24px 18px 28px;border-radius:0 0 26px 26px}
-.wrap{max-width:980px;margin:auto;padding:18px 15px 60px}.brand{font-size:23px;font-weight:850}.brand span{color:var(--gold)}
-.muted{color:var(--muted);font-size:12px}.hero{display:flex;justify-content:space-between;align-items:end;gap:15px;flex-wrap:wrap;margin-top:22px}
-.total{font-size:36px;font-weight:850}.tabs{display:flex;gap:8px;overflow:auto;margin-bottom:16px;padding-bottom:3px}
-.tab,button{border:0;border-radius:11px;padding:10px 14px;font-weight:700;cursor:pointer}.tab{background:white;color:var(--muted);border:1px solid var(--line);white-space:nowrap}
-.tab.active,button.primary{background:var(--navy);color:white}button.gold{background:var(--gold);color:#151515}button.light{background:#edf0f5;color:var(--ink)}button.red{background:#fff0f0;color:#b33}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.card{background:white;border:1px solid var(--line);border-radius:16px;padding:15px;box-shadow:0 5px 20px #1720330a}
-.amount{font-size:21px;font-weight:800;margin-top:4px}h2{font-size:18px;margin:22px 0 10px}.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
-.item{padding:12px 0;border-bottom:1px solid var(--line)}.item:last-child{border:0}.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px}
-.progress{height:7px;background:#edf0f5;border-radius:10px;overflow:hidden;margin-top:8px}.progress span{display:block;height:100%;background:var(--green)}
-label{display:block;font-size:12px;color:var(--muted);margin:10px 0}input,select{display:block;width:100%;padding:11px;border:1px solid #dfe4ed;border-radius:10px;margin-top:5px;font:inherit}
-.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.hidden{display:none}.notice{background:#fff8df;border:1px solid #f3e3a6;border-radius:12px;padding:12px;font-size:12px;color:#67551b;margin-top:12px}
-.category{display:grid;grid-template-columns:1fr 140px;gap:8px;margin:8px 0}.result{font-size:24px;font-weight:850;color:var(--green);margin-top:6px}
-footer{text-align:center;color:var(--muted);font-size:11px;margin-top:25px}
-@media(max-width:650px){.grid{grid-template-columns:1fr 1fr}.grid .card:last-child{grid-column:1/-1}.total{font-size:29px}}
-@media(max-width:390px){.grid{grid-template-columns:1fr}.formgrid{grid-template-columns:1fr}}
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font: 15px/1.55 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
 
-.welcome-note{position:fixed;inset:0;background:#101827b8;display:none;align-items:center;justify-content:center;padding:18px;z-index:2000}
-.welcome-note .welcome-box{background:#fff;border-radius:22px;max-width:430px;width:100%;padding:28px;text-align:center;box-shadow:0 24px 70px #0004}
-.welcome-note .welcome-logo{font-size:28px;font-weight:900;color:#101827}
-.welcome-note .welcome-logo span{color:#d6a928}
-.welcome-note .creator{font-size:13px;color:#778196;margin:14px 0 20px}
-.welcome-note button{min-width:140px}.guide-dim{position:fixed;inset:0;background:#10182788;z-index:2000;pointer-events:none}.guide-focus{outline:3px solid #f4c84a!important;outline-offset:3px;box-shadow:0 0 0 5px #f4c84a33!important;position:relative;z-index:2101!important;animation:none!important}.guide-panel{position:fixed;left:50%;bottom:max(14px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(520px,calc(100vw - 24px));max-height:38vh;overflow:auto;background:#fff;border:1px solid #e7ebf2;border-radius:18px;padding:16px 18px;box-shadow:0 12px 45px #0005;z-index:4000;text-align:left}.guide-panel h2{margin:0 0 6px;font-size:18px}.guide-panel p{margin:5px 0}.guide-panel .guide-actions{display:flex;justify-content:flex-end;gap:9px;flex-wrap:wrap;margin-top:12px}.guide-panel button{min-width:110px}@media(max-width:480px){.guide-panel{max-height:42vh;padding:14px}.guide-panel button{min-width:100px}}
-</style></head><body><div class="drawer-backdrop" id="drawerBackdrop"><aside class="drawer"><button class="light close-drawer" id="closeDrawer">✕</button><h2>SmartSalary menu</h2><p class="muted">Offline mode · Data stays on this device</p><button class="light" onclick="tab('home');closeMenu()">Overview</button><button class="light" onclick="tab('expenses');closeMenu()">Expenses</button><button class="light" onclick="tab('goals');closeMenu()">Savings goals</button><button class="light" onclick="tab('settings');closeMenu()">Budget & preferences</button><hr><h3>Language / زبان</h3><select id="drawerLanguage"><option value="en">English</option><option value="ur">اردو</option></select><h3>Optional categories</h3><label><input id="drawerCar" type="checkbox" style="display:inline;width:auto"> 🚗🏍️ Car/Bike</label><label><input id="drawerBike" type="checkbox" style="display:inline;width:auto"> 👨‍👩‍👧 Family Extra</label><button class="primary" id="drawerSave">Save preferences</button><hr><button class="light" onclick="tab('settings');closeMenu()">Backup & restore</button><button class="light" onclick="window.open('privacy.html','_blank')">Privacy Policy</button><button class="light" onclick="window.open('terms.html','_blank')">Terms of Use</button><p class="muted">No account or internet connection is required. Your budget stays on this device.</p><hr><h3>About SmartSalary</h3><p class="muted">Created by <b>Hurraim Khan</b></p><p class="muted">Free to use · Made for personal budgeting</p></aside></div>
+    [dir="rtl"] {
+      text-align: right;
+    }
 
-<div class="welcome-note" id="welcomeNote">
- <div class="welcome-box">
-  <div class="welcome-logo">Smart<span>Salary</span></div>
-  <h2 style="margin:12px 0 6px">Welcome!</h2>
-  <p style="font-weight:800;font-size:24px;color:#16865d;margin:12px 0">DEMO SALARY: PKR 50,000</p><p style="color:#778196;margin:0">Free personal budgeting. No account. No subscription. Use it — thank me later! ❤️</p>
-  <p class="creator">Created with care by <b>Hurraim Khan</b></p>
-  <button class="primary" id="welcomeStart">Get started</button> <button class="light" id="welcomeSkip">Skip guide</button>
- </div>
-</div>
-<header><button class="menu-trigger" id="menuTrigger" aria-label="Open menu">⋮</button><div class="wrap" style="padding:0"><div class="brand">Smart<span>Salary</span> <small style="font-size:11px;color:#d5dce7">3.4.3 FREE OFFLINE</small></div>
-<div class="muted" style="color:#cbd5e1">Your salary. Your goals. Your control.</div>
-<div class="hero"><div><div class="muted" style="color:#cbd5e1">TOTAL MONTHLY INCOME ESTIMATE</div><div class="total" id="incomeTotal">PKR 41,400</div><div class="muted" id="incomeBreakdown" style="color:#cbd5e1">Basic salary only</div></div><button class="gold" id="salaryEdit">Edit salary</button></div></div></header>
-<main class="wrap">
-<nav class="tabs">
-<button class="tab active" data-tab="home">Overview</button><button class="tab" data-tab="expenses">Expenses</button>
-<button class="tab" data-tab="family">Family extra</button><button class="tab" data-tab="goals">Savings goals</button>
-<button class="tab" data-tab="income">Extra income</button><button class="tab" data-tab="records">Monthly records</button><button class="tab" data-tab="settings">Budget & backup</button>
-</nav>
-<section id="home"><div class="grid" id="summary"></div><h2>Monthly budget</h2><div class="card" id="budget"></div>
-<h2>Carryover savings (previous months)</h2><div class="card" id="carryoverOverview"></div>
-<div class="btnrow"><button class="primary" onclick="tab('expenses')">＋ Add expense</button><button class="light" onclick="tab('income')">＋ Add extra income</button></div>
-<div class="notice">100% offline personal budget tracker. Your information is saved on this device only. Export a backup before changing device or browser. No real money is stored or transferred.</div></section>
-<section id="expenses" class="hidden"><h2>Record an expense</h2><div class="card"><label>Description<input id="desc" placeholder="e.g. Grocery, transport, petrol, oil change"></label>
-<div class="formgrid"><label>Amount (PKR)<input id="amt" type="number" min="1"></label><label>Category<select id="cat"></select></label></div>
-<div class="btnrow"><button class="primary" id="addExpense">Save expense</button></div></div><h2>Expense history</h2><div class="card" id="history"></div></section>
-<section id="family" class="hidden"><h2>Family expense tracker</h2><div class="card"><div class="row"><div><div class="muted">FAMILY EXTRA REMAINING</div><div class="amount" id="familyRemaining">PKR 6,560</div></div><div><div class="muted">USED THIS MONTH</div><div class="amount" id="familySpent">PKR 0</div></div></div>
-<label>Who received the money?<input id="familyWho" placeholder="e.g. Ammi, brother"></label><div class="formgrid"><label>Amount (PKR)<input id="familyAmount" type="number" min="1" placeholder="1000"></label><label>Reason<input id="familyReason" placeholder="Grocery, medicine, etc."></label></div>
-<div class="btnrow"><button class="primary" id="addFamily">Save family payment</button></div></div><h2>Family payment history</h2><div class="card" id="familyHistory"></div>
-<p class="muted">Family payments are also recorded as expenses under the Family Extra budget, so the remaining balance updates automatically.</p></section>
-<section id="goals" class="hidden"><h2>Create a savings goal</h2><div class="card"><label>Goal name<input id="goalName" placeholder="e.g. iPhone 13 Pro"></label>
-<div class="formgrid"><label>Target amount<input id="goalTarget" type="number"></label><label>Already saved<input id="goalSaved" type="number" value="0"></label></div><div class="btnrow"><button class="primary" id="addGoal">＋ Add goal</button></div></div><div id="goalsList"></div></section>
-<section id="income" class="hidden"><h2>Attendance bonus</h2><div class="card"><p class="muted">You have 2 allowed leave days. Select how many you used this month. Unused allowed days are paid at your daily rate (monthly salary ÷ 26).</p>
-<label>Allowed leave days used<select id="leaveUsed"><option value="0">0 days used</option><option value="1">1 day used</option><option value="2">2 days used</option></select></label>
-<div class="row"><span class="muted">Daily rate</span><b id="dailyRate">PKR 1,592.31</b></div><div class="row"><span class="muted">Attendance bonus</span><b class="result" id="attendanceBonus">PKR 3,184.62</b></div><div class="btnrow"><button class="primary" id="saveAttendance">Save attendance for this month</button></div><p class="muted" id="attendanceSaved"></p></div>
-<h2>Overtime calculator</h2><div class="card"><p class="muted">Based on your stated company rule: 9-hour calculation day and 1.5× overtime rate. Break time is included in the 9-hour calculation as you described.</p>
-<div class="formgrid"><label>Overtime hours<input id="otHours" type="number" min="0" step="0.5" placeholder="e.g. 2"></label><label>Multiplier<select id="otMultiplier"><option value="1.5">1.5×</option></select></label></div>
-<div class="row"><span class="muted">Calculated hourly base</span><b id="hourlyRate">PKR 176.92</b></div><div class="row"><span class="muted">Overtime payment</span><b class="result" id="otResult">PKR 0</b></div>
-<div class="btnrow"><button class="primary" id="saveOT">＋ Add overtime earning</button></div></div>
-<h2>Other extra income</h2><div class="card"><div class="formgrid"><label>Description<input id="otherTitle" placeholder="e.g. Bonus"></label><label>Amount (PKR)<input id="otherAmount" type="number" min="1"></label></div><div class="btnrow"><button class="light" id="addOther">＋ Add other income</button></div></div>
-<h2>Extra income history</h2><div class="card" id="incomeHistory"></div></section>
-<section id="records" class="hidden"><h2>Monthly records</h2><div class="card"><p class="muted">Every completed month is saved separately. Select a month to review its budget, spending, income and leftover money.</p><label>Select month<select id="recordSelect"></select></label><div id="recordDetails"></div></div>
-<h2>Carryover savings by category</h2><div class="card" id="carryoverDetails"></div></section>
-<section id="settings" class="hidden">
-<h2>App preferences</h2><div class="card">
-<label>Language / زبان<select id="language"><option value="en">English</option><option value="ur">اردو</option></select></label>
-<h3>Optional budget</h3><p class="muted">Choose only one additional category.</p>
-<label><input id="enableCarBike" type="checkbox" style="display:inline;width:auto"> 🚗🏍️ Car/Bike</label>
-<label><input id="enableFamilyExtra" type="checkbox" style="display:inline;width:auto"> 👨‍👩‍👧 Family Extra</label>
-<div class="muted">You can track fuel, maintenance, oil changes, insurance, tax, parking and other costs in the expense description.</div>
-<div class="btnrow"><button class="primary" id="savePreferences">Save preferences</button></div>
-</div><h2>Customize your budget</h2><div class="card"><p class="muted">Set each category percentage. Rupee amounts update live with the percentage and salary.</p><div id="editor"></div><div class="row"><b>Total allocated</b><b id="allocated"></b></div>
-<div class="btnrow"><button class="primary" id="saveBudget">Save budget</button><button class="light" id="newCat">＋ Add category</button></div></div>
-<h2>Data safety</h2><div class="card">
-<p class="muted">SmartSalary automatically keeps up to 7 recent local recovery snapshots in this browser before saving changes. These snapshots are stored on this device only and are not a cloud backup.</p>
-<div class="btnrow"><button class="light" id="restoreAuto">Restore previous auto-backup</button><button class="light" id="export">Export backup</button><button class="light" id="import">Import backup</button><input id="file" type="file" accept="application/json" class="hidden"></div>
-<p class="muted" id="backupStatus">Local recovery snapshots: checking…</p>
-</div>
-<div class="btnrow"><button class="light" id="replayGuide">Replay Guide</button></div><h2>Privacy & terms</h2><div class="card"><p class="muted">Learn how your locally stored budgeting information is handled.</p>
-<div class="btnrow"><button class="light" onclick="window.open('privacy.html','_blank')">Privacy Policy</button><button class="light" onclick="window.open('terms.html','_blank')">Terms of Use</button></div>
-</div>
-<h2>Backup & restore</h2><div class="card"><p class="muted">Your data stays on this device and browser. Use Export backup to keep a copy, or Import backup to restore your saved JSON file.</p>
-</div></section>
-<footer>SmartSalary 3.4.3 Free Offline • Free personal budgeting<br><b>Created by Hurraim Khan</b></footer></main>
-<script>
-const colors=['#d6a64b','#5799d1','#9b83d8','#399b78','#d17d65','#7c9b9b','#bd7798'];
-const monthKey=()=>{let d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')};
-const monthLabel=k=>{let [y,m]=k.split('-').map(Number);return new Date(y,m-1,1).toLocaleString('en',{month:'long',year:'numeric'});};
-let defaults={salary:0,salaryConfirmed:false,categories:[['Household',35],['Personal',15],['Committee',24.15],['Emergency fund',10],['Family extra',15.85]].map((x,i)=>({name:x[0],pct:x[1],amount:0,color:colors[i]})),expenses:[],goals:[{name:'iPhone 13 Pro',target:150000,saved:1000}],attendance:{leaveUsed:0,month:''},income:[],currentMonth:monthKey(),archives:[],carryover:{},language:'en',vehicles:{car:false,bike:false}};
-let data=structuredClone(defaults);
-try{let stored=localStorage.getItem('ss343')||localStorage.getItem('ss32')||localStorage.getItem('ss31safe')||localStorage.getItem('ss30')||localStorage.getItem('ss20');if(stored){let old=JSON.parse(stored);data={...defaults,...old};data.salaryConfirmed=old.salaryConfirmed!==undefined?old.salaryConfirmed:!!old.salary;data.categories=(old.categories||defaults.categories).map(c=>({...c,pct:Number.isFinite(Number(c.pct))?Number(c.pct):(Number(old.salary)?Number(c.amount||0)/Number(old.salary)*100:0)}));data.attendance=data.attendance||{leaveUsed:0,month:''};data.income=data.income||[];data.archives=data.archives||[];data.carryover=data.carryover||{};data.language=data.language||'en';data.vehicles=data.vehicles||{car:false,bike:false};data.currentMonth=data.currentMonth||monthKey();
- // Tag legacy records to the month in which this version is first opened.
- data.expenses=(data.expenses||[]).map(e=>({...e,monthKey:e.monthKey||data.currentMonth}));
- data.income=(data.income||[]).map(e=>({...e,monthKey:e.monthKey||data.currentMonth}));
-}}catch(e){}
-const money=n=>'PKR '+(Number(n)||0).toLocaleString('en-PK',{minimumFractionDigits:0,maximumFractionDigits:2});
-const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const save=()=>{
- const key='ss343',snapKey='ss343_autobackups';
- try{
-   const previous=localStorage.getItem(key);
-   if(previous){
-     let snapshots=JSON.parse(localStorage.getItem(snapKey)||'[]');
-     snapshots.unshift({savedAt:new Date().toISOString(),payload:previous});
-     snapshots=snapshots.slice(0,7);
-     localStorage.setItem(snapKey,JSON.stringify(snapshots));
-   }
-   syncAmounts();localStorage.setItem(key,JSON.stringify(data));
- }catch(err){console.warn('SmartSalary local backup could not be saved',err);}
-};
-const familyCat=()=>data.categories.find(c=>c.name.toLowerCase()==='family extra');
-const activeSalary=()=>data.salaryConfirmed?Number(data.salary||0):50000;
-const syncAmounts=()=>data.categories.forEach(c=>c.amount=Math.round(activeSalary()*Number(c.pct||0)/100));
-const monthExpenses=()=>data.expenses.filter(e=>(e.monthKey||data.currentMonth)===data.currentMonth);
-const spent=n=>monthExpenses().filter(e=>e.category===n).reduce((a,e)=>a+Number(e.amount||0),0);
-const daily=()=>Number(data.salary||0)/26, hourly=()=>daily()/9;
-const attendance=()=>Math.max(0,2-Number(data.attendance.leaveUsed||0))*daily();
-const overtime=()=>Math.max(0,Number(document.getElementById('otHours').value||0))*hourly()*Number(document.getElementById('otMultiplier').value||1.5);
-const totalExtra=()=>data.income.filter(x=>(x.monthKey||data.currentMonth)===data.currentMonth).reduce((s,x)=>s+Number(x.amount||0),0)+attendance();
-function closePreviousMonth(oldKey){
- if(!oldKey)return;
- if(data.archives.some(a=>a.monthKey===oldKey))return;
- const oldExpenses=data.expenses.filter(e=>(e.monthKey||oldKey)===oldKey);
- const oldIncome=data.income.filter(e=>(e.monthKey||oldKey)===oldKey);
- const breakdown=data.categories.map(c=>({name:c.name,budget:Number(c.amount)||0,spent:oldExpenses.filter(e=>e.category===c.name).reduce((s,e)=>s+Number(e.amount||0),0)}))
-   .map(c=>({...c,remaining:c.budget-c.spent,carried:Math.max(0,c.budget-c.spent)}));
- breakdown.forEach(c=>{data.carryover[c.name]=(Number(data.carryover[c.name])||0)+c.carried;});
- data.archives.push({monthKey:oldKey,label:monthLabel(oldKey),salary:data.salary,categories:breakdown,expenses:oldExpenses,income:oldIncome,attendance:{...data.attendance},totalExpenses:oldExpenses.reduce((s,e)=>s+Number(e.amount||0),0),totalExtraIncome:oldIncome.reduce((s,e)=>s+Number(e.amount||0),0)+Math.max(0,2-Number(data.attendance.leaveUsed||0))*daily(),closedAt:new Date().toISOString()});
-}
-function checkMonth(){
- const now=monthKey();
- if(data.currentMonth!==now){closePreviousMonth(data.currentMonth);data.currentMonth=now;data.attendance={leaveUsed:0,month:''};}
-}
-checkMonth();
-function tab(id){document.querySelectorAll('main section').forEach(s=>s.classList.toggle('hidden',s.id!==id));document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));}
-window.tab=tab;document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>b.dataset.tab&&tab(b.dataset.tab));
-function editor(){syncAmounts();document.getElementById('editor').innerHTML=data.categories.map((c,i)=>`<div class="category" style="grid-template-columns:minmax(100px,1fr) 85px 125px;align-items:center"><input data-n="${i}" value="${esc(c.name)}" aria-label="Category"><label style="margin:0"><input data-p="${i}" type="number" min="0" step="0.01" value="${Number(c.pct||0)}" style="margin:0">%</label><b id="amount-${i}">${money(c.amount)}</b></div>`).join('');document.querySelectorAll('[data-p]').forEach(el=>el.oninput=()=>{let i=Number(el.dataset.p);document.getElementById('amount-'+i).textContent=money(activeSalary()*Number(el.value||0)/100);let total=[...document.querySelectorAll('[data-p]')].reduce((a,x)=>a+Number(x.value||0),0);document.getElementById('allocated').textContent=total.toFixed(2)+'% • '+money(activeSalary()*total/100);});let pct=data.categories.reduce((a,c)=>a+Number(c.pct||0),0);document.getElementById('allocated').textContent=pct.toFixed(2)+'% • '+money(activeSalary()*pct/100);}
+    /* Creator Profile Picture & Avatar */
+    .creator-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+      vertical-align: middle;
+      display: inline-block;
+      margin-right: 6px;
+      border: 1.5px solid var(--gold);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.12);
+      flex-shrink: 0;
+    }
+    [dir="rtl"] .creator-avatar {
+      margin-right: 0;
+      margin-left: 6px;
+    }
 
-const translations={
- 'Overview':'جائزہ','Expenses':'اخراجات','Family extra':'خاندان کے اخراجات','Savings goals':'بچت کے اہداف','Extra income':'اضافی آمدنی','Monthly records':'ماہانہ ریکارڈ','Budget & backup':'بجٹ اور بیک اپ',
- 'Your salary. Your goals. Your control.':'آپ کی تنخواہ، آپ کے اہداف، آپ کا اختیار۔','TOTAL MONTHLY INCOME ESTIMATE':'کل ماہانہ آمدنی کا اندازہ','Edit salary':'تنخواہ تبدیل کریں',
- 'Monthly budget':'ماہانہ بجٹ','Carryover savings (previous months)':'پچھلے مہینوں کی بچت','Carryover savings by category':'ہر مد کے حساب سے بچت',
- 'Add expense':'خرچ شامل کریں','Add extra income':'اضافی آمدنی شامل کریں','Record an expense':'خرچ درج کریں','Description':'تفصیل','Amount (PKR)':'رقم (روپے)','Category':'مد','Save expense':'خرچ محفوظ کریں','Expense history':'اخراجات کی تاریخ',
- 'Family expense tracker':'خاندانی اخراجات کا ریکارڈ','Who received the money?':'رقم کس کو دی؟','Reason':'وجہ','Save family payment':'خاندانی ادائیگی محفوظ کریں','Family payment history':'خاندانی ادائیگیوں کی تاریخ',
- 'Create a savings goal':'بچت کا ہدف بنائیں','Goal name':'ہدف کا نام','Target amount':'مطلوبہ رقم','Already saved':'اب تک جمع رقم','Add goal':'ہدف شامل کریں',
- 'Attendance bonus':'حاضری بونس','Allowed leave days used':'استعمال شدہ اجازت شدہ چھٹیاں','Daily rate':'روزانہ اجرت','Overtime calculator':'اوور ٹائم کیلکولیٹر','Overtime hours':'اوور ٹائم کے گھنٹے','Multiplier':'ضرب','Overtime payment':'اوور ٹائم کی رقم','Other extra income':'دیگر اضافی آمدنی','Add other income':'دیگر آمدنی شامل کریں',
- 'Customize your budget':'اپنا بجٹ ترتیب دیں','App preferences':'ایپ کی ترجیحات','Language / زبان':'زبان / Language','Optional vehicle budgets':'گاڑیوں کے اختیاری بجٹ','Enable only the vehicles you own. A separate budget category will be added for each one.':'صرف اپنی گاڑی منتخب کریں۔ ہر منتخب گاڑی کے لیے الگ بجٹ مد بنے گی۔','Car expenses':'کار کے اخراجات','Bike expenses':'موٹر سائیکل کے اخراجات','Save preferences':'ترجیحات محفوظ کریں','Backup & restore':'بیک اپ اور بحالی','Export backup':'بیک اپ ڈاؤن لوڈ کریں','Import backup':'بیک اپ بحال کریں',
- 'Basic salary':'بنیادی تنخواہ','Extra income':'اضافی آمدنی','This month spent':'اس ماہ کے اخراجات','Spent':'خرچ','left':'باقی','over budget':'بجٹ سے زیادہ','No goals yet.':'ابھی کوئی ہدف نہیں۔','No expenses recorded this month.':'اس ماہ کوئی خرچ درج نہیں۔','No family payments recorded this month.':'اس ماہ کوئی خاندانی ادائیگی درج نہیں۔','No extra income recorded this month.':'اس ماہ کوئی اضافی آمدنی درج نہیں۔',
- 'Select month':'مہینہ منتخب کریں','Basic salary only':'صرف بنیادی تنخواہ','Spent':'خرچ','saved':'جمع شدہ','Target':'ہدف','remaining':'باقی','complete':'مکمل','Remove':'حذف کریں','Add savings':'بچت شامل کریں','Name':'نام','Date':'تاریخ','Save':'محفوظ کریں','Monthly records':'ماہانہ ریکارڈ','Family extra':'خاندانی اخراجات','Committee':'کمیٹی','Household':'گھر کے اخراجات','Personal':'ذاتی اخراجات','Emergency Fund':'ہنگامی فنڈ','Car expenses':'کار کے اخراجات','Bike expenses':'موٹر سائیکل کے اخراجات','No previous-month leftover saved yet. Any unspent budget will be moved here automatically when the month changes — it will NOT be added to next month’s budget.':'ابھی پچھلے مہینے کی بچی ہوئی رقم موجود نہیں۔ مہینہ تبدیل ہونے پر غیر استعمال شدہ بجٹ یہاں محفوظ ہوگا، اگلے مہینے کے بجٹ میں شامل نہیں ہوگا۔','Monthly records':'ماہانہ ریکارڈ','Every completed month is saved separately. Select a month to review its budget, spending, income and leftover money.':'ہر مکمل مہینہ الگ محفوظ ہوتا ہے۔ بجٹ، اخراجات، آمدنی اور بچی رقم دیکھنے کے لیے مہینہ منتخب کریں۔'
-};
-function applyLanguage(){
- const ur=data.language==='ur';
- document.documentElement.lang=ur?'ur':'en';
- document.documentElement.dir=ur?'rtl':'ltr';
- const reverse=Object.fromEntries(Object.entries(translations).map(([en,urText])=>[urText,en]));
- const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
- let node;
- while((node=walker.nextNode())){
-   const raw=node.nodeValue;
-   const trimmed=raw.trim();
-   if(!trimmed) continue;
-   const translated=ur?(translations[trimmed]||trimmed):(reverse[trimmed]||trimmed);
-   if(translated!==trimmed){
-     const leading=raw.match(/^\s*/)?.[0]||'';
-     const trailing=raw.match(/\s*$/)?.[0]||'';
-     node.nodeValue=leading+translated+trailing;
-   }
- }
- document.querySelectorAll('button.tab').forEach(b=>{
-   if(!b.dataset.original)b.dataset.original=b.textContent.trim();
-   b.textContent=ur?(translations[b.dataset.original]||b.dataset.original):b.dataset.original;
- });
- document.querySelectorAll('input[placeholder]').forEach(el=>{
-   if(!el.dataset.enPlaceholder)el.dataset.enPlaceholder=el.placeholder;
-   const ph=el.dataset.enPlaceholder;
-   el.placeholder=ur?(translations[ph]||ph):ph;
- });
-}
-function syncPreferences(){
- document.getElementById('language').value=data.language||'en';
- document.getElementById('enableCarBike').checked=!!data.vehicles?.carBike;
- document.getElementById('enableFamilyExtra').checked=data.vehicles?.familyExtra!==false;
-}
-document.getElementById('enableCarBike').onchange=e=>{if(e.target.checked)document.getElementById('enableFamilyExtra').checked=false;};document.getElementById('enableFamilyExtra').onchange=e=>{if(e.target.checked)document.getElementById('enableCarBike').checked=false;};
-document.getElementById('savePreferences').onclick=()=>{const carBike=document.getElementById('enableCarBike').checked,familyExtra=document.getElementById('enableFamilyExtra').checked;data.vehicles={carBike,familyExtra};const ensure=(name,on)=>{let i=data.categories.findIndex(c=>c.name.toLowerCase()===name.toLowerCase());if(on&&i<0)data.categories.push({name,pct:0,amount:0,color:colors[data.categories.length%colors.length]});if(!on&&i>=0){if(data.expenses.some(e=>e.category===data.categories[i].name))data.categories[i].pct=0;else data.categories.splice(i,1);}};ensure('Car/Bike',carBike);ensure('Family extra',familyExtra);data.categories.forEach(c=>{if(c.name==='Car expenses'||c.name==='Bike expenses'){c.name='Car/Bike';c.pct=c.pct||0;}});data.categories=data.categories.filter((c,i,a)=>a.findIndex(x=>x.name===c.name)===i);data.language=document.getElementById('language').value;save();render();syncPreferences();applyLanguage();alert('Preferences saved.');};
-document.getElementById('language').onchange=e=>{data.language=e.target.value;save();render();applyLanguage();};
-function render(){
- syncAmounts();const base=Number(data.salaryConfirmed?data.salary:50000), extra=totalExtra(), total=base+data.income.filter(x=>(x.monthKey||data.currentMonth)===data.currentMonth).reduce((s,x)=>s+Number(x.amount||0),0)+attendance();
- document.getElementById('incomeTotal').textContent=money(total);
- document.getElementById('incomeBreakdown').textContent=`${monthLabel(data.currentMonth)} • ${data.salaryConfirmed?'Basic':'Demo salary (not saved)'} ${money(base)} • Extra & attendance ${money(extra)}`;
- let spentAll=monthExpenses().reduce((s,e)=>s+Number(e.amount||0),0);
- document.getElementById('summary').innerHTML=[['Basic salary',money(base)],['Extra income',money(extra)],['This month spent',money(spentAll)]].map(x=>`<div class="card"><div class="muted">${x[0]}</div><div class="amount">${x[1]}</div></div>`).join('');
- document.getElementById('budget').innerHTML=data.categories.map(c=>{let used=spent(c.name),left=c.amount-used,pct=c.amount?Math.min(100,used/c.amount*100):0;return `<div class="item"><div class="row"><b><i class="dot" style="background:${c.color}"></i>${esc(c.name)}</b><b>${money(c.amount)}</b></div><div class="row muted"><span>Spent ${money(used)}</span><span>${money(left)} ${left>=0?'left':'over budget'}</span></div><div class="progress"><span style="width:${pct}%;background:${c.color}"></span></div></div>`}).join('');
- const carryEntries=Object.entries(data.carryover).filter(([k,v])=>Number(v)>0);
- const carryTotal=carryEntries.reduce((a,[k,v])=>a+Number(v),0);
- document.getElementById('carryoverOverview').innerHTML=carryEntries.length?carryEntries.map(([k,v])=>`<div class="row item"><span>${esc(k)}</span><b>${money(v)}</b></div>`).join('')+`<div class="row"><b>Total saved from previous months</b><b class="result">${money(carryTotal)}</b></div>`:'<p class="muted">No previous-month leftover saved yet. Any unspent budget will be moved here automatically when the month changes — it will NOT be added to next month’s budget.</p>';
- document.getElementById('cat').innerHTML=data.categories.map(c=>`<option>${esc(c.name)}</option>`).join('');
- document.getElementById('history').innerHTML=monthExpenses().length?monthExpenses().slice().reverse().map((e,i)=>`<div class="item row"><div><b>${esc(e.title)}</b><div class="muted">${esc(e.category)} • ${esc(e.date)}</div></div><div><b>${money(e.amount)}</b> <button class="red" onclick="delExpense(${data.expenses.indexOf(e)})">×</button></div></div>`).join(''):'<p class="muted">No expenses recorded this month.</p>';
- document.getElementById('goalsList').innerHTML=data.goals.map((g,i)=>{let p=g.target?Math.min(100,g.saved/g.target*100):0;return `<div class="card" style="margin-top:10px"><div class="row"><b>${esc(g.name)}</b><button class="red" onclick="delGoal(${i})">Remove</button></div><div class="row muted">${money(g.saved)} saved <span>Target ${money(g.target)}</span></div><div class="progress"><span style="width:${p}%;"></span></div><p class="muted">${p.toFixed(0)}% complete • ${money(g.target-g.saved)} remaining</p><button class="light" onclick="goalAdd(${i})">＋ Add savings</button></div>`}).join('')||'<div class="card muted">No goals yet.</div>';
- let fc=familyCat(),fspent=fc?spent(fc.name):0;document.getElementById('familyRemaining').textContent=money((fc?.amount||0)-fspent);document.getElementById('familySpent').textContent=money(fspent);
- let fitems=monthExpenses().filter(e=>e.familyPayment);document.getElementById('familyHistory').innerHTML=fitems.length?fitems.slice().reverse().map(e=>`<div class="item"><div class="row"><b>${esc(e.recipient||'Family')}</b><b>${money(e.amount)}</b></div><div class="muted">${esc(e.reason||'Family support')} • ${esc(e.date)}</div></div>`).join(''):'<p class="muted">No family payments recorded this month.</p>';
- document.getElementById('dailyRate').textContent=money(daily());document.getElementById('hourlyRate').textContent=money(hourly());document.getElementById('attendanceBonus').textContent=money(attendance());document.getElementById('attendanceSaved').textContent=data.attendance.month?`Saved for ${data.attendance.month}: ${data.attendance.leaveUsed} allowed leave day(s) used.`:'Not saved for this month yet.';
- document.getElementById('leaveUsed').value=String(data.attendance.leaveUsed||0);
- document.getElementById('incomeHistory').innerHTML=data.income.filter(x=>(x.monthKey||data.currentMonth)===data.currentMonth).length?data.income.filter(x=>(x.monthKey||data.currentMonth)===data.currentMonth).slice().reverse().map(x=>`<div class="item row"><div><b>${esc(x.title)}</b><div class="muted">${esc(x.date)} • ${esc(x.type)}</div></div><div><b>${money(x.amount)}</b> <button class="red" onclick="delIncome(${data.income.indexOf(x)})">×</button></div></div>`).join(''):'<p class="muted">No extra income recorded this month.</p>';
- editor();renderRecords();updateOT();syncPreferences();save();applyLanguage();
-}
-function renderRecords(){
- const sel=document.getElementById('recordSelect');let all=data.archives.slice().sort((a,b)=>b.monthKey.localeCompare(a.monthKey));
- if(!all.some(a=>a.monthKey===data.currentMonth))all.unshift({monthKey:data.currentMonth,label:monthLabel(data.currentMonth),live:true});
- sel.innerHTML=all.map(a=>`<option value="${a.monthKey}">${a.label}${a.live?' (Current month)':''}</option>`).join('');
- const chosen=all.find(a=>a.monthKey===sel.value)||all[0];if(!chosen){document.getElementById('recordDetails').innerHTML='<p class="muted">No monthly records yet.</p>';return;}
- if(chosen.live){let ex=monthExpenses(),inc=data.income.filter(x=>(x.monthKey||data.currentMonth)===data.currentMonth);document.getElementById('recordDetails').innerHTML=`<b>${chosen.label} — Current month</b><p class="muted">This month is still active. It will be archived automatically when the next month begins.</p><div class="row"><span>Expenses</span><b>${money(ex.reduce((s,x)=>s+Number(x.amount||0),0))}</b></div><div class="row"><span>Extra income</span><b>${money(inc.reduce((s,x)=>s+Number(x.amount||0),0)+attendance())}</b></div>`+data.categories.map(c=>`<div class="item row"><span>${esc(c.name)} — ${money(c.amount)} budget</span><b>${money(c.amount-spent(c.name))} left</b></div>`).join('');}
- else document.getElementById('recordDetails').innerHTML=`<b>${chosen.label} — Archived</b><div class="row"><span>Basic salary</span><b>${money(chosen.salary)}</b></div><div class="row"><span>Total expenses</span><b>${money(chosen.totalExpenses)}</b></div><div class="row"><span>Extra income incl. attendance</span><b>${money(chosen.totalExtraIncome)}</b></div><h3>Category summary</h3>`+chosen.categories.map(c=>`<div class="item"><div class="row"><b>${esc(c.name)}</b><b>${money(c.remaining)} remaining</b></div><div class="muted">Budget ${money(c.budget)} • Spent ${money(c.spent)} • Moved to carryover ${money(c.carried)}</div></div>`).join('')+`<h3>Expense history (${chosen.expenses.length})</h3>`+chosen.expenses.map(e=>`<div class="item row"><span>${esc(e.title)} <span class="muted">(${esc(e.category)})</span></span><b>${money(e.amount)}</b></div>`).join('')+`<h3>Extra income history (${chosen.income.length})</h3>`+chosen.income.map(e=>`<div class="item row"><span>${esc(e.title)}</span><b>${money(e.amount)}</b></div>`).join('');
- document.getElementById('carryoverDetails').innerHTML=Object.entries(data.carryover).filter(([k,v])=>Number(v)>0).map(([k,v])=>`<div class="item row"><span>${esc(k)}</span><b>${money(v)}</b></div>`).join('')||'<p class="muted">No carryover savings yet.</p>';
-}
-document.getElementById('recordSelect').onchange=renderRecords;
-function updateOT(){document.getElementById('otResult').textContent=money(overtime());}
-document.getElementById('salaryEdit').onclick=()=>{let n=Number(prompt('Enter your actual basic monthly salary in PKR',data.salaryConfirmed?data.salary:50000));if(n>0){data.salary=n;data.salaryConfirmed=true;syncAmounts();save();render();}};
-document.getElementById('addExpense').onclick=()=>{let title=document.getElementById('desc').value.trim(),amount=Number(document.getElementById('amt').value),category=document.getElementById('cat').value;if(!title||amount<=0)return alert('Enter description and valid amount');data.expenses.push({title,amount,category,date:new Date().toLocaleDateString(),monthKey:data.currentMonth});document.getElementById('desc').value='';document.getElementById('amt').value='';save();render();};
-window.delExpense=i=>{if(confirm('Delete this expense?')){data.expenses.splice(i,1);save();render();}};
-document.getElementById('addFamily').onclick=()=>{let recipient=document.getElementById('familyWho').value.trim(),amount=Number(document.getElementById('familyAmount').value),reason=document.getElementById('familyReason').value.trim(),fc=familyCat();if(!fc)return alert('Please keep a Family Extra budget category in Budget settings.');if(!recipient||amount<=0)return alert('Enter recipient and a valid amount.');data.expenses.push({title:`Family: ${recipient}`,amount,category:fc.name,date:new Date().toLocaleDateString(),monthKey:data.currentMonth,familyPayment:true,recipient,reason});['familyWho','familyAmount','familyReason'].forEach(id=>document.getElementById(id).value='');save();render();alert('Family payment saved and this month’s Family Extra balance updated.');};
-document.getElementById('addGoal').onclick=()=>{let name=document.getElementById('goalName').value.trim(),target=Number(document.getElementById('goalTarget').value),saved=Number(document.getElementById('goalSaved').value||0);if(!name||target<=0)return alert('Enter a goal and target');data.goals.push({name,target,saved});save();render();};
-window.delGoal=i=>{if(confirm('Remove goal?')){data.goals.splice(i,1);save();render();}};
-window.goalAdd=i=>{let n=Number(prompt('Amount saved in PKR'));if(n>0){data.goals[i].saved+=n;save();render();}};
-document.getElementById('leaveUsed').onchange=e=>{data.attendance.leaveUsed=Number(e.target.value);document.getElementById('attendanceBonus').textContent=money(attendance());};
-document.getElementById('saveAttendance').onclick=()=>{data.attendance.leaveUsed=Number(document.getElementById('leaveUsed').value);data.attendance.month=monthLabel(data.currentMonth);save();render();alert('Attendance bonus saved.');};
-document.getElementById('otHours').oninput=updateOT;document.getElementById('otMultiplier').onchange=updateOT;
-document.getElementById('saveOT').onclick=()=>{let amount=overtime(),hours=Number(document.getElementById('otHours').value);if(hours<=0||amount<=0)return alert('Enter overtime hours first.');data.income.push({title:`Overtime (${hours} hours)`,amount,type:'Overtime',date:new Date().toLocaleDateString(),monthKey:data.currentMonth});document.getElementById('otHours').value='';save();render();alert('Overtime earning added.');};
-document.getElementById('addOther').onclick=()=>{let title=document.getElementById('otherTitle').value.trim(),amount=Number(document.getElementById('otherAmount').value);if(!title||amount<=0)return alert('Enter a description and valid amount.');data.income.push({title,amount,type:'Other income',date:new Date().toLocaleDateString(),monthKey:data.currentMonth});document.getElementById('otherTitle').value='';document.getElementById('otherAmount').value='';save();render();};
-window.delIncome=i=>{if(confirm('Delete this income entry?')){data.income.splice(i,1);save();render();}};
-document.getElementById('saveBudget').onclick=()=>{let arr=data.categories.map((c,i)=>({...c,name:document.querySelector(`[data-n="${i}"]`).value.trim(),pct:Number(document.querySelector(`[data-p="${i}"]`).value)}));if(arr.some(c=>!c.name||!Number.isFinite(c.pct)||c.pct<0))return alert('Enter valid category names and percentages.');let total=arr.reduce((a,c)=>a+c.pct,0);if(total>100.0001)return alert('Total allocation cannot exceed 100%. Please reduce percentages.');data.categories=arr;syncAmounts();save();render();if(total<99.9999){let rem=100-total;alert(`Budget saved. You allocated ${total.toFixed(2)}% (${money(activeSalary()*total/100)}). Unallocated: ${rem.toFixed(2)}% (${money(activeSalary()*rem/100)}). This amount remains unassigned.`);}else alert('Budget saved successfully.');};
+    .creator-credit {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      vertical-align: middle;
+      font-size: 13px;
+      color: var(--ink-muted);
+    }
+    .creator-credit b, .creator-credit strong {
+      color: var(--ink);
+    }
 
-document.getElementById('newCat').onclick=()=>{let n=prompt('New category name');if(n){data.categories.push({name:n,pct:0,amount:0,color:colors[data.categories.length%colors.length]});save();render();}};
-document.getElementById('export').onclick=()=>{let a=document.createElement('a'),u=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.href=u;a.download='SmartSalary-3.4.3-Free-backup.json';a.click();URL.revokeObjectURL(u);};
-document.getElementById('import').onclick=()=>document.getElementById('file').click();
-document.getElementById('file').onchange=e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let d=JSON.parse(r.result);if(!Array.isArray(d.categories))throw 0;data={...defaults,...d,salaryConfirmed:d.salaryConfirmed!==undefined?d.salaryConfirmed:!!d.salary,attendance:d.attendance||{leaveUsed:0,month:''},income:d.income||[],archives:d.archives||[],carryover:d.carryover||{},language:d.language||'en',vehicles:d.vehicles||{car:false,bike:false},currentMonth:d.currentMonth||monthKey()};data.categories=data.categories.map(c=>({...c,pct:Number.isFinite(Number(c.pct))?Number(c.pct):(Number(data.salary)?Number(c.amount||0)/Number(data.salary)*100:0)}));data.expenses=(data.expenses||[]).map(x=>({...x,monthKey:x.monthKey||data.currentMonth}));data.income=data.income.map(x=>({...x,monthKey:x.monthKey||data.currentMonth}));checkMonth();save();render();alert('Backup restored.');}catch(x){alert('Invalid backup file.');}};r.readAsText(f);};
-document.getElementById('restoreAuto').onclick=()=>{
- try{
-   const snaps=JSON.parse(localStorage.getItem('ss343_autobackups')||'[]');
-   if(!snaps.length)return alert('No previous automatic backup is available yet.');
-   const choices=snaps.map((x,i)=>`${i+1}. ${new Date(x.savedAt).toLocaleString()}`).join('\\n');
-   const pick=Number(prompt('Choose a recovery snapshot number:\\n'+choices,'1'));
-   if(!Number.isInteger(pick)||pick<1||pick>snaps.length)return;
-   if(!confirm('This will replace the current SmartSalary data with the selected snapshot. Continue?'))return;
-   const recovered=JSON.parse(snaps[pick-1].payload);
-   if(!Array.isArray(recovered.categories))throw new Error('Invalid snapshot');
-   data={...defaults,...recovered,salaryConfirmed:recovered.salaryConfirmed!==undefined?recovered.salaryConfirmed:!!recovered.salary};data.categories=data.categories.map(c=>({...c,pct:Number.isFinite(Number(c.pct))?Number(c.pct):(Number(data.salary)?Number(c.amount||0)/Number(data.salary)*100:0)}));save();render();alert('Previous local snapshot restored.');
- }catch(e){alert('Could not restore the selected snapshot.');}
-};
-function updateBackupStatus(){
- const snaps=JSON.parse(localStorage.getItem('ss343_autobackups')||'[]');
- const el=document.getElementById('backupStatus');
- if(el)el.textContent=`Local recovery snapshots available: ${snaps.length} of 7. Last snapshot: ${snaps[0]?new Date(snaps[0].savedAt).toLocaleString():'not created yet'}.`;
-}
-updateBackupStatus();
-render();
+    /* Header */
+    header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: white;
+      padding: 16px 16px 24px;
+      border-radius: 0 0 24px 24px;
+      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.15);
+    }
+    .wrap {
+      max-width: 1020px;
+      margin: auto;
+      padding: 16px 16px 60px;
+    }
+    .header-wrap {
+      max-width: 1020px;
+      margin: auto;
+      padding: 0;
+    }
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-group {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .brand {
+      font-size: 22px;
+      font-weight: 850;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .brand span.gold { color: var(--gold); }
+    .badge {
+      font-size: 10.5px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(245, 158, 11, 0.2);
+      color: #fde68a;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+    .tagline {
+      font-size: 12px;
+      color: #94a3b8;
+    }
 
-// Offline-only menu and preferences. No account, login, OTP or password is used.
-function closeMenu(){document.getElementById('drawerBackdrop').style.display='none';}
-function openMenu(){
- document.getElementById('drawerBackdrop').style.display='block';
- document.getElementById('drawerLanguage').value=data.language||'en';
- document.getElementById('drawerCar').checked=!!data.vehicles?.carBike;
- document.getElementById('drawerBike').checked=data.vehicles?.familyExtra!==false;
-}
-const welcomeNote=document.getElementById('welcomeNote');
-const guideSteps=[['salaryEdit','1/5 • Edit Salary','Set your actual monthly salary here. Demo salary is not saved as your real salary.'],['budget','2/5 • Monthly Budget','See your category allocations and remaining amounts.'],['expenses','3/5 • Expenses','Record and review your daily spending.'],['goals','4/5 • Savings Goals','Create targets and track your progress.'],['settings','5/5 • Settings & Backup','Adjust percentages, preferences, and protect your data with backups.']];
-let guideIndex=0;
-function clearGuide(){document.querySelectorAll('.guide-focus').forEach(x=>x.classList.remove('guide-focus'));document.getElementById('guideDim')?.remove();document.getElementById('guidePanel')?.remove();}
-function finishGuide(){clearGuide();localStorage.setItem('ss343_onboarding_done','1');}
-function showGuide(){clearGuide();localStorage.removeItem('ss343_onboarding_done');guideIndex=0;
- const dim=document.createElement('div');dim.id='guideDim';dim.className='guide-dim';document.body.appendChild(dim);
- const panel=document.createElement('div');panel.id='guidePanel';panel.className='guide-panel';panel.innerHTML='<h2 id="guideTitle"></h2><p id="guideText"></p><p class="muted" id="guideCount"></p><div class="guide-actions"><button class="light" id="guideSkip">Skip Guide</button><button class="primary" id="guideNext">Next</button></div>';document.body.appendChild(panel);
- function paint(){const [target,title,desc]=guideSteps[guideIndex];document.querySelectorAll('.guide-focus').forEach(x=>x.classList.remove('guide-focus'));
-   if(['budget','salaryEdit'].includes(target))tab('home');else if(['expenses','goals','settings'].includes(target))tab(target);
-   let el=target==='expenses'?document.querySelector('[data-tab="expenses"]'):target==='goals'?document.querySelector('[data-tab="goals"]'):target==='settings'?document.querySelector('[data-tab="settings"]'):document.getElementById(target);
-   if(el){el.classList.add('guide-focus');el.scrollIntoView({behavior:'smooth',block:'center'});}
-   panel.querySelector('#guideTitle').textContent=title;panel.querySelector('#guideText').textContent=desc;panel.querySelector('#guideCount').textContent=`Step ${guideIndex+1} of ${guideSteps.length}`;panel.querySelector('#guideNext').textContent=guideIndex===guideSteps.length-1?'Finish':'Next';
- }
- panel.querySelector('#guideSkip').onclick=finishGuide;panel.querySelector('#guideNext').onclick=()=>{if(++guideIndex>=guideSteps.length)finishGuide();else paint();};paint();
-}
-if(!localStorage.getItem('ss343_onboarding_done'))welcomeNote.style.display='flex';
-document.getElementById('welcomeStart').onclick=()=>{welcomeNote.style.display='none';showGuide();};
-document.getElementById('welcomeSkip').onclick=()=>{welcomeNote.style.display='none';finishGuide();};
-document.getElementById('replayGuide').onclick=showGuide;
-document.getElementById('menuTrigger').onclick=openMenu;
-document.getElementById('closeDrawer').onclick=closeMenu;
-document.getElementById('drawerBackdrop').addEventListener('click',e=>{if(e.target.id==='drawerBackdrop')closeMenu();});
-document.getElementById('drawerSave').onclick=()=>{
- data.language=document.getElementById('drawerLanguage').value;
- data.vehicles={carBike:document.getElementById('drawerCar').checked,familyExtra:document.getElementById('drawerBike').checked};
- save();render();closeMenu();alert('Preferences saved.');
-};
-if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
-</script></body></html>
+    /* Three-dot menu button */
+    .menu-trigger {
+      background: rgba(255, 255, 255, 0.12);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 12px;
+      font-size: 20px;
+      width: 42px;
+      height: 42px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .menu-trigger:hover, .menu-trigger:focus {
+      background: rgba(255, 255, 255, 0.2);
+      outline: none;
+    }
+
+    /* Hero section */
+    .hero {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .hero-meta {
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #94a3b8;
+      font-weight: 600;
+    }
+    .total-display {
+      font-size: 32px;
+      font-weight: 850;
+      letter-spacing: -0.02em;
+      margin: 2px 0;
+    }
+    .hero-sub {
+      font-size: 12.5px;
+      color: #cbd5e1;
+    }
+
+    /* Tabs Navigation */
+    .tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      margin: 16px 0 20px;
+      padding-bottom: 6px;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab {
+      background: white;
+      color: var(--ink-muted);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 16px;
+      font-weight: 700;
+      font-size: 13.5px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .tab:hover {
+      border-color: #cbd5e1;
+      color: var(--ink);
+    }
+    .tab.active {
+      background: var(--navy);
+      color: white;
+      border-color: var(--navy);
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+    }
+
+    /* Buttons */
+    button {
+      border: 0;
+      border-radius: 11px;
+      padding: 10px 16px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    button.primary {
+      background: var(--navy);
+      color: white;
+    }
+    button.primary:hover { background: #1e293b; }
+    button.gold {
+      background: var(--gold);
+      color: #0f172a;
+    }
+    button.gold:hover { background: var(--gold-hover); }
+    button.light {
+      background: #f1f5f9;
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+    button.light:hover { background: #e2e8f0; }
+    button.red {
+      background: var(--red-bg);
+      color: var(--red);
+      border: 1px solid #fecaca;
+    }
+    button.red:hover { background: #fee2e2; }
+    button.green {
+      background: var(--green-bg);
+      color: #047857;
+      border: 1px solid #a7f3d0;
+    }
+    button.green:hover { background: #d1fae5; }
+    button.sm {
+      padding: 6px 11px;
+      font-size: 12.5px;
+      border-radius: 8px;
+    }
+
+    /* Cards & Layout */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+      margin-bottom: 16px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .grid-5 {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    @media(max-width: 900px) {
+      .grid-5 { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media(max-width: 600px) {
+      .grid-5 { grid-template-columns: 1fr 1fr; }
+      .grid-5 .card:last-child { grid-column: 1 / -1; }
+    }
+    @media(max-width: 400px) {
+      .grid-5 { grid-template-columns: 1fr; }
+    }
+
+    .metric-card {
+      padding: 14px 16px;
+      border-radius: var(--radius);
+      background: white;
+      border: 1px solid var(--line);
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+    }
+    .metric-label {
+      font-size: 12px;
+      color: var(--ink-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .metric-value {
+      font-size: 20px;
+      font-weight: 800;
+      margin-top: 4px;
+      color: var(--ink);
+    }
+    .metric-sub {
+      font-size: 11.5px;
+      color: var(--ink-muted);
+      margin-top: 2px;
+    }
+
+    h2 {
+      font-size: 18px;
+      font-weight: 800;
+      margin: 24px 0 12px;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    h3 {
+      font-size: 15px;
+      font-weight: 700;
+      margin: 16px 0 8px;
+      color: var(--ink);
+    }
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+    .item {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .item:last-child { border-bottom: 0; }
+    .muted {
+      color: var(--ink-muted);
+      font-size: 13px;
+    }
+
+    /* Forms */
+    label {
+      display: block;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--ink-muted);
+      margin: 12px 0 4px;
+    }
+    input, select, textarea {
+      display: block;
+      width: 100%;
+      padding: 11px 13px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      font: inherit;
+      background: white;
+      color: var(--ink);
+      font-size: 14.5px;
+      transition: border 0.15s ease;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--navy);
+      box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
+    }
+    .formgrid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .btnrow {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    /* Category Cards Grid */
+    .cat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 14px;
+      margin-top: 12px;
+    }
+    .cat-card {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+      position: relative;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .cat-card:hover {
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+    }
+    .cat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .cat-title-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .cat-icon-badge {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      flex-shrink: 0;
+    }
+    .cat-name {
+      font-size: 15px;
+      font-weight: 750;
+      color: var(--ink);
+    }
+    .cat-pct {
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 6px;
+      background: #f1f5f9;
+      color: var(--ink-muted);
+      font-weight: 700;
+    }
+    .cat-budget {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--ink);
+    }
+    .cat-stats {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12.5px;
+      color: var(--ink-muted);
+      margin-bottom: 8px;
+    }
+    .progress {
+      height: 8px;
+      background: #f1f5f9;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .progress span {
+      display: block;
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+
+    /* Warning & Notice Boxes */
+    .notice {
+      background: #fffbeb;
+      border: 1px solid #fef3c7;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 12.5px;
+      color: #92400e;
+      margin: 14px 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .warning-box {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 13px;
+      color: #b91c1c;
+      font-weight: 600;
+      margin: 12px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .info-box {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 13px;
+      color: #1e40af;
+      margin: 12px 0;
+    }
+
+    /* Tables & Ledgers */
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 10px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+    }
+    th, td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+    }
+    [dir="rtl"] th, [dir="rtl"] td {
+      text-align: right;
+    }
+    th {
+      font-weight: 700;
+      color: var(--ink-muted);
+      background: #f8fafc;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    /* Modals & Drawers */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(4px);
+      z-index: 3000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-box {
+      background: white;
+      border-radius: var(--radius-lg);
+      max-width: 500px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 24px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+      position: relative;
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 12px;
+    }
+    .modal-title {
+      font-size: 18px;
+      font-weight: 800;
+      margin: 0;
+      color: var(--ink);
+    }
+    .close-btn {
+      background: #f1f5f9;
+      border: 0;
+      border-radius: 8px;
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      cursor: pointer;
+      color: var(--ink-muted);
+    }
+    .close-btn:hover { background: #e2e8f0; color: var(--ink); }
+
+    /* Welcome Modal */
+    .welcome-box {
+      text-align: center;
+      padding: 28px 24px;
+    }
+    .welcome-logo {
+      font-size: 30px;
+      font-weight: 900;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+    .welcome-logo span { color: var(--gold); }
+    .demo-salary-banner {
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      color: #065f46;
+      font-weight: 850;
+      font-size: 22px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      margin: 16px 0;
+    }
+
+    /* Interactive Guide */
+    .guide-dim {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.75);
+      z-index: 4000;
+      pointer-events: auto;
+    }
+    .guide-focus {
+      outline: 3px solid var(--gold) !important;
+      outline-offset: 4px;
+      box-shadow: 0 0 0 8px rgba(245, 158, 11, 0.3) !important;
+      position: relative;
+      z-index: 4100 !important;
+      background: white !important;
+      border-radius: var(--radius);
+    }
+    .guide-panel {
+      position: fixed;
+      left: 50%;
+      bottom: max(16px, env(safe-area-inset-bottom));
+      transform: translateX(-50%);
+      width: min(520px, calc(100vw - 32px));
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 20px 22px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+      z-index: 4500;
+      text-align: left;
+    }
+    [dir="rtl"] .guide-panel { text-align: right; }
+    .guide-step-tag {
+      font-size: 12px;
+      font-weight: 750;
+      color: var(--gold-hover);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .guide-dots {
+      display: flex;
+      gap: 6px;
+      margin: 12px 0 16px;
+    }
+    .guide-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #cbd5e1;
+      transition: all 0.2s;
+    }
+    .guide-dot.active {
+      width: 22px;
+      border-radius: 999px;
+      background: var(--navy);
+    }
+    .guide-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      color: var(--ink-muted);
+      font-size: 12px;
+      margin-top: 36px;
+      padding: 20px 0;
+      border-top: 1px solid var(--line);
+    }
+    footer .creator-credit {
+      margin-top: 6px;
+      display: inline-flex;
+    }
+
+    /* Utility */
+    .hidden { display: none !important; }
+    .text-right { text-align: right; }
+    .font-mono { font-variant-numeric: tabular-nums; }
+    .badge-pill {
+      display: inline-block;
+      padding: 2px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 999px;
+    }
+    .badge-green { background: #d1fae5; color: #065f46; }
+    .badge-red { background: #fee2e2; color: #991b1b; }
+    .badge-gold { background: #fef3c7; color: #92400e; }
+
+    @media(max-width: 600px) {
+      .formgrid { grid-template-columns: 1fr; }
+      .hero { flex-direction: column; align-items: flex-start; }
+      .total-display { font-size: 26px; }
+      .cat-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Three-Dot Menu Drawer / Modal -->
+  <div class="modal-backdrop" id="menuModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title" data-i18n="Menu & Preferences">Menu & Preferences</h3>
+        <button class="close-btn" id="closeMenuBtn" aria-label="Close">✕</button>
+      </div>
+
+      <!-- 1. Language -->
+      <div class="card" style="margin-bottom:12px;padding:14px;">
+        <h3 style="margin-top:0;" data-i18n="Language">Language / زبان</h3>
+        <p class="muted" data-i18n="Select your preferred language.">Switch between English and Urdu instantly.</p>
+        <div class="btnrow" style="margin-top:8px;">
+          <button type="button" class="tab" id="langEnBtn" style="flex:1;">English</button>
+          <button type="button" class="tab" id="langUrBtn" style="flex:1;">اردو</button>
+        </div>
+      </div>
+
+      <!-- 2. Offline Support -->
+      <div class="card" style="margin-bottom:12px;padding:14px;">
+        <h3 style="margin-top:0;" data-i18n="Offline Support">Offline Support</h3>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+          <span class="badge-pill badge-green">🟢 100% Offline Compatible</span>
+        </div>
+        <p class="muted" style="margin:4px 0 8px;" data-i18n="No accounts, passwords, or internet required. Data is stored on this device.">
+          SmartSalary functions entirely offline. All calculations, budget records, payroll, and settings remain private in your browser local storage.
+        </p>
+        <div id="pwaStatusBox" style="font-size:12px;color:var(--ink-muted);">PWA Status: Ready for offline use</div>
+      </div>
+
+      <!-- 3. App Guide -->
+      <div class="card" style="margin-bottom:12px;padding:14px;">
+        <h3 style="margin-top:0;" data-i18n="App Guide">App Guide</h3>
+        <p class="muted" style="margin:4px 0 10px;" data-i18n="Reopen the interactive step-by-step application guide anytime.">
+          Learn how to plan salary allocations, track daily expenses, and manage payroll deductions.
+        </p>
+        <button type="button" class="light" id="openGuideBtn" style="width:100%;" data-i18n="Launch Interactive Guide">Launch Interactive Guide</button>
+      </div>
+
+      <!-- 4. Settings -->
+      <div class="card" style="margin-bottom:12px;padding:14px;">
+        <h3 style="margin-top:0;" data-i18n="Settings">Settings & Preferences</h3>
+        
+        <label data-i18n="Budget Calculation Mode">Budget Calculation Mode</label>
+        <div style="display:flex;gap:12px;margin:8px 0;">
+          <label style="display:flex;align-items:center;gap:6px;font-weight:normal;cursor:pointer;margin:0;">
+            <input type="radio" name="budgetMode" value="amount" id="modeAmount" style="width:auto;margin:0;">
+            <span data-i18n="Rupee Amount (PKR) [Default]">Rupee Amount (PKR) [Default]</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;font-weight:normal;cursor:pointer;margin:0;">
+            <input type="radio" name="budgetMode" value="percent" id="modePercent" style="width:auto;margin:0;">
+            <span data-i18n="Percentage (%)">Percentage (%)</span>
+          </label>
+        </div>
+
+        <label style="margin-top:14px;" data-i18n="Optional Budget Categories">Optional Budget Categories</label>
+        <p class="muted" style="margin:2px 0 8px;" data-i18n="Choose either Car/Bike or Family Extra.">Car/Bike and Family Extra are mutually exclusive. Choosing one unselects the other.</p>
+        <div style="display:flex;gap:16px;">
+          <label style="display:flex;align-items:center;gap:6px;font-weight:normal;cursor:pointer;margin:0;">
+            <input type="checkbox" id="menuCarBike" style="width:auto;margin:0;"> 🚗 Car/Bike
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;font-weight:normal;cursor:pointer;margin:0;">
+            <input type="checkbox" id="menuFamilyExtra" style="width:auto;margin:0;"> 👨‍👩‍👧 Family Extra
+          </label>
+        </div>
+
+        <div style="margin-top:14px;">
+          <button type="button" class="primary" id="saveMenuSettings" style="width:100%;" data-i18n="Save Preferences">Save Preferences</button>
+        </div>
+      </div>
+
+      <!-- 5. About SmartSalary -->
+      <div class="card" style="margin-bottom:0;padding:14px;">
+        <h3 style="margin-top:0;" data-i18n="About SmartSalary">About SmartSalary</h3>
+        <p style="margin:4px 0 8px;font-size:13px;">
+          <strong>SmartSalary 3.6.0 Free Offline</strong><br>
+          <span class="muted" data-i18n="Professional offline personal finance and payroll manager.">Professional offline personal finance and payroll manager.</span>
+        </p>
+        <div style="padding:10px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:10px 0;">
+          <span class="creator-credit">
+            Created with care by <img src="Hurraim_Khan_Profile_Round(1).png" alt="Hurraim Khan" class="creator-avatar"> <strong>Hurraim Khan</strong>
+          </span>
+        </div>
+        <div class="btnrow" style="margin-top:10px;">
+          <button type="button" class="light sm" onclick="window.open('privacy.html','_blank')" data-i18n="Privacy Policy">Privacy Policy</button>
+          <button type="button" class="light sm" onclick="window.open('terms.html','_blank')" data-i18n="Terms of Use">Terms of Use</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- First-Time Welcome Screen Modal -->
+  <div class="modal-backdrop" id="welcomeModal">
+    <div class="modal-box welcome-box">
+      <div class="welcome-logo">Smart<span class="gold">Salary</span></div>
+      <div style="margin:4px 0 14px;">
+        <span class="badge">3.6.0 FREE OFFLINE</span>
+      </div>
+      <h2 style="justify-content:center;margin:8px 0;" data-i18n="Welcome!">Welcome to SmartSalary!</h2>
+      <div class="demo-salary-banner font-mono">
+        DEMO SALARY: PKR 50,000
+      </div>
+      <p class="muted" style="margin:12px 0 16px;line-height:1.6;" data-i18n="Free personal budgeting. No account. No subscription. Use it — thank me later!">
+        Free personal budgeting, daily expense tracking, and complete payroll manager. No account, login, or internet required. Your data never leaves your device.
+      </p>
+      <div style="margin:16px 0 22px;">
+        <span class="creator-credit">
+          Created with care by <img src="Hurraim_Khan_Profile_Round(1).png" alt="Hurraim Khan" class="creator-avatar"> <strong>Hurraim Khan</strong>
+        </span>
+      </div>
+      <div class="btnrow" style="justify-content:center;">
+        <button type="button" class="primary" id="startGuideBtn" data-i18n="Start Guided Tour">Start Guided Tour</button>
+        <button type="button" class="light" id="skipGuideBtn" data-i18n="Skip Guide">Skip Guide</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <div class="header-wrap">
+      <div class="header-top">
+        <div class="brand-group">
+          <div class="brand">
+            Smart<span class="gold">Salary</span>
+            <span class="badge">3.6.0 FREE OFFLINE</span>
+          </div>
+          <div class="tagline" data-i18n="Your salary. Your goals. Your control.">Your salary. Your goals. Your control.</div>
+        </div>
+        <!-- Three-dot menu button aligned horizontally with title -->
+        <button class="menu-trigger" id="menuTrigger" aria-label="Menu" title="Menu">⋮</button>
+      </div>
+
+      <div class="hero">
+        <div>
+          <div class="hero-meta" data-i18n="TOTAL MONTHLY INCOME ESTIMATE">TOTAL MONTHLY INCOME ESTIMATE</div>
+          <div class="total-display font-mono" id="incomeTotal">PKR 50,000</div>
+          <div class="hero-sub font-mono" id="incomeBreakdown">Basic salary only</div>
+        </div>
+        <button type="button" class="gold" id="salaryEditBtn" data-i18n="Edit salary">Edit salary</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- MAIN NAVIGATION TABS - Exact order required -->
+    <nav class="tabs" id="mainTabs" role="tablist">
+      <button class="tab active" data-tab="overview" id="nav-overview" data-i18n="Overview">Overview</button>
+      <button class="tab" data-tab="expenses" id="nav-expenses" data-i18n="Expenses">Expenses</button>
+      <button class="tab" data-tab="payroll" id="nav-payroll" data-i18n="Salary & Payroll">Salary & Payroll</button>
+      <button class="tab" data-tab="income" id="nav-income" data-i18n="Extra Income">Extra Income</button>
+      <button class="tab" data-tab="goals" id="nav-goals" data-i18n="Savings Goals">Savings Goals</button>
+      <button class="tab" data-tab="records" id="nav-records" data-i18n="Monthly Records">Monthly Records</button>
+      <button class="tab" data-tab="backup" id="nav-backup" data-i18n="Backup / Restore">Backup / Restore</button>
+    </nav>
+
+    <!-- SECTION 1: OVERVIEW -->
+    <section id="sec-overview">
+      <div class="grid-5" id="overviewMetrics">
+        <div class="metric-card">
+          <div class="metric-label" data-i18n="Monthly Salary">Monthly Salary</div>
+          <div class="metric-value font-mono" id="mSalary">PKR 50,000</div>
+          <div class="metric-sub" id="mSalarySub">Basic wage</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label" data-i18n="Total Allocated">Total Allocated</div>
+          <div class="metric-value font-mono" id="mAllocated">PKR 50,000</div>
+          <div class="metric-sub" id="mAllocatedSub">100% of salary</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label" data-i18n="Unallocated">Unallocated</div>
+          <div class="metric-value font-mono" id="mUnallocated">PKR 0</div>
+          <div class="metric-sub" id="mUnallocatedSub">0% remaining</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label" data-i18n="Total Expenses">Total Expenses</div>
+          <div class="metric-value font-mono" id="mExpenses">PKR 0</div>
+          <div class="metric-sub" id="mExpensesSub">This month</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label" data-i18n="Remaining Balance">Remaining Balance</div>
+          <div class="metric-value font-mono" id="mRemaining" style="color:var(--green);">PKR 50,000</div>
+          <div class="metric-sub" id="mRemainingSub">Available cash</div>
+        </div>
+      </div>
+
+      <!-- Warning if allocation exceeds salary -->
+      <div id="allocationWarning" class="warning-box hidden"></div>
+
+      <!-- Monthly Budget Categories (Immediately Visible) -->
+      <div class="row" style="margin-top:20px;">
+        <h2 style="margin:0;" data-i18n="Monthly Budget Allocations">Monthly Budget Allocations</h2>
+        <button type="button" class="light sm" id="editBudgetQuickBtn" data-i18n="Customize Categories">Customize Categories</button>
+      </div>
+      <div class="cat-grid" id="catCardsGrid"></div>
+
+      <!-- Carryover Savings Card -->
+      <h2 data-i18n="Carryover savings (previous months)">Carryover savings (previous months)</h2>
+      <div class="card" id="carryoverOverview"></div>
+
+      <!-- Quick Action Buttons -->
+      <div class="btnrow">
+        <button type="button" class="primary" onclick="tab('expenses')" data-i18n="Add expense">＋ Add expense</button>
+        <button type="button" class="light" onclick="tab('income')" data-i18n="Add extra income">＋ Add extra income</button>
+        <button type="button" class="light" onclick="tab('payroll')" data-i18n="View Payroll">View Payroll & Salary</button>
+      </div>
+
+      <div class="notice">
+        <span>🛡️</span>
+        <div data-i18n="100% offline personal budget tracker. Your information is saved on this device only. Export a backup before changing device or browser. No real money is stored or transferred.">
+          100% offline personal budget tracker. Your information is saved on this device only. Export a backup before changing device or browser. No real money is stored or transferred.
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: EXPENSES -->
+    <section id="sec-expenses" class="hidden">
+      <h2 data-i18n="Record an expense">Record an expense</h2>
+      <div class="card">
+        <label data-i18n="Description">Description</label>
+        <input id="expDesc" placeholder="e.g. Grocery, transport, petrol, utility bill" data-i18n-ph="e.g. Grocery, transport, petrol, utility bill">
+        
+        <div class="formgrid">
+          <div>
+            <label data-i18n="Amount (PKR)">Amount (PKR)</label>
+            <input id="expAmt" type="number" min="1" placeholder="1000">
+          </div>
+          <div>
+            <label data-i18n="Category">Category</label>
+            <select id="expCat"></select>
+          </div>
+        </div>
+
+        <div class="formgrid">
+          <div>
+            <label data-i18n="Date">Date</label>
+            <input id="expDate" type="date">
+          </div>
+        </div>
+
+        <div class="btnrow">
+          <button type="button" class="primary" id="saveExpenseBtn" data-i18n="Save expense">Save expense</button>
+        </div>
+      </div>
+
+      <!-- Family Extra Tracker (Visible if category is active) -->
+      <div id="familyExtraSection" class="hidden">
+        <h2 data-i18n="Family expense tracker">Family expense tracker</h2>
+        <div class="card">
+          <div class="row" style="margin-bottom:12px;">
+            <div>
+              <div class="metric-label" data-i18n="FAMILY EXTRA REMAINING">FAMILY EXTRA REMAINING</div>
+              <div class="metric-value font-mono" id="familyRemaining">PKR 0</div>
+            </div>
+            <div class="text-right">
+              <div class="metric-label" data-i18n="USED THIS MONTH">USED THIS MONTH</div>
+              <div class="metric-value font-mono" id="familySpent">PKR 0</div>
+            </div>
+          </div>
+          <label data-i18n="Who received the money?">Who received the money?</label>
+          <input id="familyWho" placeholder="e.g. Ammi, brother, children" data-i18n-ph="e.g. Ammi, brother, children">
+          <div class="formgrid">
+            <div>
+              <label data-i18n="Amount (PKR)">Amount (PKR)</label>
+              <input id="familyAmount" type="number" min="1" placeholder="2000">
+            </div>
+            <div>
+              <label data-i18n="Reason">Reason</label>
+              <input id="familyReason" placeholder="Grocery, medicine, tuition fee" data-i18n-ph="Grocery, medicine, tuition fee">
+            </div>
+          </div>
+          <div class="btnrow">
+            <button type="button" class="primary" id="saveFamilyBtn" data-i18n="Save family payment">Save family payment</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:20px;">
+        <h2 style="margin:0;" data-i18n="Expense history">Expense history</h2>
+        <div style="font-size:13px;color:var(--ink-muted);" id="expenseCount"></div>
+      </div>
+      <div class="card" id="expenseHistoryList"></div>
+    </section>
+
+    <!-- SECTION 3: SALARY & PAYROLL (PRIORITY FEATURE) -->
+    <section id="sec-payroll" class="hidden">
+      <h2 data-i18n="Salary & Payroll Management">Salary & Payroll Management</h2>
+      
+      <!-- Wage & 26-Day Basis -->
+      <div class="card">
+        <div class="row" style="flex-wrap:wrap;gap:12px;">
+          <div>
+            <div class="metric-label" data-i18n="Monthly Basic Salary">Monthly Basic Salary</div>
+            <div class="metric-value font-mono" id="payrollBasicDisplay" style="font-size:24px;">PKR 50,000</div>
+          </div>
+          <div>
+            <div class="metric-label" data-i18n="Daily Salary (26 days basis)">Daily Salary (26 days basis)</div>
+            <div class="metric-value font-mono" id="payrollDailyDisplay" style="font-size:24px;color:var(--blue);">PKR 1,923.08</div>
+          </div>
+          <button type="button" class="light sm" id="payrollEditSalaryBtn" data-i18n="Edit salary">Edit Basic Salary</button>
+        </div>
+        <p class="muted" style="margin:10px 0 0;" data-i18n="Standard calculation formula: Daily Salary = Monthly Basic Salary ÷ 26 working days.">
+          Standard calculation formula: Daily Salary = Monthly Basic Salary ÷ 26 working days.
+        </p>
+      </div>
+
+      <!-- Leave Details & Deduction Rules -->
+      <h2 data-i18n="Leave Deductions & Rules">Leave Deductions & Rules</h2>
+      <div class="card">
+        <p class="muted" style="margin-top:0;" data-i18n="2 leaves free. Days beyond 2 are deducted at daily rate.">
+          <strong>Leave Rule:</strong> Two (2) leaves per month are allowed free of deduction. Any leaves beyond 2 are deductible.
+          <br><em>Deductible leaves = Total leaves − 2 (min 0). Leave deduction = Deductible leaves × Daily salary.</em>
+        </p>
+
+        <div class="formgrid">
+          <div>
+            <label data-i18n="Total Leaves Taken This Month">Total Leaves Taken This Month</label>
+            <input id="payrollLeavesInput" type="number" min="0" max="31" value="0">
+          </div>
+          <div>
+            <label data-i18n="Deductible Leaves">Deductible Leaves</label>
+            <input id="payrollDeductibleLeaves" type="text" readonly style="background:#f8fafc;font-weight:700;">
+          </div>
+        </div>
+
+        <div style="margin-top:12px;padding:12px;background:#f8fafc;border-radius:10px;border:1px solid var(--line);">
+          <div class="row">
+            <span data-i18n="Allowed Free Leaves:">Allowed Free Leaves:</span>
+            <b class="font-mono" id="payrollFreeLeaves">2</b>
+          </div>
+          <div class="row" style="margin-top:4px;">
+            <span data-i18n="Leave Deduction Amount:">Leave Deduction Amount:</span>
+            <b class="font-mono text-right" id="payrollLeaveDeductionDisplay" style="color:var(--red);font-size:16px;">PKR 0.00</b>
+          </div>
+          <div class="muted" id="payrollLeaveFormula" style="font-size:12px;margin-top:4px;"></div>
+        </div>
+
+        <div class="btnrow">
+          <button type="button" class="primary" id="savePayrollLeavesBtn" data-i18n="Save Leave Count">Save Leave Count</button>
+        </div>
+      </div>
+
+      <!-- Salary Advance Ledger System -->
+      <h2 data-i18n="Salary Advance Ledger">Salary Advance Ledger</h2>
+      <div class="card">
+        <div class="grid" style="margin-bottom:12px;">
+          <div class="metric-card">
+            <div class="metric-label" data-i18n="Total Advances">Total Advances</div>
+            <div class="metric-value font-mono" id="advanceTotalAll">PKR 0</div>
+            <div class="metric-sub" data-i18n="Cumulative issued">Cumulative issued</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label" data-i18n="Total Recovered">Total Recovered</div>
+            <div class="metric-value font-mono" id="advanceRecoveredAll">PKR 0</div>
+            <div class="metric-sub" data-i18n="Total paid back">Total paid back</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label" data-i18n="Outstanding Advance Balance">Outstanding Advance Balance</div>
+            <div class="metric-value font-mono" id="advanceOutstanding" style="color:var(--red);">PKR 0</div>
+            <div class="metric-sub" data-i18n="Carried forward balance">Carried forward balance</div>
+          </div>
+        </div>
+
+        <!-- Add New Advance Form -->
+        <h3 data-i18n="Add New Advance">Add New Advance</h3>
+        <div class="formgrid">
+          <div>
+            <label data-i18n="Amount (PKR)">Advance Amount (PKR)</label>
+            <input id="advAmount" type="number" min="1" placeholder="5000">
+          </div>
+          <div>
+            <label data-i18n="Date">Date</label>
+            <input id="advDate" type="date">
+          </div>
+        </div>
+        <label data-i18n="Description">Description / Reason</label>
+        <input id="advDesc" placeholder="e.g. Medical emergency advance, home repair">
+        <div class="btnrow">
+          <button type="button" class="primary" id="saveAdvanceBtn" data-i18n="＋ Add Advance">＋ Add Advance</button>
+        </div>
+
+        <hr style="border:0;border-top:1px solid var(--line);margin:20px 0;">
+
+        <!-- Record Recovery Form -->
+        <h3 data-i18n="Advance Recovery for This Month">Advance Recovery for This Month</h3>
+        <p class="muted" style="margin:2px 0 10px;" data-i18n="Repayment is deducted from net monthly salary. Never exceeds outstanding advance balance.">
+          Repayment is deducted from net monthly salary. Recovery cannot exceed the outstanding advance balance.
+        </p>
+        <div class="formgrid">
+          <div>
+            <label data-i18n="Recovery Amount (PKR)">Recovery Amount (PKR)</label>
+            <input id="recAmount" type="number" min="1" placeholder="2000">
+          </div>
+          <div>
+            <label data-i18n="Date">Date</label>
+            <input id="recDate" type="date">
+          </div>
+        </div>
+        <label data-i18n="Note">Note / Reference</label>
+        <input id="recNote" placeholder="e.g. Monthly salary installment recovery">
+        <div class="btnrow">
+          <button type="button" class="gold" id="saveRecoveryBtn" data-i18n="Record Recovery">Record Recovery</button>
+        </div>
+
+        <hr style="border:0;border-top:1px solid var(--line);margin:20px 0;">
+
+        <h3 data-i18n="Advance & Recovery History">Advance & Recovery History</h3>
+        <div id="advanceHistoryList"></div>
+      </div>
+
+      <!-- Payroll Summary -->
+      <h2 data-i18n="Payroll Summary">Payroll Summary</h2>
+      <div class="card" style="background:#ffffff;border:2px solid var(--navy);">
+        <div class="row item">
+          <span data-i18n="Basic Monthly Salary">Basic Monthly Salary</span>
+          <b class="font-mono" id="sumBasic">PKR 50,000</b>
+        </div>
+        <div class="row item">
+          <span data-i18n="Total Extra Income (Overtime, bonus, other)">Total Extra Income (Overtime, attendance bonus, other)</span>
+          <b class="font-mono" id="sumExtra" style="color:var(--green);">+ PKR 0</b>
+        </div>
+        <div class="row item">
+          <span data-i18n="Leave Deduction">Leave Deduction</span>
+          <b class="font-mono" id="sumLeave" style="color:var(--red);">- PKR 0</b>
+        </div>
+        <div class="row item">
+          <span data-i18n="Advance Recovery">Advance Recovery (This Month)</span>
+          <b class="font-mono" id="sumRecovery" style="color:var(--red);">- PKR 0</b>
+        </div>
+        <div class="row item">
+          <span data-i18n="Other Deductions">Other Deductions (Tax, fine, provident)</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <input id="sumOtherDeductions" type="number" min="0" value="0" style="width:110px;padding:6px;font-size:13px;display:inline-block;">
+          </div>
+        </div>
+        
+        <div class="row" style="margin-top:14px;padding-top:12px;border-top:2px solid var(--navy);">
+          <span style="font-size:17px;font-weight:800;" data-i18n="Net Payable Salary">Net Payable Salary</span>
+          <span class="font-mono" id="sumNetPayable" style="font-size:24px;font-weight:900;color:var(--navy);">PKR 50,000</span>
+        </div>
+        <div class="btnrow" style="margin-top:16px;">
+          <button type="button" class="primary" id="archivePayrollBtn" data-i18n="Archive This Month Payroll">Archive This Month Payroll</button>
+        </div>
+      </div>
+
+      <!-- Monthly Payroll Archives -->
+      <h2 data-i18n="Monthly Payroll History">Monthly Payroll History</h2>
+      <div class="card" id="payrollArchiveList"></div>
+    </section>
+
+    <!-- SECTION 4: EXTRA INCOME -->
+    <section id="sec-income" class="hidden">
+      <h2 data-i18n="Attendance Bonus">Attendance Bonus</h2>
+      <div class="card">
+        <p class="muted" style="margin-top:0;" data-i18n="You have 2 allowed leave days. Unused days are paid at daily rate.">
+          You have 2 allowed leave days per month. Unused allowed days are paid as an attendance bonus at your daily salary rate (Monthly salary ÷ 26).
+        </p>
+        <div class="formgrid">
+          <div>
+            <label data-i18n="Allowed leave days used">Allowed leave days used</label>
+            <select id="leaveUsedSelect">
+              <option value="0">0 days used (2 days bonus)</option>
+              <option value="1">1 day used (1 day bonus)</option>
+              <option value="2">2 days used (0 days bonus)</option>
+            </select>
+          </div>
+          <div>
+            <label data-i18n="Daily Rate">Daily Rate</label>
+            <div class="font-mono" id="incomeDailyRate" style="font-size:18px;font-weight:700;margin-top:10px;">PKR 1,923.08</div>
+          </div>
+        </div>
+        <div class="row" style="margin-top:12px;padding:12px;background:#f8fafc;border-radius:10px;">
+          <span class="muted" data-i18n="Calculated Attendance Bonus:">Calculated Attendance Bonus:</span>
+          <b class="font-mono" id="attendanceBonusDisplay" style="color:var(--green);font-size:18px;">PKR 3,846.15</b>
+        </div>
+        <div class="btnrow">
+          <button type="button" class="primary" id="saveAttendanceBtn" data-i18n="Save attendance bonus">Save attendance bonus</button>
+        </div>
+        <p class="muted" id="attendanceSavedStatus" style="font-size:12px;margin:8px 0 0;"></p>
+      </div>
+
+      <h2 data-i18n="Overtime calculator">Overtime calculator</h2>
+      <div class="card">
+        <p class="muted" style="margin-top:0;" data-i18n="Based on stated 9-hour calculation day and 1.5× overtime multiplier.">
+          Calculation basis: 9-hour workday (including break) and 1.5× overtime multiplier.
+        </p>
+        <div class="formgrid">
+          <div>
+            <label data-i18n="Overtime hours">Overtime hours</label>
+            <input id="otHours" type="number" min="0" step="0.5" placeholder="e.g. 4">
+          </div>
+          <div>
+            <label data-i18n="Multiplier">Multiplier</label>
+            <select id="otMultiplier">
+              <option value="1.5">1.5×</option>
+              <option value="2.0">2.0×</option>
+              <option value="1.0">1.0×</option>
+            </select>
+          </div>
+        </div>
+        <div class="row" style="margin-top:10px;">
+          <span class="muted" data-i18n="Calculated hourly base:">Calculated hourly base:</span>
+          <b class="font-mono" id="otHourlyBase">PKR 213.68</b>
+        </div>
+        <div class="row" style="margin-top:4px;">
+          <span class="muted" data-i18n="Overtime payment:">Overtime payment:</span>
+          <b class="font-mono" id="otResult" style="color:var(--green);font-size:18px;">PKR 0.00</b>
+        </div>
+        <div class="btnrow">
+          <button type="button" class="primary" id="saveOTBtn" data-i18n="Add overtime earning">＋ Add overtime earning</button>
+        </div>
+      </div>
+
+      <h2 data-i18n="Other extra income">Other extra income</h2>
+      <div class="card">
+        <div class="formgrid">
+          <div>
+            <label data-i18n="Description">Description</label>
+            <input id="otherTitle" placeholder="e.g. Freelancing, bonus, gift, dividend">
+          </div>
+          <div>
+            <label data-i18n="Amount (PKR)">Amount (PKR)</label>
+            <input id="otherAmount" type="number" min="1" placeholder="3000">
+          </div>
+        </div>
+        <div class="btnrow">
+          <button type="button" class="light" id="saveOtherIncomeBtn" data-i18n="Add other income">＋ Add other income</button>
+        </div>
+      </div>
+
+      <h2 data-i18n="Extra income history">Extra income history</h2>
+      <div class="card" id="extraIncomeHistoryList"></div>
+    </section>
+
+    <!-- SECTION 5: SAVINGS GOALS (TAB #5) -->
+    <section id="sec-goals" class="hidden">
+      <h2 data-i18n="Create a savings goal">Create a savings goal</h2>
+      <div class="card">
+        <label data-i18n="Goal name">Goal name</label>
+        <input id="goalName" placeholder="e.g. iPhone 13 Pro, Umrah, Laptop, Bike upgrade">
+        <div class="formgrid">
+          <div>
+            <label data-i18n="Target amount">Target amount (PKR)</label>
+            <input id="goalTarget" type="number" min="1" placeholder="150000">
+          </div>
+          <div>
+            <label data-i18n="Already saved">Already saved (PKR)</label>
+            <input id="goalSaved" type="number" min="0" value="0">
+          </div>
+        </div>
+        <div class="btnrow">
+          <button type="button" class="primary" id="saveGoalBtn" data-i18n="Add goal">＋ Add goal</button>
+        </div>
+      </div>
+
+      <h2 data-i18n="Your Savings Goals">Your Savings Goals</h2>
+      <div id="goalsList"></div>
+    </section>
+
+    <!-- SECTION 6: MONTHLY RECORDS -->
+    <section id="sec-records" class="hidden">
+      <h2 data-i18n="Monthly records">Monthly records</h2>
+      <div class="card">
+        <p class="muted" style="margin-top:0;" data-i18n="Every completed month is saved separately. Select a month to review its budget, spending, income and leftover money.">
+          Every completed month is saved separately. Select a month to review its budget, spending, income, payroll, and leftover savings.
+        </p>
+        <label data-i18n="Select month">Select month</label>
+        <select id="recordSelect"></select>
+        <div id="recordDetails" style="margin-top:16px;"></div>
+      </div>
+
+      <h2 data-i18n="Carryover savings by category">Carryover savings by category</h2>
+      <div class="card" id="carryoverDetails"></div>
+    </section>
+
+    <!-- SECTION 7: BACKUP / RESTORE -->
+    <section id="sec-backup" class="hidden">
+      <h2 data-i18n="Data Backup & Restore">Data Backup & Restore</h2>
+      
+      <div class="card">
+        <h3 style="margin-top:0;" data-i18n="Export & Import">Export & Import</h3>
+        <p class="muted" data-i18n="Your data stays strictly on this device and browser. Export regular JSON backups to keep a portable copy.">
+          Your data stays strictly on this device and browser. Export regular JSON backups to keep a portable copy.
+        </p>
+        <div class="btnrow">
+          <button type="button" class="primary" id="exportBackupBtn" data-i18n="Export Backup (JSON)">Export Backup (JSON)</button>
+          <button type="button" class="light" id="importBackupBtn" data-i18n="Import Backup">Import Backup</button>
+          <input type="file" id="backupFileInput" accept="application/json" class="hidden">
+        </div>
+      </div>
+
+      <h2 data-i18n="Automatic Local Recovery Snapshots">Automatic Local Recovery Snapshots</h2>
+      <div class="card">
+        <p class="muted" style="margin-top:0;" data-i18n="SmartSalary automatically preserves up to 7 recent local recovery snapshots before changes are saved.">
+          SmartSalary automatically preserves up to 7 recent local recovery snapshots before changes are saved. These are stored securely in this browser.
+        </p>
+        <div class="btnrow">
+          <button type="button" class="light" id="restoreSnapshotBtn" data-i18n="Restore previous auto-backup">Restore previous auto-backup</button>
+        </div>
+        <p class="muted" id="backupStatusText" style="font-size:12px;margin:12px 0 0;"></p>
+      </div>
+
+      <h2 data-i18n="Privacy & Terms">Privacy & Terms</h2>
+      <div class="card">
+        <p class="muted" style="margin-top:0;" data-i18n="SmartSalary is free, offline-first, and does not harvest your financial records.">
+          SmartSalary is free, offline-first, and does not harvest your financial records.
+        </p>
+        <div class="btnrow">
+          <button type="button" class="light sm" onclick="window.open('privacy.html','_blank')" data-i18n="Privacy Policy">Privacy Policy</button>
+          <button type="button" class="light sm" onclick="window.open('terms.html','_blank')" data-i18n="Terms of Use">Terms of Use</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Category Customization Modal / Settings Drawer Section -->
+    <div class="modal-backdrop" id="categoryModal">
+      <div class="modal-box" style="max-width:560px;">
+        <div class="modal-header">
+          <h3 class="modal-title" data-i18n="Customize Budget Categories">Customize Budget Categories</h3>
+          <button class="close-btn" id="closeCatModalBtn" aria-label="Close">✕</button>
+        </div>
+        <p class="muted" id="catEditorHelpText">Set each category allocation. Fixed rupee amounts update automatically.</p>
+        
+        <div id="categoryEditorContainer" style="margin:14px 0;"></div>
+        
+        <div class="row" style="padding:10px 0;border-top:1px solid var(--line);font-size:14px;">
+          <b data-i18n="Total allocated">Total allocated:</b>
+          <b class="font-mono" id="editorAllocatedTotal"></b>
+        </div>
+        <div class="row" style="padding-bottom:10px;font-size:13px;color:var(--ink-muted);">
+          <span data-i18n="Remaining unallocated">Remaining unallocated:</span>
+          <span class="font-mono" id="editorUnallocatedTotal"></span>
+        </div>
+
+        <div id="editorWarningBox" class="warning-box hidden"></div>
+
+        <div class="btnrow" style="justify-content:space-between;">
+          <button type="button" class="light" id="editorAddCatBtn" data-i18n="＋ Add Category">＋ Add Category (Max 10)</button>
+          <button type="button" class="primary" id="editorSaveBtn" data-i18n="Save Budget">Save Budget</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER WITH REQUIRED CREATOR CREDIT & PROFILE AVATAR -->
+    <footer>
+      <div>SmartSalary 3.6.0 Free Offline • Free Personal Budgeting & Payroll</div>
+      <div style="margin-top:6px;">
+        <span class="creator-credit">
+          Created with care by <img src="Hurraim_Khan_Profile_Round(1).png" alt="Hurraim Khan" class="creator-avatar"> <strong>Hurraim Khan</strong>
+        </span>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    /* Professional Inline SVG Icons Library */
+    const ICONS = {
+      household: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 3l9 7.5V20a1.5 1.5 0 0 1-1.5 1.5H4.5A1.5 1.5 0 0 1 3 20v-9.5z"/><polyline points="9 21 9 12 15 12 15 21"/></svg>`,
+      personal: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
+      committee: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/><path d="M8 12a4 4 0 0 1 8 0"/></svg>`,
+      emergency: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
+      family: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
+      carbike: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="8" rx="2"/><circle cx="7.5" cy="19" r="2.5"/><circle cx="16.5" cy="19" r="2.5"/><path d="M5 11l2.5-6h9l2.5 6"/><line x1="9" y1="14" x2="15" y2="14"/></svg>`,
+      custom: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="1.5"/></svg>`
+    };
+
+    function getCategoryIcon(name, size = 20) {
+      const n = (name || '').toLowerCase();
+      let key = 'custom';
+      if (n.includes('house') || n.includes('home') || n.includes('گھر')) key = 'household';
+      else if (n.includes('person') || n.includes('ذاتی') || n.includes('self')) key = 'personal';
+      else if (n.includes('comm') || n.includes('کمیٹی')) key = 'committee';
+      else if (n.includes('emerg') || n.includes('ہنگامی') || n.includes('fund')) key = 'emergency';
+      else if (n.includes('fam') || n.includes('خاندان')) key = 'family';
+      else if (n.includes('car') || n.includes('bike') || n.includes('گاڑی') || n.includes('motor')) key = 'carbike';
+      return ICONS[key].replace('width="20" height="20"', `width="${size}" height="${size}"`);
+    }
+
+    const colors = ['#d97706', '#2563eb', '#7c3aed', '#059669', '#dc2626', '#0891b2', '#db2777', '#4b5563', '#65a30d', '#ea580c'];
+    const monthKey = () => {
+      const d = new Date();
+      return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+    };
+    const monthLabel = k => {
+      const [y, m] = (k || monthKey()).split('-').map(Number);
+      return new Date(y, m - 1, 1).toLocaleString('en', { month: 'long', year: 'numeric' });
+    };
+    const money = n => 'PKR ' + (Number(n) || 0).toLocaleString('en-PK', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+    const esc = s => String(s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+    const defaultCategories = [
+      { name: 'Household', amount: 17500, pct: 35, color: '#d97706' },
+      { name: 'Personal', amount: 7500, pct: 15, color: '#2563eb' },
+      { name: 'Committee', amount: 12075, pct: 24.15, color: '#7c3aed' },
+      { name: 'Emergency Fund', amount: 5000, pct: 10, color: '#059669' },
+      { name: 'Family Extra', amount: 7925, pct: 15.85, color: '#dc2626' }
+    ];
+
+    const defaults = {
+      version: '3.6.0',
+      salary: 50000,
+      salaryConfirmed: false,
+      budgetMode: 'amount', // Default: Fixed Rupee amounts (PKR)
+      categories: defaultCategories,
+      expenses: [],
+      goals: [{ name: 'iPhone 13 Pro', target: 150000, saved: 1000 }],
+      attendance: { leaveUsed: 0, month: '' },
+      income: [],
+      currentMonth: monthKey(),
+      archives: [],
+      carryover: {},
+      language: 'en',
+      vehicles: { carBike: false, familyExtra: true },
+      // Salary & Payroll Ledger:
+      advances: [],
+      recoveries: [],
+      payrollLeaves: 0,
+      payrollOtherDeductions: 0,
+      payrollArchives: []
+    };
+
+    let data = structuredClone(defaults);
+
+    /* Safe Data Migration & Backward Compatibility */
+    try {
+      const stored = localStorage.getItem('ss360') || localStorage.getItem('ss343') || localStorage.getItem('ss32') || localStorage.getItem('ss31safe') || localStorage.getItem('ss30') || localStorage.getItem('ss20');
+      if (stored) {
+        const old = JSON.parse(stored);
+        data = { ...defaults, ...old };
+        data.salaryConfirmed = old.salaryConfirmed !== undefined ? old.salaryConfirmed : !!old.salary;
+        data.budgetMode = old.budgetMode || 'amount'; // Default to amount mode
+        const salaryVal = data.salaryConfirmed ? Number(data.salary || 0) : 50000;
+        data.categories = (old.categories || defaultCategories).map((c, i) => {
+          const pct = Number.isFinite(Number(c.pct)) ? Number(c.pct) : (salaryVal ? Number(c.amount || 0) / salaryVal * 100 : 0);
+          const amount = Number.isFinite(Number(c.amount)) && Number(c.amount) > 0 ? Number(c.amount) : Math.round(salaryVal * pct / 100);
+          return {
+            name: c.name,
+            pct: Number(pct.toFixed(2)),
+            amount: Math.round(amount),
+            color: c.color || colors[i % colors.length]
+          };
+        });
+        data.expenses = (data.expenses || []).map(e => ({ ...e, monthKey: e.monthKey || data.currentMonth }));
+        data.income = (data.income || []).map(x => ({ ...x, monthKey: x.monthKey || data.currentMonth }));
+        data.advances = data.advances || [];
+        data.recoveries = data.recoveries || [];
+        data.archives = data.archives || [];
+        data.carryover = data.carryover || {};
+        data.payrollArchives = data.payrollArchives || [];
+        data.vehicles = data.vehicles || { carBike: false, familyExtra: true };
+        data.language = data.language || 'en';
+      }
+    } catch (e) {
+      console.warn('SmartSalary: Migration notice', e);
+    }
+
+    const activeSalary = () => data.salaryConfirmed ? Number(data.salary || 0) : 50000;
+    const dailyRate = () => activeSalary() / 26; // 26 working days calculation basis
+    const hourlyRate = () => dailyRate() / 9; // 9-hour basis
+
+    function syncBudgetAmounts() {
+      const sal = activeSalary();
+      if (data.budgetMode === 'percent') {
+        data.categories.forEach(c => {
+          c.amount = Math.round(sal * (Number(c.pct) || 0) / 100);
+        });
+      } else {
+        data.categories.forEach(c => {
+          c.pct = sal > 0 ? Number(((Number(c.amount) || 0) / sal * 100).toFixed(2)) : 0;
+        });
+      }
+    }
+
+    const save = () => {
+      const key = 'ss360';
+      const snapKey = 'ss360_autobackups';
+      try {
+        const previous = localStorage.getItem(key);
+        if (previous) {
+          let snapshots = JSON.parse(localStorage.getItem(snapKey) || '[]');
+          snapshots.unshift({ savedAt: new Date().toISOString(), payload: previous });
+          snapshots = snapshots.slice(0, 7);
+          localStorage.setItem(snapKey, JSON.stringify(snapshots));
+        }
+        syncBudgetAmounts();
+        const jsonStr = JSON.stringify(data);
+        localStorage.setItem(key, jsonStr);
+        localStorage.setItem('ss343', jsonStr); // Mirror for legacy compatibility
+      } catch (err) {
+        console.warn('SmartSalary local snapshot error', err);
+      }
+    };
+
+    const familyCat = () => data.categories.find(c => c.name.toLowerCase().includes('family'));
+    const monthExpenses = () => data.expenses.filter(e => (e.monthKey || data.currentMonth) === data.currentMonth);
+    const spentByCategory = name => monthExpenses().filter(e => e.category === name).reduce((sum, e) => sum + Number(e.amount || 0), 0);
+
+    /* Attendance Bonus & Overtime */
+    const attendanceBonus = () => {
+      const used = Number(data.payrollLeaves !== undefined ? data.payrollLeaves : data.attendance?.leaveUsed || 0);
+      return Math.max(0, 2 - used) * dailyRate();
+    };
+
+    const overtimePayment = () => {
+      const hrs = Number(document.getElementById('otHours')?.value || 0);
+      const mult = Number(document.getElementById('otMultiplier')?.value || 1.5);
+      return Math.max(0, hrs * hourlyRate() * mult);
+    };
+
+    const totalExtraIncome = () => {
+      const extraList = data.income.filter(x => (x.monthKey || data.currentMonth) === data.currentMonth);
+      return extraList.reduce((s, x) => s + Number(x.amount || 0), 0) + attendanceBonus();
+    };
+
+    /* Salary Advance Ledger Calculations */
+    const totalAdvances = () => data.advances.reduce((s, a) => s + Number(a.amount || 0), 0);
+    const totalRecoveries = () => data.recoveries.reduce((s, r) => s + Number(r.amount || 0), 0);
+    const outstandingAdvance = () => Math.max(0, totalAdvances() - totalRecoveries());
+    const currentMonthRecoveries = () => data.recoveries.filter(r => (r.monthKey || data.currentMonth) === data.currentMonth).reduce((s, r) => s + Number(r.amount || 0), 0);
+
+    /* Leave Deductions (2 free leaves, 26 days basis) */
+    const deductibleLeaves = () => Math.max(0, Number(data.payrollLeaves || 0) - 2);
+    const leaveDeduction = () => deductibleLeaves() * dailyRate();
+
+    /* Net Payable Salary */
+    const netPayableSalary = () => {
+      const base = activeSalary();
+      const extra = totalExtraIncome();
+      const lDed = leaveDeduction();
+      const aRec = currentMonthRecoveries();
+      const other = Number(data.payrollOtherDeductions || 0);
+      return base + extra - lDed - aRec - other;
+    };
+
+    function checkMonthRollover() {
+      const now = monthKey();
+      if (data.currentMonth !== now) {
+        archiveMonth(data.currentMonth);
+        data.currentMonth = now;
+        data.attendance = { leaveUsed: 0, month: '' };
+        data.payrollLeaves = 0;
+        data.payrollOtherDeductions = 0;
+        save();
+      }
+    }
+
+    function archiveMonth(oldKey) {
+      if (!oldKey || data.archives.some(a => a.monthKey === oldKey)) return;
+      const oldExpenses = data.expenses.filter(e => (e.monthKey || oldKey) === oldKey);
+      const oldIncome = data.income.filter(e => (e.monthKey || oldKey) === oldKey);
+      const breakdown = data.categories.map(c => {
+        const spent = oldExpenses.filter(e => e.category === c.name).reduce((s, e) => s + Number(e.amount || 0), 0);
+        const remaining = c.amount - spent;
+        return {
+          name: c.name,
+          budget: c.amount,
+          spent,
+          remaining,
+          carried: Math.max(0, remaining)
+        };
+      });
+      breakdown.forEach(c => {
+        data.carryover[c.name] = (Number(data.carryover[c.name]) || 0) + c.carried;
+      });
+      data.archives.push({
+        monthKey: oldKey,
+        label: monthLabel(oldKey),
+        salary: activeSalary(),
+        categories: breakdown,
+        expenses: oldExpenses,
+        income: oldIncome,
+        totalExpenses: oldExpenses.reduce((s, e) => s + Number(e.amount || 0), 0),
+        totalExtraIncome: oldIncome.reduce((s, e) => s + Number(e.amount || 0), 0) + attendanceBonus(),
+        netPayable: netPayableSalary(),
+        closedAt: new Date().toISOString()
+      });
+    }
+
+    checkMonthRollover();
+
+    /* Tab Switcher */
+    function tab(tabId) {
+      document.querySelectorAll('main section').forEach(s => s.classList.add('hidden'));
+      const activeSec = document.getElementById('sec-' + tabId);
+      if (activeSec) activeSec.classList.remove('hidden');
+
+      document.querySelectorAll('.tab').forEach(b => {
+        b.classList.toggle('active', b.dataset.tab === tabId);
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    window.tab = tab;
+
+    document.querySelectorAll('.tab').forEach(b => {
+      b.onclick = () => b.dataset.tab && tab(b.dataset.tab);
+    });
+
+    /* Urdu / English Translations */
+    const translations = {
+      'Overview': 'جائزہ',
+      'Expenses': 'اخراجات',
+      'Salary & Payroll': 'تنخواہ اور پے رول',
+      'Extra Income': 'اضافی آمدنی',
+      'Savings Goals': 'بچت کے اہداف',
+      'Monthly Records': 'ماہانہ ریکارڈ',
+      'Backup / Restore': 'بیک اپ اور بحالی',
+      'Your salary. Your goals. Your control.': 'آپ کی تنخواہ، آپ کے اہداف، آپ کا اختیار۔',
+      'TOTAL MONTHLY INCOME ESTIMATE': 'کل ماہانہ متوقع آمدنی',
+      'Edit salary': 'تنخواہ تبدیل کریں',
+      'Monthly Salary': 'ماہانہ تنخواہ',
+      'Total Allocated': 'کل مختص رقم',
+      'Unallocated': 'غیر مختص رقم',
+      'Total Expenses': 'اس ماہ کے اخراجات',
+      'Remaining Balance': 'باقی رقم',
+      'Monthly Budget Allocations': 'ماہانہ بجٹ کی تقسیم',
+      'Carryover savings (previous months)': 'پچھلے مہینوں کی بچت',
+      'Add expense': 'خرچ درج کریں',
+      'Add extra income': 'اضافی آمدنی شامل کریں',
+      'View Payroll': 'پے رول دیکھیں',
+      'Record an expense': 'نیا خرچ درج کریں',
+      'Description': 'تفصیل',
+      'Amount (PKR)': 'رقم (روپے)',
+      'Category': 'کیٹیگری',
+      'Date': 'تاریخ',
+      'Save expense': 'خرچ محفوظ کریں',
+      'Expense history': 'اخراجات کی تاریخ',
+      'Family expense tracker': 'خاندانی اخراجات کا ریکارڈ',
+      'Who received the money?': 'رقم کس کو دی؟',
+      'Reason': 'وجہ',
+      'Save family payment': 'خاندانی ادائیگی محفوظ کریں',
+      'FAMILY EXTRA REMAINING': 'خاندانی بجٹ باقی',
+      'USED THIS MONTH': 'اس ماہ استعمال شدہ',
+      'Salary & Payroll Management': 'تنخواہ اور پے رول کا انتظام',
+      'Monthly Basic Salary': 'ماہانہ بنیادی تنخواہ',
+      'Daily Salary (26 days basis)': 'روزانہ تنخواہ (26 دنوں کی بنیاد)',
+      'Leave Deductions & Rules': 'چھٹیوں کے قواعد اور کٹوتی',
+      'Total Leaves Taken This Month': 'اس ماہ کل لی گئی چھٹیاں',
+      'Deductible Leaves': 'کٹوتی والی چھٹیاں',
+      'Salary Advance Ledger': 'تنخواہ ایڈوانس کھاتہ',
+      'Total Advances': 'کل ایڈوانس',
+      'Total Recovered': 'کل وصول شدہ',
+      'Outstanding Advance Balance': 'بقایا ایڈوانس',
+      'Add New Advance': 'نیا ایڈوانس شامل کریں',
+      'Advance Recovery for This Month': 'اس ماہ کی ایڈوانس کٹوتی',
+      'Record Recovery': 'کٹوتی درج کریں',
+      'Advance & Recovery History': 'ایڈوانس اور واپسی کی تاریخ',
+      'Payroll Summary': 'پے رول کا خلاصہ',
+      'Basic Monthly Salary': 'بنیادی ماہانہ تنخواہ',
+      'Total Extra Income (Overtime, bonus, other)': 'کل اضافی آمدنی (اوور ٹائم، بونس، دیگر)',
+      'Leave Deduction': 'چھٹیوں کی کٹوتی',
+      'Advance Recovery': 'ایڈوانس کٹوتی',
+      'Other Deductions': 'دیگر کٹوتیاں',
+      'Net Payable Salary': 'خالص قابل ادا تنخواہ',
+      'Archive This Month Payroll': 'اس ماہ کا پے رول محفوظ کریں',
+      'Monthly Payroll History': 'ماہانہ پے رول کی تاریخ',
+      'Attendance Bonus': 'حاضری بونس',
+      'Allowed leave days used': 'استعمال شدہ اجازت شدہ چھٹیاں',
+      'Daily Rate': 'روزانہ اجرت',
+      'Save attendance bonus': 'حاضری بونس محفوظ کریں',
+      'Overtime calculator': 'اوور ٹائم کیلکولیٹر',
+      'Overtime hours': 'اوور ٹائم گھنٹے',
+      'Multiplier': 'ضرب (ریٹ)',
+      'Add overtime earning': 'اوور ٹائم رقم شامل کریں',
+      'Other extra income': 'دیگر اضافی آمدنی',
+      'Add other income': 'دیگر آمدنی شامل کریں',
+      'Extra income history': 'اضافی آمدنی کی تاریخ',
+      'Create a savings goal': 'نیا بچت کا ہدف بنائیں',
+      'Goal name': 'ہدف کا نام',
+      'Target amount': 'مطلوبہ رقم',
+      'Already saved': 'اب تک جمع رقم',
+      'Add goal': 'ہدف شامل کریں',
+      'Your Savings Goals': 'آپ کے بچت کے اہداف',
+      'Select month': 'مہینہ منتخب کریں',
+      'Carryover savings by category': 'ہر مد کے حساب سے بچت',
+      'Data Backup & Restore': 'ڈیٹا بیک اپ اور بحالی',
+      'Export Backup (JSON)': 'بیک اپ ڈاؤن لوڈ کریں (JSON)',
+      'Import Backup': 'بیک اپ بحال کریں',
+      'Automatic Local Recovery Snapshots': 'خودکار مقامی بحالی اسنیپ شاٹس',
+      'Restore previous auto-backup': 'اسنیپ شاٹ بحال کریں',
+      'Privacy Policy': 'پرائیویسی پالیسی',
+      'Terms of Use': 'شرائط و ضوابط',
+      'Menu & Preferences': 'مینو اور ترجیحات',
+      'Language': 'زبان (Language)',
+      'Offline Support': 'آف لائن سپورٹ',
+      'App Guide': 'ایپ گائیڈ',
+      'Settings': 'سیٹنگز',
+      'About SmartSalary': 'اسمارٹ سیلری کے بارے میں',
+      'Budget Calculation Mode': 'بجٹ حساب کا طریقہ',
+      'Rupee Amount (PKR) [Default]': 'روپے کی رقم (PKR) [پہلے سے طے شدہ]',
+      'Percentage Mode (%)': 'فیصد موڈ (%)',
+      'Optional Budget Categories': 'اختیاری بجٹ کیٹیگریز',
+      'Save Preferences': 'ترجیحات محفوظ کریں',
+      'Customize Budget Categories': 'بجٹ کیٹیگریز ترتیب دیں',
+      'Customize Categories': 'کیٹیگریز تبدیل کریں',
+      'Save Budget': 'بجٹ محفوظ کریں',
+      'Start Guided Tour': 'رہنمائی شروع کریں',
+      'Skip Guide': 'گائیڈ چھوڑیں',
+      'Welcome to SmartSalary!': 'اسمارٹ سیلری میں خوش آمدید!',
+      'Created with care by Hurraim Khan': 'بڑی محبت سے تیار کردہ از Hurraim Khan'
+    };
+
+    function applyLanguage() {
+      const ur = data.language === 'ur';
+      document.documentElement.lang = ur ? 'ur' : 'en';
+      document.documentElement.dir = ur ? 'rtl' : 'ltr';
+
+      const reverse = Object.fromEntries(Object.entries(translations).map(([en, urText]) => [urText, en]));
+      
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.dataset.i18n;
+        el.textContent = ur ? (translations[key] || key) : (reverse[key] || key);
+      });
+
+      document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+        const ph = el.dataset.i18nPh;
+        el.placeholder = ur ? (translations[ph] || ph) : ph;
+      });
+
+      document.getElementById('langEnBtn')?.classList.toggle('active', !ur);
+      document.getElementById('langUrBtn')?.classList.toggle('active', ur);
+    }
+
+    /* RENDER ALL APPLICATION SECTIONS */
+    function render() {
+      syncBudgetAmounts();
+      const baseSalary = activeSalary();
+      const extraTotal = totalExtraIncome();
+      const totalIncome = baseSalary + extraTotal;
+      const allExpenses = monthExpenses();
+      const spentTotal = allExpenses.reduce((s, e) => s + Number(e.amount || 0), 0);
+      const remainingBalance = totalIncome - spentTotal - currentMonthRecoveries();
+
+      // Header Hero
+      document.getElementById('incomeTotal').textContent = money(totalIncome);
+      document.getElementById('incomeBreakdown').textContent = `${monthLabel(data.currentMonth)} • ${data.salaryConfirmed ? 'Basic' : 'Demo Salary'} ${money(baseSalary)} • Extra ${money(extraTotal)}`;
+
+      // Overview Metrics
+      const totalAllocated = data.categories.reduce((s, c) => s + Number(c.amount || 0), 0);
+      const unallocated = baseSalary - totalAllocated;
+      const allocatedPct = baseSalary > 0 ? (totalAllocated / baseSalary * 100).toFixed(1) : '0';
+      const unallocatedPct = baseSalary > 0 ? (unallocated / baseSalary * 100).toFixed(1) : '0';
+
+      document.getElementById('mSalary').textContent = money(baseSalary);
+      document.getElementById('mSalarySub').textContent = data.salaryConfirmed ? 'Confirmed salary' : 'Demo (editable)';
+      document.getElementById('mAllocated').textContent = money(totalAllocated);
+      document.getElementById('mAllocatedSub').textContent = `${allocatedPct}% of salary`;
+      document.getElementById('mUnallocated').textContent = money(unallocated);
+      document.getElementById('mUnallocatedSub').textContent = `${unallocatedPct}% unassigned`;
+      document.getElementById('mExpenses').textContent = money(spentTotal);
+      document.getElementById('mExpensesSub').textContent = `${allExpenses.length} entries this month`;
+      document.getElementById('mRemaining').textContent = money(remainingBalance);
+      document.getElementById('mRemainingSub').textContent = remainingBalance >= 0 ? 'Remaining cash' : 'Deficit / overspent';
+
+      // Allocation Warning
+      const warnBox = document.getElementById('allocationWarning');
+      if (totalAllocated > baseSalary) {
+        warnBox.classList.remove('hidden');
+        warnBox.innerHTML = `⚠️ <b>Warning:</b> Total allocated budget (${money(totalAllocated)}) exceeds monthly basic salary (${money(baseSalary)}) by ${money(totalAllocated - baseSalary)}! Please reduce allocations.`;
+      } else {
+        warnBox.classList.add('hidden');
+      }
+
+      // Budget Category Cards on Overview
+      renderCategoryCards();
+
+      // Carryover overview
+      const carryEntries = Object.entries(data.carryover).filter(([k, v]) => Number(v) > 0);
+      const carryTotal = carryEntries.reduce((a, [k, v]) => a + Number(v), 0);
+      document.getElementById('carryoverOverview').innerHTML = carryEntries.length
+        ? carryEntries.map(([k, v]) => `<div class="row item"><span>${esc(k)}</span><b class="font-mono">${money(v)}</b></div>`).join('') +
+          `<div class="row" style="margin-top:10px;padding-top:10px;border-top:1px solid var(--line);"><b>Total saved from previous months</b><b class="font-mono" style="color:var(--green);font-size:16px;">${money(carryTotal)}</b></div>`
+        : '<p class="muted">No previous-month leftover saved yet. Any unspent budget will be moved here automatically when the month changes.</p>';
+
+      // Expenses Category Dropdown
+      document.getElementById('expCat').innerHTML = data.categories.map(c => `<option value="${esc(c.name)}">${esc(c.name)}</option>`).join('');
+
+      // Expense History
+      document.getElementById('expenseCount').textContent = `${allExpenses.length} expenses recorded`;
+      document.getElementById('expenseHistoryList').innerHTML = allExpenses.length
+        ? allExpenses.slice().reverse().map((e, idx) => {
+            const originalIndex = data.expenses.indexOf(e);
+            return `<div class="item row">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div class="cat-icon-badge" style="background:#0f172a;width:32px;height:32px;">${getCategoryIcon(e.category, 18)}</div>
+                <div>
+                  <b>${esc(e.title)}</b>
+                  <div class="muted">${esc(e.category)} • ${esc(e.date || 'Today')}</div>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <b class="font-mono">${money(e.amount)}</b>
+                <button type="button" class="red sm" onclick="delExpense(${originalIndex})">✕</button>
+              </div>
+            </div>`;
+          }).join('')
+        : '<p class="muted">No expenses recorded this month.</p>';
+
+      // Family Extra Tracker
+      const fc = familyCat();
+      const famSection = document.getElementById('familyExtraSection');
+      if (fc && data.vehicles?.familyExtra) {
+        famSection.classList.remove('hidden');
+        const fspent = spentByCategory(fc.name);
+        const fleft = (fc.amount || 0) - fspent;
+        document.getElementById('familyRemaining').textContent = money(fleft);
+        document.getElementById('familySpent').textContent = money(fspent);
+      } else {
+        famSection.classList.add('hidden');
+      }
+
+      // Salary & Payroll Section
+      renderPayroll();
+
+      // Extra Income Section
+      renderExtraIncome();
+
+      // Savings Goals
+      renderGoals();
+
+      // Monthly Records
+      renderRecords();
+
+      // Settings in 3-dot menu
+      document.getElementById('modeAmount').checked = data.budgetMode === 'amount';
+      document.getElementById('modePercent').checked = data.budgetMode === 'percent';
+      document.getElementById('menuCarBike').checked = !!data.vehicles?.carBike;
+      document.getElementById('menuFamilyExtra').checked = data.vehicles?.familyExtra !== false;
+
+      updateBackupStatus();
+      save();
+      applyLanguage();
+    }
+
+    function renderCategoryCards() {
+      const container = document.getElementById('catCardsGrid');
+      container.innerHTML = data.categories.map((c, idx) => {
+        const spent = spentByCategory(c.name);
+        const remaining = c.amount - spent;
+        const pct = c.amount > 0 ? Math.min(100, Math.round(spent / c.amount * 100)) : 0;
+        const isOver = remaining < 0;
+
+        return `<div class="cat-card">
+          <div class="cat-header">
+            <div class="cat-title-group">
+              <div class="cat-icon-badge" style="background:${c.color};">
+                ${getCategoryIcon(c.name, 22)}
+              </div>
+              <div>
+                <div class="cat-name">${esc(c.name)}</div>
+                <div class="cat-pct font-mono">${c.pct || 0}% of salary</div>
+              </div>
+            </div>
+            <div class="text-right">
+              <div class="cat-budget font-mono">${money(c.amount)}</div>
+              <div class="muted font-mono" style="font-size:11px;">Allocated</div>
+            </div>
+          </div>
+          <div class="cat-stats font-mono">
+            <span>Spent: <b>${money(spent)}</b></span>
+            <span style="color:${isOver ? 'var(--red)' : 'var(--green)'};">
+              <b>${money(Math.abs(remaining))}</b> ${isOver ? 'over budget' : 'left'}
+            </span>
+          </div>
+          <div class="progress">
+            <span style="width:${pct}%;background:${isOver ? 'var(--red)' : c.color};"></span>
+          </div>
+          <div class="btnrow" style="margin-top:10px;">
+            <button type="button" class="light sm" style="width:100%;" onclick="quickExpenseCategory('${esc(c.name)}')">＋ Add expense to this category</button>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    function renderPayroll() {
+      const sal = activeSalary();
+      const dRate = dailyRate();
+      document.getElementById('payrollBasicDisplay').textContent = money(sal);
+      document.getElementById('payrollDailyDisplay').textContent = money(dRate);
+
+      const totalL = Number(data.payrollLeaves || 0);
+      const dedL = Math.max(0, totalL - 2);
+      const lDedAmount = dedL * dRate;
+
+      document.getElementById('payrollLeavesInput').value = totalL;
+      document.getElementById('payrollDeductibleLeaves').value = `${dedL} days`;
+      document.getElementById('payrollFreeLeaves').textContent = Math.min(2, totalL) + ' of 2';
+      document.getElementById('payrollLeaveDeductionDisplay').textContent = money(lDedAmount);
+      document.getElementById('payrollLeaveFormula').textContent = `Calculation: ${dedL} deductible days × ${money(dRate)} = ${money(lDedAmount)}`;
+
+      // Advance metrics
+      const tAdv = totalAdvances();
+      const tRec = totalRecoveries();
+      const outBal = outstandingAdvance();
+      const curRec = currentMonthRecoveries();
+
+      document.getElementById('advanceTotalAll').textContent = money(tAdv);
+      document.getElementById('advanceRecoveredAll').textContent = money(tRec);
+      document.getElementById('advanceOutstanding').textContent = money(outBal);
+
+      // Advance History
+      const combinedHistory = [
+        ...data.advances.map(a => ({ ...a, kind: 'advance' })),
+        ...data.recoveries.map(r => ({ ...r, kind: 'recovery' }))
+      ].sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+
+      document.getElementById('advanceHistoryList').innerHTML = combinedHistory.length
+        ? combinedHistory.map((item, i) => {
+            const isAdv = item.kind === 'advance';
+            return `<div class="item row">
+              <div>
+                <span class="badge-pill ${isAdv ? 'badge-gold' : 'badge-green'}">${isAdv ? 'Advance Issued' : 'Monthly Recovery'}</span>
+                <b style="margin-left:6px;">${esc(item.description || item.note || (isAdv ? 'Salary Advance' : 'Recovery'))}</b>
+                <div class="muted font-mono" style="font-size:11.5px;">${esc(item.date || '—')}</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <b class="font-mono" style="color:${isAdv ? 'var(--navy)' : 'var(--green)'};">${isAdv ? '+' : '-'}${money(item.amount)}</b>
+                <button type="button" class="red sm" onclick="delAdvanceItem('${item.kind}', '${item.id}')">✕</button>
+              </div>
+            </div>`;
+          }).join('')
+        : '<p class="muted">No advance or recovery records yet.</p>';
+
+      // Summary Card
+      const extraInc = totalExtraIncome();
+      const otherDed = Number(data.payrollOtherDeductions || 0);
+      const net = sal + extraInc - lDedAmount - curRec - otherDed;
+
+      document.getElementById('sumBasic').textContent = money(sal);
+      document.getElementById('sumExtra').textContent = `+ ${money(extraInc)}`;
+      document.getElementById('sumLeave').textContent = `- ${money(lDedAmount)}`;
+      document.getElementById('sumRecovery').textContent = `- ${money(curRec)}`;
+      document.getElementById('sumOtherDeductions').value = otherDed;
+      document.getElementById('sumNetPayable').textContent = money(net);
+
+      // Payroll archives
+      document.getElementById('payrollArchiveList').innerHTML = data.payrollArchives.length
+        ? data.payrollArchives.slice().reverse().map(p => `
+            <div class="item">
+              <div class="row">
+                <b>${esc(p.monthLabel)}</b>
+                <b class="font-mono" style="font-size:16px;color:var(--navy);">${money(p.netPayable)}</b>
+              </div>
+              <div class="muted font-mono" style="font-size:12px;">
+                Basic: ${money(p.basicSalary)} • Extra: +${money(p.extraIncome)} • Leave Ded: -${money(p.leaveDeduction)} • Advance Rec: -${money(p.advanceRecovery)}
+              </div>
+            </div>
+          `).join('')
+        : '<p class="muted">No archived payroll records yet. Click "Archive This Month Payroll" to save a snapshot.</p>';
+    }
+
+    function renderExtraIncome() {
+      const dRate = dailyRate();
+      document.getElementById('incomeDailyRate').textContent = money(dRate);
+      document.getElementById('otHourlyBase').textContent = money(hourlyRate());
+      document.getElementById('leaveUsedSelect').value = String(Math.min(2, Number(data.payrollLeaves || 0)));
+      document.getElementById('attendanceBonusDisplay').textContent = money(attendanceBonus());
+      document.getElementById('otResult').textContent = money(overtimePayment());
+
+      const list = data.income.filter(x => (x.monthKey || data.currentMonth) === data.currentMonth);
+      document.getElementById('extraIncomeHistoryList').innerHTML = list.length
+        ? list.slice().reverse().map(item => {
+            const origIndex = data.income.indexOf(item);
+            return `<div class="item row">
+              <div>
+                <b>${esc(item.title)}</b>
+                <div class="muted">${esc(item.type || 'Income')} • ${esc(item.date || 'Today')}</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <b class="font-mono" style="color:var(--green);">${money(item.amount)}</b>
+                <button type="button" class="red sm" onclick="delIncome(${origIndex})">✕</button>
+              </div>
+            </div>`;
+          }).join('')
+        : '<p class="muted">No extra income recorded this month.</p>';
+    }
+
+    function renderGoals() {
+      const container = document.getElementById('goalsList');
+      container.innerHTML = data.goals.length
+        ? data.goals.map((g, i) => {
+            const pct = g.target > 0 ? Math.min(100, Math.round(g.saved / g.target * 100)) : 0;
+            const remaining = Math.max(0, g.target - g.saved);
+            return `<div class="card" style="margin-bottom:12px;">
+              <div class="row">
+                <b style="font-size:16px;">${esc(g.name)}</b>
+                <button type="button" class="red sm" onclick="delGoal(${i})">Remove</button>
+              </div>
+              <div class="row muted font-mono" style="margin:8px 0;">
+                <span>Saved: <b>${money(g.saved)}</b></span>
+                <span>Target: <b>${money(g.target)}</b></span>
+              </div>
+              <div class="progress">
+                <span style="width:${pct}%;background:var(--blue);"></span>
+              </div>
+              <div class="row muted" style="margin-top:6px;font-size:12.5px;">
+                <span>${pct}% complete</span>
+                <span class="font-mono">${money(remaining)} remaining</span>
+              </div>
+              <div class="btnrow" style="margin-top:10px;">
+                <button type="button" class="light sm" onclick="addGoalSavings(${i})">＋ Add savings</button>
+              </div>
+            </div>`;
+          }).join('')
+        : '<div class="card muted">No savings goals created yet. Add one above!</div>';
+    }
+
+    function renderRecords() {
+      const sel = document.getElementById('recordSelect');
+      let all = data.archives.slice().sort((a, b) => b.monthKey.localeCompare(a.monthKey));
+      if (!all.some(a => a.monthKey === data.currentMonth)) {
+        all.unshift({ monthKey: data.currentMonth, label: monthLabel(data.currentMonth), live: true });
+      }
+      sel.innerHTML = all.map(a => `<option value="${a.monthKey}">${a.label}${a.live ? ' (Current Active Month)' : ''}</option>`).join('');
+
+      const chosen = all.find(a => a.monthKey === sel.value) || all[0];
+      const details = document.getElementById('recordDetails');
+      if (!chosen) {
+        details.innerHTML = '<p class="muted">No records available.</p>';
+        return;
+      }
+
+      if (chosen.live) {
+        const ex = monthExpenses();
+        const inc = data.income.filter(x => (x.monthKey || data.currentMonth) === data.currentMonth);
+        details.innerHTML = `
+          <div class="row item"><span>Basic Monthly Salary</span><b class="font-mono">${money(activeSalary())}</b></div>
+          <div class="row item"><span>Total Expenses</span><b class="font-mono">${money(ex.reduce((s, x) => s + Number(x.amount || 0), 0))}</b></div>
+          <div class="row item"><span>Total Extra Income</span><b class="font-mono" style="color:var(--green);">${money(inc.reduce((s, x) => s + Number(x.amount || 0), 0) + attendanceBonus())}</b></div>
+          <div class="row item"><span>Net Payable Salary</span><b class="font-mono" style="color:var(--navy);font-size:16px;">${money(netPayableSalary())}</b></div>
+          <h3 style="margin-top:14px;">Category Balances</h3>
+          ${data.categories.map(c => `
+            <div class="item row">
+              <span>${esc(c.name)} (Budget: ${money(c.amount)})</span>
+              <b class="font-mono">${money(c.amount - spentByCategory(c.name))} remaining</b>
+            </div>
+          `).join('')}
+        `;
+      } else {
+        details.innerHTML = `
+          <div class="row item"><span>Basic Salary</span><b class="font-mono">${money(chosen.salary)}</b></div>
+          <div class="row item"><span>Total Expenses</span><b class="font-mono">${money(chosen.totalExpenses)}</b></div>
+          <div class="row item"><span>Total Extra Income</span><b class="font-mono" style="color:var(--green);">${money(chosen.totalExtraIncome)}</b></div>
+          <div class="row item"><span>Net Payable Salary</span><b class="font-mono" style="color:var(--navy);font-size:16px;">${money(chosen.netPayable || chosen.salary)}</b></div>
+          <h3 style="margin-top:14px;">Category Breakdown</h3>
+          ${(chosen.categories || []).map(c => `
+            <div class="item">
+              <div class="row"><b>${esc(c.name)}</b><b class="font-mono">${money(c.remaining)} remaining</b></div>
+              <div class="muted font-mono" style="font-size:12px;">Budget: ${money(c.budget)} • Spent: ${money(c.spent)} • Carried: ${money(c.carried)}</div>
+            </div>
+          `).join('')}
+        `;
+      }
+
+      // Carryover details
+      const cEntries = Object.entries(data.carryover).filter(([k, v]) => Number(v) > 0);
+      document.getElementById('carryoverDetails').innerHTML = cEntries.length
+        ? cEntries.map(([k, v]) => `<div class="item row"><span>${esc(k)}</span><b class="font-mono">${money(v)}</b></div>`).join('')
+        : '<p class="muted">No carryover savings yet.</p>';
+    }
+
+    document.getElementById('recordSelect').onchange = renderRecords;
+
+    /* Category Editor (Amount Mode vs Percentage Mode) */
+    function openCategoryEditor() {
+      syncBudgetAmounts();
+      const container = document.getElementById('categoryEditorContainer');
+      const isPercent = data.budgetMode === 'percent';
+      const sal = activeSalary();
+
+      document.getElementById('catEditorHelpText').textContent = isPercent
+        ? 'Percentage Mode: Enter percentages for each category. Rupee amounts calculate automatically.'
+        : 'Amount Mode (PKR): Enter fixed rupee amounts for each category. Percentages calculate automatically.';
+
+      container.innerHTML = data.categories.map((c, idx) => {
+        const isBase = ['household', 'personal', 'committee', 'emergency fund'].includes(c.name.toLowerCase());
+        return `<div class="item row" style="gap:8px;padding:8px 0;">
+          <input type="text" data-cat-name="${idx}" value="${esc(c.name)}" style="flex:2;" ${isBase ? 'readonly style="background:#f8fafc;"' : ''}>
+          ${isPercent
+            ? `<div style="display:flex;align-items:center;gap:4px;flex:1.2;">
+                 <input type="number" min="0" max="100" step="0.01" data-cat-pct="${idx}" value="${c.pct}" style="width:100%;">
+                 <span>%</span>
+               </div>
+               <span class="font-mono muted" id="catAmountPreview-${idx}" style="font-size:12px;min-width:85px;text-align:right;">${money(c.amount)}</span>`
+            : `<div style="display:flex;align-items:center;gap:4px;flex:1.5;">
+                 <input type="number" min="0" data-cat-amount="${idx}" value="${c.amount}" style="width:100%;">
+               </div>
+               <span class="font-mono muted" id="catPctPreview-${idx}" style="font-size:12px;min-width:65px;text-align:right;">${c.pct}%</span>`
+          }
+          ${!isBase ? `<button type="button" class="red sm" onclick="removeCustomCategory(${idx})">✕</button>` : '<span style="width:28px;"></span>'}
+        </div>`;
+      }).join('');
+
+      updateEditorTotals();
+
+      if (isPercent) {
+        container.querySelectorAll('[data-cat-pct]').forEach(input => {
+          input.oninput = () => {
+            const idx = input.dataset.catPct;
+            const p = Number(input.value || 0);
+            const amt = Math.round(sal * p / 100);
+            document.getElementById(`catAmountPreview-${idx}`).textContent = money(amt);
+            updateEditorTotals();
+          };
+        });
+      } else {
+        container.querySelectorAll('[data-cat-amount]').forEach(input => {
+          input.oninput = () => {
+            const idx = input.dataset.catAmount;
+            const a = Number(input.value || 0);
+            const p = sal > 0 ? (a / sal * 100).toFixed(2) : 0;
+            document.getElementById(`catPctPreview-${idx}`).textContent = `${p}%`;
+            updateEditorTotals();
+          };
+        });
+      }
+
+      document.getElementById('categoryModal').style.display = 'flex';
+    }
+
+    function updateEditorTotals() {
+      const sal = activeSalary();
+      const isPercent = data.budgetMode === 'percent';
+      let total = 0;
+      const warnBox = document.getElementById('editorWarningBox');
+
+      if (isPercent) {
+        document.querySelectorAll('[data-cat-pct]').forEach(inp => total += Number(inp.value || 0));
+        document.getElementById('editorAllocatedTotal').textContent = `${total.toFixed(2)}% (${money(sal * total / 100)})`;
+        const rem = 100 - total;
+        document.getElementById('editorUnallocatedTotal').textContent = `${rem.toFixed(2)}% (${money(sal * rem / 100)})`;
+
+        if (total > 100.001) {
+          warnBox.classList.remove('hidden');
+          warnBox.textContent = `⚠️ Total allocation (${total.toFixed(2)}%) exceeds 100%! Please reduce percentages.`;
+        } else {
+          warnBox.classList.add('hidden');
+        }
+      } else {
+        document.querySelectorAll('[data-cat-amount]').forEach(inp => total += Number(inp.value || 0));
+        const pctTotal = sal > 0 ? (total / sal * 100).toFixed(2) : 0;
+        document.getElementById('editorAllocatedTotal').textContent = `${money(total)} (${pctTotal}%)`;
+        const rem = sal - total;
+        const remPct = sal > 0 ? (rem / sal * 100).toFixed(2) : 0;
+        document.getElementById('editorUnallocatedTotal').textContent = `${money(rem)} (${remPct}%)`;
+
+        if (total > sal) {
+          warnBox.classList.remove('hidden');
+          warnBox.textContent = `⚠️ Total allocated (${money(total)}) exceeds monthly salary (${money(sal)}) by ${money(total - sal)}!`;
+        } else {
+          warnBox.classList.add('hidden');
+        }
+      }
+    }
+
+    window.removeCustomCategory = idx => {
+      const catName = data.categories[idx]?.name;
+      if (!confirm(`Delete custom category "${catName}"? Existing expense records will be preserved.`)) return;
+      data.categories.splice(idx, 1);
+      openCategoryEditor();
+    };
+
+    document.getElementById('editorAddCatBtn').onclick = () => {
+      if (data.categories.length >= 10) {
+        alert('Maximum 10 budget categories are allowed.');
+        return;
+      }
+      const name = prompt('Enter new category name:');
+      if (name && name.trim()) {
+        data.categories.push({
+          name: name.trim(),
+          amount: 0,
+          pct: 0,
+          color: colors[data.categories.length % colors.length]
+        });
+        openCategoryEditor();
+      }
+    };
+
+    document.getElementById('editorSaveBtn').onclick = () => {
+      const sal = activeSalary();
+      const isPercent = data.budgetMode === 'percent';
+      let newCategories = [];
+
+      data.categories.forEach((c, idx) => {
+        const nameInput = document.querySelector(`[data-cat-name="${idx}"]`);
+        const name = nameInput ? nameInput.value.trim() : c.name;
+        if (!name) return;
+
+        if (isPercent) {
+          const pctInput = document.querySelector(`[data-cat-pct="${idx}"]`);
+          const pct = Math.max(0, Number(pctInput ? pctInput.value : c.pct));
+          const amount = Math.round(sal * pct / 100);
+          newCategories.push({ ...c, name, pct, amount });
+        } else {
+          const amtInput = document.querySelector(`[data-cat-amount="${idx}"]`);
+          const amount = Math.max(0, Number(amtInput ? amtInput.value : c.amount));
+          const pct = sal > 0 ? Number((amount / sal * 100).toFixed(2)) : 0;
+          newCategories.push({ ...c, name, amount, pct });
+        }
+      });
+
+      // Validation
+      if (isPercent) {
+        const totalPct = newCategories.reduce((s, c) => s + c.pct, 0);
+        if (totalPct > 100.001) {
+          alert(`Total allocation cannot exceed 100%. Currently at ${totalPct.toFixed(2)}%. Please reduce.`);
+          return;
+        }
+      } else {
+        const totalAmt = newCategories.reduce((s, c) => s + c.amount, 0);
+        if (totalAmt > sal) {
+          alert(`Total allocated amount (${money(totalAmt)}) cannot exceed available monthly salary (${money(sal)}). Please reduce.`);
+          return;
+        }
+      }
+
+      data.categories = newCategories;
+      save();
+      render();
+      document.getElementById('categoryModal').style.display = 'none';
+      alert('Budget saved successfully.');
+    };
+
+    document.getElementById('closeCatModalBtn').onclick = () => {
+      document.getElementById('categoryModal').style.display = 'none';
+    };
+
+    /* Actions & Event Listeners */
+    function promptEditSalary() {
+      const current = data.salaryConfirmed ? data.salary : 50000;
+      const val = prompt('Enter your monthly basic salary in PKR:', current);
+      if (val !== null) {
+        const num = Number(val);
+        if (num > 0) {
+          data.salary = num;
+          data.salaryConfirmed = true;
+          syncBudgetAmounts();
+          save();
+          render();
+        } else {
+          alert('Please enter a valid salary amount greater than zero.');
+        }
+      }
+    }
+    document.getElementById('salaryEditBtn').onclick = promptEditSalary;
+    document.getElementById('payrollEditSalaryBtn').onclick = promptEditSalary;
+    document.getElementById('editBudgetQuickBtn').onclick = openCategoryEditor;
+
+    window.quickExpenseCategory = catName => {
+      tab('expenses');
+      document.getElementById('expCat').value = catName;
+      document.getElementById('expDesc').focus();
+    };
+
+    /* Add Expense */
+    document.getElementById('saveExpenseBtn').onclick = () => {
+      const title = document.getElementById('expDesc').value.trim();
+      const amount = Number(document.getElementById('expAmt').value);
+      const category = document.getElementById('expCat').value;
+      const dateVal = document.getElementById('expDate').value || new Date().toISOString().split('T')[0];
+
+      if (!title || amount <= 0) {
+        alert('Please enter a description and a valid amount.');
+        return;
+      }
+
+      data.expenses.push({
+        id: 'exp_' + Date.now(),
+        title,
+        amount,
+        category,
+        date: dateVal,
+        monthKey: data.currentMonth
+      });
+
+      document.getElementById('expDesc').value = '';
+      document.getElementById('expAmt').value = '';
+      save();
+      render();
+    };
+
+    window.delExpense = idx => {
+      if (confirm('Delete this expense?')) {
+        data.expenses.splice(idx, 1);
+        save();
+        render();
+      }
+    };
+
+    /* Family Payment */
+    document.getElementById('saveFamilyBtn').onclick = () => {
+      const who = document.getElementById('familyWho').value.trim();
+      const amount = Number(document.getElementById('familyAmount').value);
+      const reason = document.getElementById('familyReason').value.trim();
+      const fc = familyCat();
+
+      if (!fc) return alert('Family Extra category is not active.');
+      if (!who || amount <= 0) return alert('Please enter recipient and valid amount.');
+
+      const dateVal = new Date().toISOString().split('T')[0];
+      data.expenses.push({
+        id: 'fam_' + Date.now(),
+        title: `Family: ${who}`,
+        amount,
+        category: fc.name,
+        date: dateVal,
+        monthKey: data.currentMonth,
+        familyPayment: true,
+        recipient: who,
+        reason
+      });
+
+      document.getElementById('familyWho').value = '';
+      document.getElementById('familyAmount').value = '';
+      document.getElementById('familyReason').value = '';
+      save();
+      render();
+      alert('Family payment recorded.');
+    };
+
+    /* Payroll Leaves */
+    document.getElementById('savePayrollLeavesBtn').onclick = () => {
+      const l = Number(document.getElementById('payrollLeavesInput').value || 0);
+      data.payrollLeaves = Math.max(0, l);
+      if (!data.attendance) data.attendance = {};
+      data.attendance.leaveUsed = Math.min(2, l);
+      save();
+      render();
+      alert('Leave count saved.');
+    };
+
+    document.getElementById('payrollLeavesInput').oninput = e => {
+      const totalL = Math.max(0, Number(e.target.value || 0));
+      const dedL = Math.max(0, totalL - 2);
+      const dRate = dailyRate();
+      document.getElementById('payrollDeductibleLeaves').value = `${dedL} days`;
+      document.getElementById('payrollFreeLeaves').textContent = Math.min(2, totalL) + ' of 2';
+      document.getElementById('payrollLeaveDeductionDisplay').textContent = money(dedL * dRate);
+      document.getElementById('payrollLeaveFormula').textContent = `Calculation: ${dedL} deductible days × ${money(dRate)} = ${money(dedL * dRate)}`;
+    };
+
+    /* Advances & Recoveries */
+    document.getElementById('saveAdvanceBtn').onclick = () => {
+      const amount = Number(document.getElementById('advAmount').value);
+      const dateVal = document.getElementById('advDate').value || new Date().toISOString().split('T')[0];
+      const desc = document.getElementById('advDesc').value.trim() || 'Salary Advance';
+
+      if (amount <= 0) return alert('Enter a valid advance amount.');
+
+      data.advances.push({
+        id: 'adv_' + Date.now(),
+        amount,
+        date: dateVal,
+        description: desc
+      });
+
+      document.getElementById('advAmount').value = '';
+      document.getElementById('advDesc').value = '';
+      save();
+      render();
+      alert('Salary advance recorded.');
+    };
+
+    document.getElementById('saveRecoveryBtn').onclick = () => {
+      const amount = Number(document.getElementById('recAmount').value);
+      const dateVal = document.getElementById('recDate').value || new Date().toISOString().split('T')[0];
+      const note = document.getElementById('recNote').value.trim() || 'Advance Recovery';
+      const bal = outstandingAdvance();
+
+      if (amount <= 0) return alert('Enter a valid recovery amount.');
+      if (amount > bal) {
+        alert(`Recovery amount (${money(amount)}) cannot exceed outstanding advance balance (${money(bal)})!`);
+        return;
+      }
+
+      data.recoveries.push({
+        id: 'rec_' + Date.now(),
+        amount,
+        date: dateVal,
+        note,
+        monthKey: data.currentMonth
+      });
+
+      document.getElementById('recAmount').value = '';
+      document.getElementById('recNote').value = '';
+      save();
+      render();
+      alert('Advance recovery recorded.');
+    };
+
+    window.delAdvanceItem = (kind, id) => {
+      if (!confirm(`Delete this ${kind} record?`)) return;
+      if (kind === 'advance') {
+        data.advances = data.advances.filter(a => a.id !== id);
+      } else {
+        data.recoveries = data.recoveries.filter(r => r.id !== id);
+      }
+      save();
+      render();
+    };
+
+    /* Other Deductions */
+    document.getElementById('sumOtherDeductions').onchange = e => {
+      data.payrollOtherDeductions = Math.max(0, Number(e.target.value || 0));
+      save();
+      render();
+    };
+
+    /* Archive Payroll */
+    document.getElementById('archivePayrollBtn').onclick = () => {
+      const net = netPayableSalary();
+      const dedL = deductibleLeaves() * dailyRate();
+      const rec = currentMonthRecoveries();
+      const record = {
+        monthKey: data.currentMonth,
+        monthLabel: monthLabel(data.currentMonth),
+        basicSalary: activeSalary(),
+        extraIncome: totalExtraIncome(),
+        leaveDeduction: dedL,
+        advanceRecovery: rec,
+        otherDeductions: Number(data.payrollOtherDeductions || 0),
+        netPayable: net,
+        archivedAt: new Date().toISOString()
+      };
+      data.payrollArchives = data.payrollArchives.filter(p => p.monthKey !== data.currentMonth);
+      data.payrollArchives.push(record);
+      save();
+      render();
+      alert(`Payroll summary for ${record.monthLabel} archived successfully!`);
+    };
+
+    /* Attendance Bonus & Overtime */
+    document.getElementById('leaveUsedSelect').onchange = e => {
+      const u = Number(e.target.value);
+      data.payrollLeaves = u;
+      if (!data.attendance) data.attendance = {};
+      data.attendance.leaveUsed = u;
+      document.getElementById('attendanceBonusDisplay').textContent = money(attendanceBonus());
+    };
+
+    document.getElementById('saveAttendanceBtn').onclick = () => {
+      const u = Number(document.getElementById('leaveUsedSelect').value);
+      data.payrollLeaves = u;
+      if (!data.attendance) data.attendance = {};
+      data.attendance.leaveUsed = u;
+      data.attendance.month = monthLabel(data.currentMonth);
+      save();
+      render();
+      document.getElementById('attendanceSavedStatus').textContent = `Saved for ${data.attendance.month}: ${u} allowed leave day(s) used.`;
+      alert('Attendance bonus saved.');
+    };
+
+    document.getElementById('otHours').oninput = () => document.getElementById('otResult').textContent = money(overtimePayment());
+    document.getElementById('otMultiplier').onchange = () => document.getElementById('otResult').textContent = money(overtimePayment());
+
+    document.getElementById('saveOTBtn').onclick = () => {
+      const amt = overtimePayment();
+      const hrs = Number(document.getElementById('otHours').value || 0);
+      if (hrs <= 0 || amt <= 0) return alert('Enter overtime hours first.');
+
+      data.income.push({
+        id: 'ot_' + Date.now(),
+        title: `Overtime (${hrs} hrs)`,
+        amount: Math.round(amt),
+        type: 'Overtime',
+        date: new Date().toISOString().split('T')[0],
+        monthKey: data.currentMonth
+      });
+
+      document.getElementById('otHours').value = '';
+      save();
+      render();
+      alert('Overtime earning added to extra income.');
+    };
+
+    document.getElementById('saveOtherIncomeBtn').onclick = () => {
+      const title = document.getElementById('otherTitle').value.trim();
+      const amount = Number(document.getElementById('otherAmount').value);
+      if (!title || amount <= 0) return alert('Enter description and valid amount.');
+
+      data.income.push({
+        id: 'inc_' + Date.now(),
+        title,
+        amount,
+        type: 'Other Income',
+        date: new Date().toISOString().split('T')[0],
+        monthKey: data.currentMonth
+      });
+
+      document.getElementById('otherTitle').value = '';
+      document.getElementById('otherAmount').value = '';
+      save();
+      render();
+      alert('Extra income added.');
+    };
+
+    window.delIncome = idx => {
+      if (confirm('Delete this income entry?')) {
+        data.income.splice(idx, 1);
+        save();
+        render();
+      }
+    };
+
+    /* Goals */
+    document.getElementById('saveGoalBtn').onclick = () => {
+      const name = document.getElementById('goalName').value.trim();
+      const target = Number(document.getElementById('goalTarget').value);
+      const saved = Number(document.getElementById('goalSaved').value || 0);
+
+      if (!name || target <= 0) return alert('Enter goal name and target amount.');
+
+      data.goals.push({ id: 'goal_' + Date.now(), name, target, saved });
+      document.getElementById('goalName').value = '';
+      document.getElementById('goalTarget').value = '';
+      document.getElementById('goalSaved').value = '0';
+      save();
+      render();
+    };
+
+    window.delGoal = idx => {
+      if (confirm('Remove this savings goal?')) {
+        data.goals.splice(idx, 1);
+        save();
+        render();
+      }
+    };
+
+    window.addGoalSavings = idx => {
+      const val = prompt('Enter amount saved to add in PKR:');
+      if (val !== null) {
+        const num = Number(val);
+        if (num > 0) {
+          data.goals[idx].saved += num;
+          save();
+          render();
+        }
+      }
+    };
+
+    /* Backups & Restore */
+    document.getElementById('exportBackupBtn').onclick = () => {
+      const backupData = JSON.stringify(data, null, 2);
+      const blob = new Blob([backupData], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `SmartSalary-3.6.0-Free-Backup-${data.currentMonth}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    };
+
+    document.getElementById('importBackupBtn').onclick = () => {
+      document.getElementById('backupFileInput').click();
+    };
+
+    document.getElementById('backupFileInput').onchange = e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const imported = JSON.parse(reader.result);
+          if (!imported || !Array.isArray(imported.categories)) throw new Error('Invalid format');
+          data = { ...defaults, ...imported };
+          data.salaryConfirmed = imported.salaryConfirmed !== undefined ? imported.salaryConfirmed : !!imported.salary;
+          data.budgetMode = imported.budgetMode || 'amount';
+          checkMonthRollover();
+          save();
+          render();
+          alert('Backup restored successfully!');
+        } catch (err) {
+          alert('Invalid backup file. Please choose a valid SmartSalary JSON backup.');
+        }
+      };
+      reader.readAsText(file);
+    };
+
+    document.getElementById('restoreSnapshotBtn').onclick = () => {
+      try {
+        const snaps = JSON.parse(localStorage.getItem('ss360_autobackups') || '[]');
+        if (!snaps.length) return alert('No recovery snapshots available.');
+        const list = snaps.map((s, i) => `${i + 1}. ${new Date(s.savedAt).toLocaleString()}`).join('\n');
+        const pick = Number(prompt('Select snapshot number to restore:\n' + list, '1'));
+        if (!Number.isInteger(pick) || pick < 1 || pick > snaps.length) return;
+        if (!confirm('Restore this snapshot? Current data will be replaced.')) return;
+        const recovered = JSON.parse(snaps[pick - 1].payload);
+        data = { ...defaults, ...recovered };
+        save();
+        render();
+        alert('Snapshot restored successfully.');
+      } catch (e) {
+        alert('Could not restore snapshot.');
+      }
+    };
+
+    function updateBackupStatus() {
+      const snaps = JSON.parse(localStorage.getItem('ss360_autobackups') || '[]');
+      const el = document.getElementById('backupStatusText');
+      if (el) {
+        el.textContent = `Local recovery snapshots available: ${snaps.length} of 7. Last snapshot: ${snaps[0] ? new Date(snaps[0].savedAt).toLocaleString() : 'Not created yet'}.`;
+      }
+    }
+
+    /* Three-Dot Menu */
+    const menuModal = document.getElementById('menuModal');
+    document.getElementById('menuTrigger').onclick = () => menuModal.style.display = 'flex';
+    document.getElementById('closeMenuBtn').onclick = () => menuModal.style.display = 'none';
+    menuModal.onclick = e => { if (e.target === menuModal) menuModal.style.display = 'none'; };
+
+    // Language buttons
+    document.getElementById('langEnBtn').onclick = () => {
+      data.language = 'en';
+      save();
+      render();
+    };
+    document.getElementById('langUrBtn').onclick = () => {
+      data.language = 'ur';
+      save();
+      render();
+    };
+
+    // Mutual exclusivity for Car/Bike and Family Extra
+    const carCb = document.getElementById('menuCarBike');
+    const famCb = document.getElementById('menuFamilyExtra');
+    carCb.onchange = () => { if (carCb.checked) famCb.checked = false; };
+    famCb.onchange = () => { if (famCb.checked) carCb.checked = false; };
+
+    document.getElementById('saveMenuSettings').onclick = () => {
+      const mode = document.querySelector('input[name="budgetMode"]:checked')?.value || 'amount';
+      data.budgetMode = mode;
+
+      const hasCar = carCb.checked;
+      const hasFam = famCb.checked;
+      data.vehicles = { carBike: hasCar, familyExtra: hasFam };
+
+      // Ensure categories match toggles
+      const ensureCategory = (name, on) => {
+        const idx = data.categories.findIndex(c => c.name.toLowerCase() === name.toLowerCase());
+        if (on && idx < 0) {
+          data.categories.push({
+            name,
+            amount: 0,
+            pct: 0,
+            color: colors[data.categories.length % colors.length]
+          });
+        }
+        if (!on && idx >= 0) {
+          if (!data.expenses.some(e => e.category === data.categories[idx].name)) {
+            data.categories.splice(idx, 1);
+          } else {
+            data.categories[idx].amount = 0;
+            data.categories[idx].pct = 0;
+          }
+        }
+      };
+
+      ensureCategory('Car/Bike', hasCar);
+      ensureCategory('Family Extra', hasFam);
+
+      save();
+      render();
+      menuModal.style.display = 'none';
+      alert('Preferences saved.');
+    };
+
+    /* Interactive Guided Tour */
+    const guideSteps = [
+      {
+        tab: 'overview',
+        focus: 'mSalary',
+        tag: 'Step 1 of 7 • Overview Dashboard',
+        title: 'Your Complete Financial Summary',
+        desc: 'Review your monthly salary, total allocated budget, expenses, and available cash balance at a glance.'
+      },
+      {
+        tab: 'overview',
+        focus: 'catCardsGrid',
+        tag: 'Step 2 of 7 • Budget Categories',
+        title: 'Visual Category Cards',
+        desc: 'Categories are immediately visible with clean SVG icons, spent amounts, remaining balances, and progress bars.'
+      },
+      {
+        tab: 'expenses',
+        focus: 'sec-expenses',
+        tag: 'Step 3 of 7 • Daily Expenses',
+        title: 'Track Every Rupee',
+        desc: 'Easily log daily spending with descriptions, amounts, and dates. Includes a dedicated Family Extra tracker if enabled.'
+      },
+      {
+        tab: 'payroll',
+        focus: 'sec-payroll',
+        tag: 'Step 4 of 7 • Salary & Payroll',
+        title: 'Priority Payroll System',
+        desc: 'Calculate daily salary based on 26 working days, deduct leaves beyond 2 free days, manage salary advance ledger, and review net pay.'
+      },
+      {
+        tab: 'income',
+        focus: 'sec-income',
+        tag: 'Step 5 of 7 • Extra Income & Overtime',
+        title: 'Attendance & Extra Earnings',
+        desc: 'Receive attendance bonus for unused allowed leave days, calculate 1.5× overtime, and track freelance earnings.'
+      },
+      {
+        tab: 'goals',
+        focus: 'sec-goals',
+        tag: 'Step 6 of 7 • Savings Goals & Records',
+        title: 'Build Savings & Review History',
+        desc: 'Create targets for electronics or emergencies. Past months are automatically archived with carryover savings.'
+      },
+      {
+        tab: 'backup',
+        focus: 'sec-backup',
+        tag: 'Step 7 of 7 • Three-Dot Menu & Safety',
+        title: '100% Offline Control',
+        desc: 'Switch between Rupee Amount and Percentage modes, toggle English/Urdu, and export regular JSON backups anytime.'
+      }
+    ];
+
+    let currentGuideStep = 0;
+
+    function clearGuide() {
+      document.querySelectorAll('.guide-focus').forEach(el => el.classList.remove('guide-focus'));
+      document.getElementById('guideDimOverlay')?.remove();
+      document.getElementById('guidePanelBox')?.remove();
+    }
+
+    function finishGuide() {
+      clearGuide();
+      localStorage.setItem('ss360_guide_done', '1');
+    }
+
+    function launchGuide() {
+      clearGuide();
+      currentGuideStep = 0;
+
+      const dim = document.createElement('div');
+      dim.id = 'guideDimOverlay';
+      dim.className = 'guide-dim';
+      document.body.appendChild(dim);
+
+      const panel = document.createElement('div');
+      panel.id = 'guidePanelBox';
+      panel.className = 'guide-panel';
+      panel.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span class="guide-step-tag" id="guideTag"></span>
+          <span class="creator-credit" style="font-size:11.5px;">
+            Created with care by <img src="Hurraim_Khan_Profile_Round(1).png" alt="Hurraim Khan" class="creator-avatar" style="width:24px;height:24px;"> <strong>Hurraim Khan</strong>
+          </span>
+        </div>
+        <h3 id="guideTitle" style="margin:6px 0;font-size:17px;"></h3>
+        <p class="muted" id="guideDesc" style="margin:4px 0 10px;font-size:13.5px;line-height:1.5;"></p>
+        <div class="guide-dots" id="guideDots"></div>
+        <div class="guide-actions">
+          <button type="button" class="light sm" id="guideSkipBtn" data-i18n="Skip Guide">Skip Guide</button>
+          <div style="display:flex;gap:8px;">
+            <button type="button" class="light sm" id="guideBackBtn" data-i18n="Back">Back</button>
+            <button type="button" class="primary sm" id="guideNextBtn" data-i18n="Next">Next</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(panel);
+
+      function renderStep() {
+        const step = guideSteps[currentGuideStep];
+        tab(step.tab);
+
+        document.querySelectorAll('.guide-focus').forEach(el => el.classList.remove('guide-focus'));
+        const target = document.getElementById(step.focus);
+        if (target) {
+          target.classList.add('guide-focus');
+          target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        panel.querySelector('#guideTag').textContent = step.tag;
+        panel.querySelector('#guideTitle').textContent = step.title;
+        panel.querySelector('#guideDesc').textContent = step.desc;
+
+        // Dots
+        panel.querySelector('#guideDots').innerHTML = guideSteps.map((_, i) =>
+          `<div class="guide-dot ${i === currentGuideStep ? 'active' : ''}"></div>`
+        ).join('');
+
+        const backBtn = panel.querySelector('#guideBackBtn');
+        const nextBtn = panel.querySelector('#guideNextBtn');
+
+        backBtn.disabled = currentGuideStep === 0;
+        backBtn.style.opacity = currentGuideStep === 0 ? '0.5' : '1';
+        nextBtn.textContent = currentGuideStep === guideSteps.length - 1 ? 'Finish' : 'Next';
+      }
+
+      panel.querySelector('#guideSkipBtn').onclick = finishGuide;
+      panel.querySelector('#guideBackBtn').onclick = () => {
+        if (currentGuideStep > 0) {
+          currentGuideStep--;
+          renderStep();
+        }
+      };
+      panel.querySelector('#guideNextBtn').onclick = () => {
+        if (currentGuideStep < guideSteps.length - 1) {
+          currentGuideStep++;
+          renderStep();
+        } else {
+          finishGuide();
+        }
+      };
+
+      renderStep();
+    }
+
+    // Welcome Modal trigger
+    const welcomeModal = document.getElementById('welcomeModal');
+    if (!localStorage.getItem('ss360_guide_done')) {
+      welcomeModal.style.display = 'flex';
+    }
+
+    document.getElementById('startGuideBtn').onclick = () => {
+      welcomeModal.style.display = 'none';
+      launchGuide();
+    };
+    document.getElementById('skipGuideBtn').onclick = () => {
+      welcomeModal.style.display = 'none';
+      finishGuide();
+    };
+
+    document.getElementById('openGuideBtn').onclick = () => {
+      menuModal.style.display = 'none';
+      launchGuide();
+    };
+
+    // Service Worker Registration
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').then(reg => {
+          document.getElementById('pwaStatusBox').textContent = 'PWA Status: Registered & Cached for 100% Offline Use';
+        }).catch(() => {
+          document.getElementById('pwaStatusBox').textContent = 'PWA Status: Ready for Offline Use';
+        });
+      });
+    }
+
+    // Expose helpers for testing and console inspection
+    window.data = data;
+    window.activeSalary = activeSalary;
+    window.dailyRate = dailyRate;
+    window.hourlyRate = hourlyRate;
+    window.deductibleLeaves = deductibleLeaves;
+    window.leaveDeduction = leaveDeduction;
+    window.totalAdvances = totalAdvances;
+    window.totalRecoveries = totalRecoveries;
+    window.outstandingAdvance = outstandingAdvance;
+    window.totalExtraIncome = totalExtraIncome;
+    window.netPayableSalary = netPayableSalary;
+    window.spentByCategory = spentByCategory;
+    window.syncBudgetAmounts = syncBudgetAmounts;
+    window.render = render;
+    window.applyLanguage = applyLanguage;
+    window.launchGuide = launchGuide;
+    window.finishGuide = finishGuide;
+
+    // Initial Render
+    render();
+  </script>
+</body>
+</html>

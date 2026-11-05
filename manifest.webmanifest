@@ -1,24 +1,18 @@
 {
-  "name": "SmartSalary 3.4.3 Free Offline",
+  "name": "SmartSalary 3.6.0 Free Offline",
   "short_name": "SmartSalary",
-  "description": "Offline personal salary, expense and savings tracker.",
-  "start_url": "https://hurraimofficial.github.io/SmartSalary/",
-  "scope": "https://hurraimofficial.github.io/SmartSalary/",
+  "description": "Offline personal salary, expense, payroll, and savings tracker.",
+  "start_url": "./index.html?v=3.6.0",
+  "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#f3f5f9",
-  "theme_color": "#101827",
+  "background_color": "#f1f5f9",
+  "theme_color": "#0f172a",
   "icons": [
     {
-      "src": "https://hurraimofficial.github.io/SmartSalary/icons/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "https://hurraimofficial.github.io/SmartSalary/icons/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
       "purpose": "any maskable"
     }
   ]
