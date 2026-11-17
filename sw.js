@@ -1,10 +1,9 @@
-const CACHE_NAME = "smartsalary-offline-v360";
+const CACHE_NAME = "smartsalary-offline-v370";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
-  "./icons/icon-192.png",
-  "./icons/icon-512.png",
+  "./icons/icon.svg",
   "./privacy.html",
   "./terms.html",
   "./Hurraim_Khan_Profile_Round(1).png"

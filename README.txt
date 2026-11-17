@@ -1,28 +1,78 @@
-SmartSalary 3.6.0 Free Offline — Created with care by Hurraim Khan
+SmartSalary 3.7.0 Free Offline — Created with care by Hurraim Khan
 ================================================================================
 Professional Offline Personal Budgeting, Expense Tracker & Payroll System
 
 QUICK START
-1. Extract the SmartSalary-3.6.0-Free-Offline.zip folder.
-2. Open the folder in VS Code or any modern browser.
+1. Extract the SmartSalary-3.7.0-Free-Offline.zip folder.
+2. Open the extracted folder in VS Code or any modern browser.
 3. If using VS Code, click "Go Live" (Live Server) on index.html, or double-click index.html directly.
 4. No account, sign-in, OTP, credit card, or internet connection is required.
 5. All data is saved privately inside your browser's local storage on this device.
 
-KEY FEATURES IN VERSION 3.6.0
-1. Welcome Screen & Interactive Guided Tour
-   - Welcomes users on first launch with demo salary (PKR 50,000).
-   - Step-by-step interactive application guide with Next, Back, and Skip controls.
-   - Progress indicators and instant reopen capability from the three-dot menu.
+KEY FEATURES IN VERSION 3.7.0
+1. New Update Screen & Onboarding Experience
+   - Displays the official upgrade message:
+     "Update SmartSalary to enjoy the latest features. Your saved details and records will remain safe and will not be erased."
+   - Dynamic Salary Handling:
+     * Existing users: Displays "You previously set your salary to Rs [saved salary]. We are keeping your existing salary and personal records unchanged."
+     * New users: Displays demo starting salary of Rs 50,000 (editable).
+   - Animated 5-second progress indicator (0% to 100%) during upgrade initialization.
+   - Smooth transition into Welcome Screen, Personal Details, Updated App Guide, and Dashboard.
+   - Guide Finish & Skip buttons navigate directly to the Overview/Dashboard screen ready for immediate use.
 
-2. Personal Branding & Creator Credit
-   - Authentic profile picture of creator Hurraim Khan (Hurraim_Khan_Profile_Round(1).png).
-   - Circular avatar placed immediately before "Hurraim Khan" wherever creator credit appears:
-     "Created with care by Hurraim Khan"
-   - Displayed on Welcome screen, App Guide branding, Footer, About section, and Offline dialog.
+2. Personal Details Management
+   - Added Employee Name and Designation fields.
+   - Used cleanly in generated Salary Slips and reports without unnecessarily cluttering greetings.
+   - Editable anytime from Settings or Salary Slip dialog.
 
-3. Strict Main Navigation Order
-   The 7 primary application tabs are arranged in this exact order:
+3. Complete Salary & Payroll Management (5 Dedicated Cards)
+   - Leaves This Month:
+     * 26 working days calculation basis.
+     * 4 Sundays regular weekly holidays.
+     * 2 free allowed leaves per month.
+     * Deductible leaves = Total leaves - 2 (minimum 0).
+     * Leave deduction = Deductible leaves × Daily salary.
+   - Sundays (Weekly Holiday Details) — MANUAL HOURS ENTRY:
+     * Manual entry of date, hours worked, and note.
+     * No automatic 8h/16h assignment.
+     * No 2x multiplier or double payment.
+     * Sunday Payment = Entered Hours × Standard Hourly Rate.
+     * Standard Hourly Rate = Monthly Basic Salary ÷ 26 ÷ 9.
+     * Full add, edit, and delete capability. Recalculates dynamically with salary.
+   - Overtime — Extra Hours & Payment Record:
+     * Manual overtime entry with date, extra hours, and note.
+     * Payment = Extra Hours × (Standard Hourly Rate × 1.5).
+     * Full add, edit, and delete capability.
+   - Advance — Balance & Recovery:
+     * Full advance ledger: add advances with date and reason.
+     * Record monthly recovery amounts (capped at outstanding balance).
+     * Outstanding balance carries forward across months.
+   - Extra Pay — Bonus & Additional Earnings:
+     * Record performance bonuses, festival gifts, and incentives.
+     * Included accurately in monthly salary calculations.
+
+4. Salary Slip Generation & 100% Offline PDF Download
+   - "Generate Salary Slip" is present in only the two intended locations:
+     1. Top header/action area beside the SmartSalary heading.
+     2. Monthly Salary Slip section in Salary & Payroll.
+   - Prompts for Employee Name and Designation if missing.
+   - Excel-style clean, professional salary sheet preview.
+   - Download genuine PDF 1.4 document generated completely offline via pure JavaScript!
+   - Also includes direct Print Slip preview.
+   - Saves permanent monthly salary snapshots in Monthly Records.
+   - Creator credit: "By Hurraim Khan".
+
+5. Eight New Improvements
+   - Savings Goals Progress: Target, saved, remaining amount, percentage, and progress bar. Removed prefilled personal iPhone 13 Pro goal. Added placeholder: "e.g. Car, Bike, House".
+   - Monthly Expense Summary: Dedicated breakdown table showing category budget, spent, remaining, and % used.
+   - Search & Filter: Real-time search across expenses and monthly records (by month name, year, and employee name).
+   - Low Savings Alert: Visual gentle reminder on goals that are behind schedule (< 25%).
+   - Edit History: Audit trail recording key changes with old and new values and rollback options.
+   - Backup Reminder: Friendly offline reminder banner if no backup has been created in > 14 days.
+   - Dashboard Improvements: Preserved existing colors and themes while enhancing spacing and readability.
+   - Empty Screen Design: Beautiful, clean empty states with icons and action buttons across all lists.
+
+6. Strict Main Navigation Order
    1. Overview
    2. Expenses
    3. Salary & Payroll (Priority feature, tab #3)
@@ -31,66 +81,11 @@ KEY FEATURES IN VERSION 3.6.0
    6. Monthly Records
    7. Backup / Restore
 
-4. Three-Dot Menu (⋮) in Header
-   - Fully responsive, aligned on the same horizontal line as the brand title on mobile.
-   - Contains:
-     1. Language: Instant toggle between English and Urdu (اردو) with bidirectional LTR/RTL support.
-     2. Offline Support: Accessible offline status, local storage verification, and PWA installation state.
-     3. App Guide: Reopen the animated interactive onboarding guide anytime.
-     4. Settings: Switch between Rupee Amount mode (PKR) and Percentage mode (%), manage base and custom categories.
-     5. About SmartSalary: Version details, creator credit, and privacy/terms links.
+7. Creator Branding & Authentic Profile Picture
+   - Authentic profile picture of creator Hurraim Khan (Hurraim_Khan_Profile_Round(1).png).
+   - Displayed immediately before "Hurraim Khan" wherever creator credit appears:
+     "Created with care by Hurraim Khan"
+   - Caching enabled in sw.js for 100% offline access.
 
-5. Professional Overview Dashboard
-   - Budget categories immediately visible with crisp SVG icons.
-   - Financial overview: Monthly Basic Salary, Total Allocated Budget, Unallocated Amount, Total Expenses, and Net Remaining Balance.
-   - Dynamic progress bars with category color accents.
-   - Carryover savings summary from previous months.
-
-6. Professional Category SVG Icons
-   - Replaced ordinary emojis with consistent, lightweight inline SVG icons for:
-     * Household
-     * Personal
-     * Committee
-     * Emergency Fund
-     * Family Extra
-     * Car/Bike
-     * Custom categories
-   - 100% vector, responsive, fully offline.
-
-7. Flexible Budget Calculation Modes
-   - Default mode: Fixed Rupee amounts (PKR).
-   - Optional mode: Percentage allocation (%).
-   - Live calculations for category allocations, total allocations, unallocated salary, and remaining balance.
-   - Clear warning banners and allocation caps preventing allocations exceeding 100% of salary.
-   - Mutually exclusive Car/Bike and Family Extra budget categories.
-   - Support for up to 10 total categories with safe add, edit, and delete functionality.
-
-8. Comprehensive Salary & Payroll System
-   - Daily Salary Calculation based on 26 working days (Monthly Salary ÷ 26).
-   - Leave Rules:
-     * 2 leaves allowed free of deduction.
-     * Deductible leaves = Total leaves - 2 (minimum 0).
-     * Leave deduction = Deductible leaves × Daily salary.
-   - Salary Advance Ledger:
-     * Add new advance with date and description.
-     * Record monthly repayment/recovery (capped at outstanding balance).
-     * Formula: Outstanding Advance = Total Advances - Total Recoveries.
-     * Persistent advance ledger automatically carries forward balances across months.
-     * Advances are never treated as normal income or erased upon month turnover.
-   - Payroll Summary:
-     * Basic Monthly Salary
-     * Extra Income & Attendance Bonus
-     * Leave Deductions
-     * Advance Recovery
-     * Other Deductions
-     * Net Payable Salary
-
-9. Data Safety & Backward Compatibility
-   - Preserves existing data from versions 3.4.3, 3.2, 3.1, 3.0, and 2.0.
-   - Automatic migration of older localStorage keys with full backward compatibility.
-   - Up to 7 automatic local recovery snapshots stored before modifications.
-   - Complete JSON Export & Import utility.
-
-10. PWA & Offline Support
-   - Service worker caches app shell and profile image (smartsalary-offline-v360).
-   - Installable as a standalone progressive web app on Android, iOS, Windows, and macOS.
+8. Complete Multi-language Support
+   - Full English (LTR) and Urdu (RTL) interface with instant switching.

@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
   <meta name="theme-color" content="#0f172a">
-  <meta name="description" content="SmartSalary 3.6.0 Free Offline — Your personal budgeting, expense tracker and payroll management system.">
+  <meta name="description" content="SmartSalary 3.7.0 Free Offline — Your personal budgeting, expense tracker, Sunday duty and payroll management system.">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
-  <title>SmartSalary 3.6.0 Free Offline — Hurraim Khan</title>
+  <title>SmartSalary 3.7.0 Free Offline — Hurraim Khan</title>
   <style>
     :root {
       --navy: #0f172a;
@@ -503,6 +503,45 @@
       margin: 12px 0;
     }
 
+    /* Empty state card */
+    .empty-state {
+      text-align: center;
+      padding: 28px 16px;
+      border: 2px dashed #cbd5e1;
+      border-radius: var(--radius);
+      color: var(--ink-muted);
+      background: #fafbfc;
+      margin: 12px 0;
+    }
+    .empty-state svg {
+      color: #94a3b8;
+      margin-bottom: 8px;
+    }
+    .empty-state p {
+      margin: 4px 0 14px;
+      font-size: 13.5px;
+    }
+
+    /* Search & Filter Bar */
+    .search-filter-bar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+      padding: 12px;
+      background: #f1f5f9;
+      border-radius: var(--radius);
+      align-items: center;
+    }
+    .search-filter-bar input, .search-filter-bar select {
+      flex: 1;
+      min-width: 140px;
+      background: white;
+      margin: 0;
+      padding: 8px 12px;
+      font-size: 13.5px;
+    }
+
     /* Tables & Ledgers */
     .table-wrap {
       overflow-x: auto;
@@ -545,7 +584,7 @@
     .modal-box {
       background: white;
       border-radius: var(--radius-lg);
-      max-width: 500px;
+      max-width: 520px;
       width: 100%;
       max-height: 90vh;
       overflow-y: auto;
@@ -582,6 +621,71 @@
       color: var(--ink-muted);
     }
     .close-btn:hover { background: #e2e8f0; color: var(--ink); }
+
+    /* Update Modal Progress Bar */
+    .update-progress-container {
+      margin: 18px 0 10px;
+      display: none;
+    }
+    .update-progress-bar-bg {
+      height: 10px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 6px;
+    }
+    .update-progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #f59e0b, #10b981);
+      border-radius: 999px;
+      transition: width 0.1s linear;
+    }
+
+    /* Salary Slip Preview Styles */
+    .salary-slip-sheet {
+      background: #ffffff;
+      border: 2px solid #0f172a;
+      border-radius: 8px;
+      padding: 20px;
+      font-family: system-ui, -apple-system, sans-serif;
+      color: #0f172a;
+    }
+    .slip-header-brand {
+      border-bottom: 2px solid #0f172a;
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .slip-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+    }
+    .slip-table th, .slip-table td {
+      border: 1px solid #cbd5e1;
+      padding: 8px 10px;
+      font-size: 13px;
+    }
+    .slip-table th {
+      background: #f1f5f9;
+      font-weight: 700;
+    }
+    .slip-total-row {
+      background: #f8fafc;
+      font-weight: 800;
+    }
+    .slip-net-row {
+      background: #0f172a;
+      color: #ffffff;
+      font-weight: 900;
+      font-size: 15px;
+    }
+    .slip-net-row td {
+      border-color: #0f172a;
+    }
 
     /* Welcome Modal */
     .welcome-box {
@@ -628,7 +732,7 @@
       left: 50%;
       bottom: max(16px, env(safe-area-inset-bottom));
       transform: translateX(-50%);
-      width: min(520px, calc(100vw - 32px));
+      width: min(540px, calc(100vw - 32px));
       background: white;
       border: 1px solid var(--line);
       border-radius: var(--radius-lg);
@@ -647,18 +751,19 @@
     }
     .guide-dots {
       display: flex;
-      gap: 6px;
+      gap: 5px;
+      flex-wrap: wrap;
       margin: 12px 0 16px;
     }
     .guide-dot {
-      width: 8px;
-      height: 8px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
       background: #cbd5e1;
       transition: all 0.2s;
     }
     .guide-dot.active {
-      width: 22px;
+      width: 18px;
       border-radius: 999px;
       background: var(--navy);
     }
@@ -701,6 +806,7 @@
     .badge-green { background: #d1fae5; color: #065f46; }
     .badge-red { background: #fee2e2; color: #991b1b; }
     .badge-gold { background: #fef3c7; color: #92400e; }
+    .badge-blue { background: #dbeafe; color: #1e40af; }
 
     @media(max-width: 600px) {
       .formgrid { grid-template-columns: 1fr; }
@@ -708,9 +814,151 @@
       .total-display { font-size: 26px; }
       .cat-grid { grid-template-columns: 1fr; }
     }
+
+    /* Print styling for Salary Slip */
+    @media print {
+      body * { visibility: hidden; }
+      #salarySlipPrintArea, #salarySlipPrintArea * { visibility: visible; }
+      #salarySlipPrintArea {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 20px;
+        box-shadow: none;
+        border: 2px solid #000;
+      }
+    }
   </style>
 </head>
 <body>
+
+  <!-- NEW 3.7.0 UPDATE SCREEN MODAL -->
+  <div class="modal-backdrop" id="updateModal">
+    <div class="modal-box welcome-box">
+      <div class="welcome-logo">Smart<span class="gold">Salary</span></div>
+      <div style="margin:4px 0 14px;">
+        <span class="badge">3.7.0 MASTER UPDATE</span>
+      </div>
+      <h2 style="justify-content:center;margin:12px 0 8px;" data-i18n="Update SmartSalary">Update SmartSalary 3.7.0</h2>
+      <p style="font-size:14.5px;line-height:1.6;color:var(--ink);margin:14px 0 10px;font-weight:600;" id="updateMessageText">
+        Update SmartSalary to enjoy the latest features. Your saved details and records will remain safe and will not be erased.
+      </p>
+
+      <!-- Complete Data Protection Guarantee -->
+      <div style="margin:10px 0 14px;padding:12px 14px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;line-height:1.5;color:var(--ink);text-align:left;">
+        <div style="font-weight:700;margin-bottom:4px;color:var(--navy);">🔒 Complete Data Protection Guarantee:</div>
+        Updating will preserve your existing basic salary, employee details, daily expenses, savings goals, Sunday duty records, overtime logs, advance balances, and all monthly historical records. No saved data will be deleted or erased.
+      </div>
+
+      <div id="updateSalaryNotice" style="margin:10px 0 16px;padding:12px 14px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;font-size:13.5px;line-height:1.5;color:#166534;font-weight:600;text-align:center;"></div>
+
+      <!-- 5-Second Update Progress Indicator -->
+      <div class="update-progress-container" id="updateProgressContainer" style="display:none;">
+        <div class="update-progress-bar-bg">
+          <div class="update-progress-bar-fill" id="updateProgressFill"></div>
+        </div>
+        <div class="row font-mono" style="font-size:12px;color:var(--ink-muted);margin-top:6px;">
+          <span id="updateProgressStatus">Verifying saved records and personal details...</span>
+          <b id="updateProgressPct">0%</b>
+        </div>
+      </div>
+
+      <div style="margin:16px 0;">
+        <span class="creator-credit">
+          Created with care by <img src="Hurraim_Khan_Profile_Round(1).png" alt="Hurraim Khan" class="creator-avatar"> <strong>Hurraim Khan</strong>
+        </span>
+      </div>
+
+      <div class="btnrow" style="justify-content:center;margin-top:20px;">
+        <button type="button" class="primary" id="startUpdateBtn" style="min-width:180px;font-size:16px;padding:12px 24px;font-weight:700;" data-i18n="Update">
+          Update
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PERSONAL DETAILS MODAL -->
+  <div class="modal-backdrop" id="personalDetailsModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title" data-i18n="Personal Details">Personal Details</h3>
+        <button class="close-btn" id="closePersonalBtn" aria-label="Close">✕</button>
+      </div>
+      <p class="muted" style="margin-top:0;" data-i18n="Enter your employee details for Salary Slip generation. These are stored locally and kept private.">
+        Enter your employee name and designation. These are used in generated Salary Slips and reports without cluttering the main dashboard.
+      </p>
+      <label data-i18n="Employee Name">Employee Name</label>
+      <input type="text" id="employeeNameInput" placeholder="e.g. Muhammad Ali" data-i18n-ph="e.g. Muhammad Ali">
+      
+      <label data-i18n="Designation">Designation</label>
+      <input type="text" id="employeeDesignationInput" placeholder="e.g. Senior Accountant / Officer" data-i18n-ph="e.g. Senior Accountant / Officer">
+
+      <div class="btnrow" style="justify-content:flex-end;margin-top:20px;">
+        <button type="button" class="light" id="skipPersonalBtn" data-i18n="Later">Later / Skip</button>
+        <button type="button" class="primary" id="savePersonalBtn" data-i18n="Save Details">Save Details</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SALARY SLIP PREVIEW & PDF MODAL -->
+  <div class="modal-backdrop" id="salarySlipModal">
+    <div class="modal-box" style="max-width:620px;">
+      <div class="modal-header">
+        <h3 class="modal-title" data-i18n="Salary Slip Preview">Salary Slip Preview</h3>
+        <button class="close-btn" id="closeSlipBtn" aria-label="Close">✕</button>
+      </div>
+
+      <!-- Printable & PDF Target Area -->
+      <div id="salarySlipPrintArea" class="salary-slip-sheet">
+        <div class="slip-header-brand">
+          <div>
+            <div style="font-size:20px;font-weight:900;letter-spacing:-0.02em;">Smart<span style="color:#f59e0b;">Salary</span></div>
+            <div style="font-size:10px;color:#64748b;letter-spacing:0.04em;text-transform:uppercase;">Personal Budget & Payroll System</div>
+          </div>
+          <div class="text-right">
+            <div style="font-size:14px;font-weight:800;color:#0f172a;" id="slipMonthHeading">MONTHLY SALARY SLIP</div>
+            <div style="font-size:11px;color:#64748b;" id="slipDateGenerated">Date: —</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;background:#f8fafc;padding:10px;border-radius:6px;border:1px solid #e2e8f0;margin-bottom:12px;font-size:12.5px;">
+          <div><span style="color:#64748b;">Employee Name:</span> <strong id="slipEmpNameDisplay">—</strong></div>
+          <div><span style="color:#64748b;">Designation:</span> <strong id="slipEmpDesigDisplay">—</strong></div>
+          <div><span style="color:#64748b;">Salary Basis:</span> <strong>26 Working Days</strong></div>
+          <div><span style="color:#64748b;">Month / Year:</span> <strong id="slipMonthPeriodDisplay">—</strong></div>
+        </div>
+
+        <table class="slip-table font-mono">
+          <thead>
+            <tr>
+              <th style="width:45px;text-align:center;">Sr.</th>
+              <th>Description</th>
+              <th style="width:130px;text-align:right;">Amount (PKR)</th>
+            </tr>
+          </thead>
+          <tbody id="slipTableBody">
+            <!-- Dynamic rows populated via JS -->
+          </tbody>
+        </table>
+
+        <div style="margin-top:14px;padding-top:10px;border-top:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#64748b;">
+          <span>SmartSalary 3.7.0 Free Offline</span>
+          <span style="font-weight:700;">By Hurraim Khan</span>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="btnrow" style="justify-content:space-between;margin-top:16px;">
+        <button type="button" class="light" id="cancelSlipBtn" data-i18n="Cancel">Cancel</button>
+        <div style="display:flex;gap:8px;">
+          <button type="button" class="light" id="printSlipBtn" data-i18n="Print Slip">🖨️ Print Slip</button>
+          <button type="button" class="primary" id="downloadPdfBtn" data-i18n="Download PDF">📥 Download PDF</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Three-Dot Menu Drawer / Modal -->
   <div class="modal-backdrop" id="menuModal">
@@ -726,11 +974,18 @@
         <p class="muted" data-i18n="Select your preferred language.">Switch between English and Urdu instantly.</p>
         <div class="btnrow" style="margin-top:8px;">
           <button type="button" class="tab" id="langEnBtn" style="flex:1;">English</button>
-          <button type="button" class="tab" id="langUrBtn" style="flex:1;">اردو</button>
+          <button type="button" class="tab" id="langUrBtn" style="flex:1;">&#1575;&#1585;&#1583;&#1608;</button>
         </div>
       </div>
 
-      <!-- 2. Offline Support -->
+      <!-- 2. Personal Details -->
+      <div class="card" style="margin-bottom:12px;padding:14px;">
+        <h3 style="margin-top:0;" data-i18n="Personal Details">Personal Details</h3>
+        <p class="muted" style="margin:2px 0 8px;" id="menuEmpSummary">Employee Name & Designation for Salary Slips.</p>
+        <button type="button" class="light sm" id="editPersonalFromMenuBtn" style="width:100%;" data-i18n="Edit Personal Details">Edit Personal Details</button>
+      </div>
+
+      <!-- 3. Offline Support -->
       <div class="card" style="margin-bottom:12px;padding:14px;">
         <h3 style="margin-top:0;" data-i18n="Offline Support">Offline Support</h3>
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
@@ -742,16 +997,17 @@
         <div id="pwaStatusBox" style="font-size:12px;color:var(--ink-muted);">PWA Status: Ready for offline use</div>
       </div>
 
-      <!-- 3. App Guide -->
+      <!-- 4. App Guide -->
       <div class="card" style="margin-bottom:12px;padding:14px;">
         <h3 style="margin-top:0;" data-i18n="App Guide">App Guide</h3>
         <p class="muted" style="margin:4px 0 10px;" data-i18n="Reopen the interactive step-by-step application guide anytime.">
-          Learn how to plan salary allocations, track daily expenses, and manage payroll deductions.
+          Learn how to plan salary allocations, track daily expenses, manage Sunday duties, and generate salary slips.
         </p>
         <button type="button" class="light" id="openGuideBtn" style="width:100%;" data-i18n="Launch Interactive Guide">Launch Interactive Guide</button>
+        <button type="button" class="light sm" id="replayUpdateBtn" style="width:100%;margin-top:8px;" data-i18n="Replay 3.7.0 Update Screen">Replay 3.7.0 Update Screen</button>
       </div>
 
-      <!-- 4. Settings -->
+      <!-- 5. Settings -->
       <div class="card" style="margin-bottom:12px;padding:14px;">
         <h3 style="margin-top:0;" data-i18n="Settings">Settings & Preferences</h3>
         
@@ -783,12 +1039,12 @@
         </div>
       </div>
 
-      <!-- 5. About SmartSalary -->
+      <!-- 6. About SmartSalary -->
       <div class="card" style="margin-bottom:0;padding:14px;">
         <h3 style="margin-top:0;" data-i18n="About SmartSalary">About SmartSalary</h3>
         <p style="margin:4px 0 8px;font-size:13px;">
-          <strong>SmartSalary 3.6.0 Free Offline</strong><br>
-          <span class="muted" data-i18n="Professional offline personal finance and payroll manager.">Professional offline personal finance and payroll manager.</span>
+          <strong>SmartSalary 3.7.0 Free Offline</strong><br>
+          <span class="muted" data-i18n="Professional offline personal finance and payroll manager.">Professional offline personal finance, Sunday duty and payroll manager.</span>
         </p>
         <div style="padding:10px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:10px 0;">
           <span class="creator-credit">
@@ -808,23 +1064,23 @@
     <div class="modal-box welcome-box">
       <div class="welcome-logo">Smart<span class="gold">Salary</span></div>
       <div style="margin:4px 0 14px;">
-        <span class="badge">3.6.0 FREE OFFLINE</span>
+        <span class="badge">3.7.0 FREE OFFLINE</span>
       </div>
       <h2 style="justify-content:center;margin:8px 0;" data-i18n="Welcome!">Welcome to SmartSalary!</h2>
-      <div class="demo-salary-banner font-mono">
+      <div class="demo-salary-banner font-mono" id="welcomeSalaryDisplay">
         DEMO SALARY: PKR 50,000
       </div>
       <p class="muted" style="margin:12px 0 16px;line-height:1.6;" data-i18n="Free personal budgeting. No account. No subscription. Use it — thank me later!">
-        Free personal budgeting, daily expense tracking, and complete payroll manager. No account, login, or internet required. Your data never leaves your device.
+        Free personal budgeting, daily expense tracking, Sunday duty records, and complete payroll manager. No account, login, or internet required. Your data never leaves your device.
       </p>
       <div style="margin:16px 0 22px;">
         <span class="creator-credit">
           Created with care by <img src="Hurraim_Khan_Profile_Round(1).png" alt="Hurraim Khan" class="creator-avatar"> <strong>Hurraim Khan</strong>
         </span>
       </div>
-      <div class="btnrow" style="justify-content:center;">
-        <button type="button" class="primary" id="startGuideBtn" data-i18n="Start Guided Tour">Start Guided Tour</button>
-        <button type="button" class="light" id="skipGuideBtn" data-i18n="Skip Guide">Skip Guide</button>
+      <div class="btnrow" style="justify-content:center;gap:12px;">
+        <button type="button" class="light" id="skipGuideBtn" style="min-width:120px;" data-i18n="Skip">Skip</button>
+        <button type="button" class="primary" id="startGuideBtn" style="min-width:120px;" data-i18n="Next">Next</button>
       </div>
     </div>
   </div>
@@ -836,7 +1092,7 @@
         <div class="brand-group">
           <div class="brand">
             Smart<span class="gold">Salary</span>
-            <span class="badge">3.6.0 FREE OFFLINE</span>
+            <span class="badge">3.7.0 FREE OFFLINE</span>
           </div>
           <div class="tagline" data-i18n="Your salary. Your goals. Your control.">Your salary. Your goals. Your control.</div>
         </div>
@@ -850,7 +1106,10 @@
           <div class="total-display font-mono" id="incomeTotal">PKR 50,000</div>
           <div class="hero-sub font-mono" id="incomeBreakdown">Basic salary only</div>
         </div>
-        <button type="button" class="gold" id="salaryEditBtn" data-i18n="Edit salary">Edit salary</button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button type="button" class="gold" id="salaryEditBtn" data-i18n="Edit salary">Edit salary</button>
+          <button type="button" class="light" id="heroSlipBtn" style="background:#ffffff20;color:white;border-color:#ffffff40;" data-i18n="Generate Salary Slip">Generate Salary Slip</button>
+        </div>
       </div>
     </div>
   </header>
@@ -869,6 +1128,17 @@
 
     <!-- SECTION 1: OVERVIEW -->
     <section id="sec-overview">
+      <!-- 6.6 Backup Reminder Banner (Appears if > 14 days or never backed up) -->
+      <div id="backupReminderBanner" class="notice hidden" style="background:#fffbeb;border-color:#fde68a;">
+        <span style="font-size:18px;">💡</span>
+        <div style="flex:1;">
+          <strong data-i18n="Backup Reminder">Backup Reminder:</strong>
+          <span id="backupReminderText" style="margin-left:4px;">It has been over 14 days since your last backup. Export a JSON backup to protect your records offline.</span>
+        </div>
+        <button type="button" class="primary sm" id="quickExportBannerBtn" data-i18n="Export Backup">Export Backup</button>
+      </div>
+
+      <!-- Overview Metrics Grid -->
       <div class="grid-5" id="overviewMetrics">
         <div class="metric-card">
           <div class="metric-label" data-i18n="Monthly Salary">Monthly Salary</div>
@@ -914,8 +1184,7 @@
       <!-- Quick Action Buttons -->
       <div class="btnrow">
         <button type="button" class="primary" onclick="tab('expenses')" data-i18n="Add expense">＋ Add expense</button>
-        <button type="button" class="light" onclick="tab('income')" data-i18n="Add extra income">＋ Add extra income</button>
-        <button type="button" class="light" onclick="tab('payroll')" data-i18n="View Payroll">View Payroll & Salary</button>
+        <button type="button" class="light" onclick="tab('payroll')" data-i18n="Salary & Payroll">Salary & Payroll</button>
       </div>
 
       <div class="notice">
@@ -928,6 +1197,15 @@
 
     <!-- SECTION 2: EXPENSES -->
     <section id="sec-expenses" class="hidden">
+      <!-- 6.3 Search and Filter for Expenses -->
+      <div class="search-filter-bar">
+        <input type="text" id="expenseSearchInput" placeholder="🔍 Search expenses by title or category..." data-i18n-ph="🔍 Search expenses by title or category...">
+        <select id="expenseCategoryFilter">
+          <option value="ALL">All Categories</option>
+        </select>
+        <input type="date" id="expenseDateFilter" title="Filter by specific date">
+      </div>
+
       <h2 data-i18n="Record an expense">Record an expense</h2>
       <div class="card">
         <label data-i18n="Description">Description</label>
@@ -953,6 +1231,35 @@
 
         <div class="btnrow">
           <button type="button" class="primary" id="saveExpenseBtn" data-i18n="Save expense">Save expense</button>
+        </div>
+      </div>
+
+      <!-- 6.2 Monthly Expense Summary -->
+      <h2 data-i18n="Monthly Expense Summary">Monthly Expense Summary</h2>
+      <div class="card">
+        <div class="row" style="margin-bottom:12px;">
+          <div>
+            <div class="metric-label" data-i18n="Total Expenses This Month">Total Expenses This Month</div>
+            <div class="metric-value font-mono" id="monthlyExpenseSummaryTotal">PKR 0</div>
+          </div>
+          <div class="text-right">
+            <div class="metric-label" data-i18n="Allocated Budget">Allocated Budget</div>
+            <div class="metric-value font-mono" id="monthlyExpenseSummaryBudget">PKR 0</div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="font-mono">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th style="text-align:right;">Budget</th>
+                <th style="text-align:right;">Spent</th>
+                <th style="text-align:right;">Remaining</th>
+                <th style="text-align:right;">% Used</th>
+              </tr>
+            </thead>
+            <tbody id="expenseCategorySummaryTableBody"></tbody>
+          </table>
         </div>
       </div>
 
@@ -997,34 +1304,40 @@
 
     <!-- SECTION 3: SALARY & PAYROLL (PRIORITY FEATURE) -->
     <section id="sec-payroll" class="hidden">
-      <h2 data-i18n="Salary & Payroll Management">Salary & Payroll Management</h2>
-      
-      <!-- Wage & 26-Day Basis -->
-      <div class="card">
+      <!-- Section Header & Wage Rates -->
+      <div class="card" style="background:#ffffff;border-left:4px solid var(--navy);">
         <div class="row" style="flex-wrap:wrap;gap:12px;">
           <div>
             <div class="metric-label" data-i18n="Monthly Basic Salary">Monthly Basic Salary</div>
-            <div class="metric-value font-mono" id="payrollBasicDisplay" style="font-size:24px;">PKR 50,000</div>
+            <div class="metric-value font-mono" id="payrollBasicDisplay" style="font-size:26px;">PKR 50,000</div>
           </div>
           <div>
             <div class="metric-label" data-i18n="Daily Salary (26 days basis)">Daily Salary (26 days basis)</div>
-            <div class="metric-value font-mono" id="payrollDailyDisplay" style="font-size:24px;color:var(--blue);">PKR 1,923.08</div>
+            <div class="metric-value font-mono" id="payrollDailyDisplay" style="font-size:20px;color:var(--blue);">PKR 1,923.08</div>
           </div>
-          <button type="button" class="light sm" id="payrollEditSalaryBtn" data-i18n="Edit salary">Edit Basic Salary</button>
+          <div>
+            <div class="metric-label" data-i18n="Standard Hourly Rate">Standard Hourly Rate</div>
+            <div class="metric-value font-mono" id="payrollHourlyDisplay" style="font-size:20px;color:var(--gold-hover);">PKR 213.68</div>
+          </div>
         </div>
-        <p class="muted" style="margin:10px 0 0;" data-i18n="Standard calculation formula: Daily Salary = Monthly Basic Salary ÷ 26 working days.">
-          Standard calculation formula: Daily Salary = Monthly Basic Salary ÷ 26 working days.
+        <div class="btnrow" style="margin-top:14px;">
+          <button type="button" class="gold" id="payrollEditSalaryBtn" data-i18n="Edit salary">Edit Basic Salary</button>
+        </div>
+        <p class="muted" style="margin:10px 0 0;font-size:12px;">
+          Calculation standard: 26 working days per month. Four Sundays are weekly holidays. Daily Salary = Monthly Salary ÷ 26. Hourly Rate = Daily Salary ÷ 9.
         </p>
       </div>
 
-      <!-- Leave Details & Deduction Rules -->
-      <h2 data-i18n="Leave Deductions & Rules">Leave Deductions & Rules</h2>
+      <!-- 1. LEAVES THIS MONTH (Current Month Leave Record) -->
+      <h2>
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <span data-i18n="Leaves This Month">1. Leaves This Month</span>
+      </h2>
       <div class="card">
         <p class="muted" style="margin-top:0;" data-i18n="2 leaves free. Days beyond 2 are deducted at daily rate.">
-          <strong>Leave Rule:</strong> Two (2) leaves per month are allowed free of deduction. Any leaves beyond 2 are deductible.
+          <strong>Leave Rules:</strong> Two (2) allowed leave days per month are permitted without deduction. Deductions apply only to extra leaves beyond two.
           <br><em>Deductible leaves = Total leaves − 2 (min 0). Leave deduction = Deductible leaves × Daily salary.</em>
         </p>
-
         <div class="formgrid">
           <div>
             <label data-i18n="Total Leaves Taken This Month">Total Leaves Taken This Month</label>
@@ -1035,11 +1348,10 @@
             <input id="payrollDeductibleLeaves" type="text" readonly style="background:#f8fafc;font-weight:700;">
           </div>
         </div>
-
         <div style="margin-top:12px;padding:12px;background:#f8fafc;border-radius:10px;border:1px solid var(--line);">
           <div class="row">
             <span data-i18n="Allowed Free Leaves:">Allowed Free Leaves:</span>
-            <b class="font-mono" id="payrollFreeLeaves">2</b>
+            <b class="font-mono" id="payrollFreeLeaves">2 of 2</b>
           </div>
           <div class="row" style="margin-top:4px;">
             <span data-i18n="Leave Deduction Amount:">Leave Deduction Amount:</span>
@@ -1047,14 +1359,99 @@
           </div>
           <div class="muted" id="payrollLeaveFormula" style="font-size:12px;margin-top:4px;"></div>
         </div>
-
         <div class="btnrow">
           <button type="button" class="primary" id="savePayrollLeavesBtn" data-i18n="Save Leave Count">Save Leave Count</button>
         </div>
       </div>
 
-      <!-- Salary Advance Ledger System -->
-      <h2 data-i18n="Salary Advance Ledger">Salary Advance Ledger</h2>
+      <!-- 2. SUNDAYS — WEEKLY HOLIDAY DETAILS (IMPORTANT: MANUAL HOURS ENTRY) -->
+      <h2>
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span data-i18n="Sundays — Weekly Holiday Details">2. Sundays — Weekly Holiday Details</span>
+      </h2>
+      <div class="card">
+        <p class="muted" style="margin-top:0;">
+          <strong>Manual Hours Entry Rule:</strong> Sunday duty hours are entered manually. No automatic 8h/16h assignment. No double multiplier.
+          <br><em>Sunday Payment = Entered Hours × Standard Hourly Rate (<span class="font-mono" id="sundayRateDisplay">PKR 213.68</span>/hr).</em>
+        </p>
+
+        <div class="formgrid">
+          <div>
+            <label data-i18n="Sunday Duty Date">Sunday Duty Date</label>
+            <input type="date" id="sundayDutyDate">
+          </div>
+          <div>
+            <label data-i18n="Hours Worked">Hours Worked (e.g. 8, 12, 16)</label>
+            <input type="number" id="sundayDutyHours" min="0.5" max="24" step="0.5" placeholder="8">
+          </div>
+        </div>
+        <label data-i18n="Duty Note / Reason">Duty Note / Reason</label>
+        <input type="text" id="sundayDutyNote" placeholder="e.g. Plant maintenance, audit, urgent production">
+        
+        <div class="row" style="margin-top:10px;padding:10px;background:#f8fafc;border-radius:10px;">
+          <span class="muted" data-i18n="Calculated Sunday Payment:">Calculated Sunday Payment:</span>
+          <b class="font-mono" id="sundayPaymentPreview" style="color:var(--green);font-size:16px;">PKR 0.00</b>
+        </div>
+
+        <div class="btnrow">
+          <button type="button" class="primary" id="saveSundayDutyBtn" data-i18n="＋ Add Sunday Duty">＋ Add Sunday Duty</button>
+        </div>
+
+        <hr style="border:0;border-top:1px solid var(--line);margin:18px 0;">
+
+        <div class="row">
+          <h3 style="margin:0;" data-i18n="Sunday Duty Records This Month">Sunday Duty Records This Month</h3>
+          <span class="badge-pill badge-green font-mono" id="sundayDutyTotalBadge">0 hrs • PKR 0</span>
+        </div>
+        <div id="sundayDutyList" style="margin-top:10px;"></div>
+      </div>
+
+      <!-- 3. OVERTIME — EXTRA HOURS & PAYMENT RECORD -->
+      <h2>
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span data-i18n="Overtime — Extra Hours & Payment Record">3. Overtime — Extra Hours & Payment Record</span>
+      </h2>
+      <div class="card">
+        <p class="muted" style="margin-top:0;">
+          <strong>Standard Overtime Rule:</strong> Calculated at 1.5× of the standard hourly rate.
+          <br><em>Overtime Payment = Extra Hours × (<span class="font-mono" id="otRatePreviewDisplay">PKR 320.51</span>/hr).</em>
+        </p>
+        <div class="formgrid">
+          <div>
+            <label data-i18n="Overtime Date">Overtime Date</label>
+            <input type="date" id="otDateInput">
+          </div>
+          <div>
+            <label data-i18n="Extra Hours">Extra Hours</label>
+            <input type="number" id="otHoursInput" min="0.5" max="24" step="0.5" placeholder="e.g. 3">
+          </div>
+        </div>
+        <label data-i18n="Note / Reason">Note / Reason</label>
+        <input type="text" id="otNoteInput" placeholder="e.g. Month-end closing overtime">
+        
+        <div class="row" style="margin-top:10px;padding:10px;background:#f8fafc;border-radius:10px;">
+          <span class="muted" data-i18n="Calculated Overtime Payment:">Calculated Overtime Payment:</span>
+          <b class="font-mono" id="otCalcPreview" style="color:var(--green);font-size:16px;">PKR 0.00</b>
+        </div>
+
+        <div class="btnrow">
+          <button type="button" class="primary" id="savePayrollOTBtn" data-i18n="＋ Add Overtime Entry">＋ Add Overtime Entry</button>
+        </div>
+
+        <hr style="border:0;border-top:1px solid var(--line);margin:18px 0;">
+
+        <div class="row">
+          <h3 style="margin:0;" data-i18n="Overtime Records This Month">Overtime Records This Month</h3>
+          <span class="badge-pill badge-green font-mono" id="otTotalBadge">0 hrs • PKR 0</span>
+        </div>
+        <div id="payrollOTList" style="margin-top:10px;"></div>
+      </div>
+
+      <!-- 4. ADVANCE — BALANCE & RECOVERY -->
+      <h2>
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        <span data-i18n="Advance — Balance & Recovery">4. Advance — Balance & Recovery</span>
+      </h2>
       <div class="card">
         <div class="grid" style="margin-bottom:12px;">
           <div class="metric-card">
@@ -1074,11 +1471,11 @@
           </div>
         </div>
 
-        <!-- Add New Advance Form -->
+        <!-- Add New Advance -->
         <h3 data-i18n="Add New Advance">Add New Advance</h3>
         <div class="formgrid">
           <div>
-            <label data-i18n="Amount (PKR)">Advance Amount (PKR)</label>
+            <label data-i18n="Advance Amount (PKR)">Advance Amount (PKR)</label>
             <input id="advAmount" type="number" min="1" placeholder="5000">
           </div>
           <div>
@@ -1086,15 +1483,15 @@
             <input id="advDate" type="date">
           </div>
         </div>
-        <label data-i18n="Description">Description / Reason</label>
+        <label data-i18n="Description / Reason">Description / Reason</label>
         <input id="advDesc" placeholder="e.g. Medical emergency advance, home repair">
         <div class="btnrow">
           <button type="button" class="primary" id="saveAdvanceBtn" data-i18n="＋ Add Advance">＋ Add Advance</button>
         </div>
 
-        <hr style="border:0;border-top:1px solid var(--line);margin:20px 0;">
+        <hr style="border:0;border-top:1px solid var(--line);margin:18px 0;">
 
-        <!-- Record Recovery Form -->
+        <!-- Record Recovery -->
         <h3 data-i18n="Advance Recovery for This Month">Advance Recovery for This Month</h3>
         <p class="muted" style="margin:2px 0 10px;" data-i18n="Repayment is deducted from net monthly salary. Never exceeds outstanding advance balance.">
           Repayment is deducted from net monthly salary. Recovery cannot exceed the outstanding advance balance.
@@ -1109,19 +1506,51 @@
             <input id="recDate" type="date">
           </div>
         </div>
-        <label data-i18n="Note">Note / Reference</label>
+        <label data-i18n="Note / Reference">Note / Reference</label>
         <input id="recNote" placeholder="e.g. Monthly salary installment recovery">
         <div class="btnrow">
           <button type="button" class="gold" id="saveRecoveryBtn" data-i18n="Record Recovery">Record Recovery</button>
         </div>
 
-        <hr style="border:0;border-top:1px solid var(--line);margin:20px 0;">
+        <hr style="border:0;border-top:1px solid var(--line);margin:18px 0;">
 
         <h3 data-i18n="Advance & Recovery History">Advance & Recovery History</h3>
         <div id="advanceHistoryList"></div>
       </div>
 
-      <!-- Payroll Summary -->
+      <!-- 5. EXTRA PAY — BONUS & ADDITIONAL EARNINGS -->
+      <h2>
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <span data-i18n="Extra Pay — Bonus & Additional Earnings">5. Extra Pay — Bonus & Additional Earnings</span>
+      </h2>
+      <div class="card">
+        <p class="muted" style="margin-top:0;">Record bonuses, incentives, festival allowances or special project pay.</p>
+        <div class="formgrid">
+          <div>
+            <label data-i18n="Amount (PKR)">Amount (PKR)</label>
+            <input type="number" id="extraPayAmount" min="1" placeholder="3000">
+          </div>
+          <div>
+            <label data-i18n="Date">Date</label>
+            <input type="date" id="extraPayDate">
+          </div>
+        </div>
+        <label data-i18n="Reason / Description">Reason / Description</label>
+        <input type="text" id="extraPayReason" placeholder="e.g. Annual performance bonus, Eid gift">
+        <div class="btnrow">
+          <button type="button" class="primary" id="saveExtraPayBtn" data-i18n="＋ Add Extra Pay">＋ Add Extra Pay</button>
+        </div>
+
+        <hr style="border:0;border-top:1px solid var(--line);margin:18px 0;">
+
+        <div class="row">
+          <h3 style="margin:0;" data-i18n="Extra Pay Records This Month">Extra Pay Records This Month</h3>
+          <span class="badge-pill badge-green font-mono" id="extraPayTotalBadge">PKR 0</span>
+        </div>
+        <div id="extraPayList" style="margin-top:10px;"></div>
+      </div>
+
+      <!-- PAYROLL SUMMARY & SALARY SLIP GENERATION -->
       <h2 data-i18n="Payroll Summary">Payroll Summary</h2>
       <div class="card" style="background:#ffffff;border:2px solid var(--navy);">
         <div class="row item">
@@ -1129,8 +1558,24 @@
           <b class="font-mono" id="sumBasic">PKR 50,000</b>
         </div>
         <div class="row item">
-          <span data-i18n="Total Extra Income (Overtime, bonus, other)">Total Extra Income (Overtime, attendance bonus, other)</span>
-          <b class="font-mono" id="sumExtra" style="color:var(--green);">+ PKR 0</b>
+          <span data-i18n="Sunday Duty Earnings">Sunday Duty Earnings</span>
+          <b class="font-mono" id="sumSundays" style="color:var(--green);">+ PKR 0</b>
+        </div>
+        <div class="row item">
+          <span data-i18n="Overtime Earnings">Overtime Earnings</span>
+          <b class="font-mono" id="sumOvertime" style="color:var(--green);">+ PKR 0</b>
+        </div>
+        <div class="row item">
+          <span data-i18n="Extra Pay & Bonus">Extra Pay & Bonus</span>
+          <b class="font-mono" id="sumExtraPay" style="color:var(--green);">+ PKR 0</b>
+        </div>
+        <div class="row item">
+          <span data-i18n="Attendance Bonus">Attendance Bonus (Allowed off)</span>
+          <b class="font-mono" id="sumAttendanceBonus" style="color:var(--green);">+ PKR 0</b>
+        </div>
+        <div class="row item" style="background:#f8fafc;padding:8px 10px;border-radius:6px;">
+          <b data-i18n="Total Gross Earnings">Total Gross Earnings</b>
+          <b class="font-mono" id="sumTotalEarnings" style="color:var(--green);font-size:16px;">PKR 50,000</b>
         </div>
         <div class="row item">
           <span data-i18n="Leave Deduction">Leave Deduction</span>
@@ -1146,19 +1591,24 @@
             <input id="sumOtherDeductions" type="number" min="0" value="0" style="width:110px;padding:6px;font-size:13px;display:inline-block;">
           </div>
         </div>
+        <div class="row item" style="background:#fef2f2;padding:8px 10px;border-radius:6px;">
+          <b data-i18n="Total Deductions">Total Deductions</b>
+          <b class="font-mono" id="sumTotalDeductions" style="color:var(--red);font-size:16px;">- PKR 0</b>
+        </div>
         
         <div class="row" style="margin-top:14px;padding-top:12px;border-top:2px solid var(--navy);">
           <span style="font-size:17px;font-weight:800;" data-i18n="Net Payable Salary">Net Payable Salary</span>
-          <span class="font-mono" id="sumNetPayable" style="font-size:24px;font-weight:900;color:var(--navy);">PKR 50,000</span>
+          <span class="font-mono" id="sumNetPayable" style="font-size:26px;font-weight:900;color:var(--navy);">PKR 50,000</span>
         </div>
         <div class="btnrow" style="margin-top:16px;">
+          <button type="button" class="gold" id="payrollGenerateSlipMainBtn" style="flex:1;" data-i18n="Generate Salary Slip">Generate Salary Slip</button>
           <button type="button" class="primary" id="archivePayrollBtn" data-i18n="Archive This Month Payroll">Archive This Month Payroll</button>
         </div>
       </div>
 
-      <!-- Monthly Payroll Archives -->
-      <h2 data-i18n="Monthly Payroll History">Monthly Payroll History</h2>
-      <div class="card" id="payrollArchiveList"></div>
+      <!-- Saved Monthly Salary Slips & History -->
+      <h2 data-i18n="Saved Monthly Salary Slips & History">Saved Monthly Salary Slips & History</h2>
+      <div class="card" id="salarySlipsArchiveList"></div>
     </section>
 
     <!-- SECTION 4: EXTRA INCOME -->
@@ -1195,7 +1645,7 @@
       <h2 data-i18n="Overtime calculator">Overtime calculator</h2>
       <div class="card">
         <p class="muted" style="margin-top:0;" data-i18n="Based on stated 9-hour calculation day and 1.5× overtime multiplier.">
-          Calculation basis: 9-hour workday (including break) and 1.5× overtime multiplier.
+          Calculation basis: 9-hour workday and 1.5× overtime multiplier.
         </p>
         <div class="formgrid">
           <div>
@@ -1249,8 +1699,9 @@
     <section id="sec-goals" class="hidden">
       <h2 data-i18n="Create a savings goal">Create a savings goal</h2>
       <div class="card">
-        <label data-i18n="Goal name">Goal name</label>
-        <input id="goalName" placeholder="e.g. iPhone 13 Pro, Umrah, Laptop, Bike upgrade">
+        <!-- 10. SAVINGS GOALS: Input placeholder "e.g. Car, Bike, House". Removed iPhone 13 Pro prefill -->
+        <label data-i18n="What are you saving for?">What are you saving for?</label>
+        <input id="goalName" placeholder="e.g. Car, Bike, House" data-i18n-ph="e.g. Car, Bike, House">
         <div class="formgrid">
           <div>
             <label data-i18n="Target amount">Target amount (PKR)</label>
@@ -1272,14 +1723,18 @@
 
     <!-- SECTION 6: MONTHLY RECORDS -->
     <section id="sec-records" class="hidden">
+      <!-- 6.3 Search and Filter for Records -->
+      <div class="search-filter-bar">
+        <input type="text" id="recordsSearchInput" placeholder="🔍 Search records, expenses, payroll..." data-i18n-ph="🔍 Search records, expenses, payroll...">
+        <select id="recordSelect"></select>
+      </div>
+
       <h2 data-i18n="Monthly records">Monthly records</h2>
       <div class="card">
         <p class="muted" style="margin-top:0;" data-i18n="Every completed month is saved separately. Select a month to review its budget, spending, income and leftover money.">
-          Every completed month is saved separately. Select a month to review its budget, spending, income, payroll, and leftover savings.
+          Every completed month is saved separately. Review budget allocations, Sunday earnings, overtime, payroll slip, and carryover savings.
         </p>
-        <label data-i18n="Select month">Select month</label>
-        <select id="recordSelect"></select>
-        <div id="recordDetails" style="margin-top:16px;"></div>
+        <div id="recordDetails" style="margin-top:14px;"></div>
       </div>
 
       <h2 data-i18n="Carryover savings by category">Carryover savings by category</h2>
@@ -1311,6 +1766,15 @@
           <button type="button" class="light" id="restoreSnapshotBtn" data-i18n="Restore previous auto-backup">Restore previous auto-backup</button>
         </div>
         <p class="muted" id="backupStatusText" style="font-size:12px;margin:12px 0 0;"></p>
+      </div>
+
+      <!-- 6.5 Edit History & Audit Trail -->
+      <div class="row" style="margin-top:20px;">
+        <h2 style="margin:0;" data-i18n="Edit History">Edit History & Changes</h2>
+        <button type="button" class="light sm" id="clearEditHistoryBtn" data-i18n="Clear History">Clear</button>
+      </div>
+      <div class="card" id="editHistoryCard">
+        <div id="editHistoryList"></div>
       </div>
 
       <h2 data-i18n="Privacy & Terms">Privacy & Terms</h2>
@@ -1356,7 +1820,7 @@
 
     <!-- FOOTER WITH REQUIRED CREATOR CREDIT & PROFILE AVATAR -->
     <footer>
-      <div>SmartSalary 3.6.0 Free Offline • Free Personal Budgeting & Payroll</div>
+      <div>SmartSalary 3.7.0 Free Offline • Free Personal Budgeting & Payroll</div>
       <div style="margin-top:6px;">
         <span class="creator-credit">
           Created with care by <img src="Hurraim_Khan_Profile_Round(1).png" alt="Hurraim Khan" class="creator-avatar"> <strong>Hurraim Khan</strong>
@@ -1410,13 +1874,13 @@
     ];
 
     const defaults = {
-      version: '3.6.0',
+      version: '3.7.0',
       salary: 50000,
       salaryConfirmed: false,
       budgetMode: 'amount', // Default: Fixed Rupee amounts (PKR)
       categories: defaultCategories,
       expenses: [],
-      goals: [{ name: 'iPhone 13 Pro', target: 150000, saved: 1000 }],
+      goals: [], // Removed prefilled demo goals
       attendance: { leaveUsed: 0, month: '' },
       income: [],
       currentMonth: monthKey(),
@@ -1424,25 +1888,44 @@
       carryover: {},
       language: 'en',
       vehicles: { carBike: false, familyExtra: true },
-      // Salary & Payroll Ledger:
+      personalDetails: { name: '', designation: '' },
+      // Salary & Payroll Engine:
       advances: [],
       recoveries: [],
       payrollLeaves: 0,
+      payrollLeavesDetails: [],
+      sundays: [], // Manual hours records: { id, date, hours, hourlyRate, amount, note, monthKey }
+      extraPay: [], // Bonuses: { id, date, amount, reason, monthKey }
       payrollOtherDeductions: 0,
-      payrollArchives: []
+      payrollArchives: [],
+      salarySlips: [], // Permanent monthly salary snapshots
+      editHistory: [], // Edit history audit trail
+      lastBackupDate: null
     };
 
     let data = structuredClone(defaults);
 
     /* Safe Data Migration & Backward Compatibility */
     try {
-      const stored = localStorage.getItem('ss360') || localStorage.getItem('ss343') || localStorage.getItem('ss32') || localStorage.getItem('ss31safe') || localStorage.getItem('ss30') || localStorage.getItem('ss20');
+      const stored = localStorage.getItem('ss370') || localStorage.getItem('ss360') || localStorage.getItem('ss343') || localStorage.getItem('ss32') || localStorage.getItem('ss31safe') || localStorage.getItem('ss30') || localStorage.getItem('ss20');
       if (stored) {
         const old = JSON.parse(stored);
         data = { ...defaults, ...old };
-        data.salaryConfirmed = old.salaryConfirmed !== undefined ? old.salaryConfirmed : !!old.salary;
-        data.budgetMode = old.budgetMode || 'amount'; // Default to amount mode
+        data.version = '3.7.0';
+        // Dynamic Salary Handling: Preserve saved user salary exactly; never overwrite
+        if (old.salaryConfirmed === true) {
+          data.salary = Number(old.salary);
+          data.salaryConfirmed = true;
+        } else if (old.salary !== undefined && old.salaryConfirmed !== false) {
+          data.salary = Number(old.salary);
+          data.salaryConfirmed = true;
+        } else {
+          data.salary = 50000;
+          data.salaryConfirmed = false;
+        }
+        data.budgetMode = old.budgetMode || 'amount';
         const salaryVal = data.salaryConfirmed ? Number(data.salary || 0) : 50000;
+        
         data.categories = (old.categories || defaultCategories).map((c, i) => {
           const pct = Number.isFinite(Number(c.pct)) ? Number(c.pct) : (salaryVal ? Number(c.amount || 0) / salaryVal * 100 : 0);
           const amount = Number.isFinite(Number(c.amount)) && Number(c.amount) > 0 ? Number(c.amount) : Math.round(salaryVal * pct / 100);
@@ -1453,10 +1936,21 @@
             color: c.color || colors[i % colors.length]
           };
         });
+
+        // Remove demo iPhone 13 Pro goal if present
+        if (data.goals && data.goals.length === 1 && data.goals[0].name === 'iPhone 13 Pro') {
+          data.goals = [];
+        }
+
         data.expenses = (data.expenses || []).map(e => ({ ...e, monthKey: e.monthKey || data.currentMonth }));
         data.income = (data.income || []).map(x => ({ ...x, monthKey: x.monthKey || data.currentMonth }));
         data.advances = data.advances || [];
         data.recoveries = data.recoveries || [];
+        data.sundays = data.sundays || [];
+        data.extraPay = data.extraPay || [];
+        data.salarySlips = data.salarySlips || [];
+        data.editHistory = data.editHistory || [];
+        data.personalDetails = data.personalDetails || { name: '', designation: '' };
         data.archives = data.archives || [];
         data.carryover = data.carryover || {};
         data.payrollArchives = data.payrollArchives || [];
@@ -1470,6 +1964,7 @@
     const activeSalary = () => data.salaryConfirmed ? Number(data.salary || 0) : 50000;
     const dailyRate = () => activeSalary() / 26; // 26 working days calculation basis
     const hourlyRate = () => dailyRate() / 9; // 9-hour basis
+    const overtimeHourlyRate = () => hourlyRate() * 1.5; // 1.5x overtime multiplier
 
     function syncBudgetAmounts() {
       const sal = activeSalary();
@@ -1484,9 +1979,23 @@
       }
     }
 
+    /* Edit History Logger */
+    function logEditHistory(type, description, oldValue, newValue) {
+      if (!data.editHistory) data.editHistory = [];
+      data.editHistory.unshift({
+        id: 'eh_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+        timestamp: new Date().toISOString(),
+        type,
+        description,
+        oldValue: String(oldValue ?? '—'),
+        newValue: String(newValue ?? '—')
+      });
+      data.editHistory = data.editHistory.slice(0, 50); // Keep 50 items
+    }
+
     const save = () => {
-      const key = 'ss360';
-      const snapKey = 'ss360_autobackups';
+      const key = 'ss370';
+      const snapKey = 'ss370_autobackups';
       try {
         const previous = localStorage.getItem(key);
         if (previous) {
@@ -1498,7 +2007,8 @@
         syncBudgetAmounts();
         const jsonStr = JSON.stringify(data);
         localStorage.setItem(key, jsonStr);
-        localStorage.setItem('ss343', jsonStr); // Mirror for legacy compatibility
+        localStorage.setItem('ss360', jsonStr); // Mirror for legacy compatibility
+        localStorage.setItem('ss343', jsonStr);
       } catch (err) {
         console.warn('SmartSalary local snapshot error', err);
       }
@@ -1514,16 +2024,31 @@
       return Math.max(0, 2 - used) * dailyRate();
     };
 
-    const overtimePayment = () => {
-      const hrs = Number(document.getElementById('otHours')?.value || 0);
-      const mult = Number(document.getElementById('otMultiplier')?.value || 1.5);
-      return Math.max(0, hrs * hourlyRate() * mult);
+    /* Sunday Duty Calculations (MANUAL HOURS ENTRY ONLY: Hours * Hourly Rate) */
+    const currentMonthSundays = () => data.sundays.filter(s => (s.monthKey || data.currentMonth) === data.currentMonth);
+    const totalSundayDutyHours = () => currentMonthSundays().reduce((sum, s) => sum + Number(s.hours || 0), 0);
+    const totalSundayDutyEarnings = () => currentMonthSundays().reduce((sum, s) => sum + (Number(s.hours || 0) * hourlyRate()), 0);
+
+    /* Overtime Calculations (1.5x) */
+    const currentMonthOvertime = () => data.income.filter(x => (x.monthKey || data.currentMonth) === data.currentMonth && x.type === 'Overtime');
+    const totalOvertimeHours = () => currentMonthOvertime().reduce((sum, x) => sum + Number(x.hours || 0), 0);
+    const totalOvertimeEarnings = () => currentMonthOvertime().reduce((sum, x) => sum + Number(x.amount || 0), 0);
+
+    /* Extra Pay / Bonuses */
+    const currentMonthExtraPay = () => (data.extraPay || []).filter(p => (p.monthKey || data.currentMonth) === data.currentMonth);
+    const totalExtraPayEarnings = () => currentMonthExtraPay().reduce((sum, p) => sum + Number(p.amount || 0), 0);
+
+    /* Other Income */
+    const currentMonthOtherIncome = () => data.income.filter(x => (x.monthKey || data.currentMonth) === data.currentMonth && x.type !== 'Overtime');
+    const totalOtherIncomeEarnings = () => currentMonthOtherIncome().reduce((sum, x) => sum + Number(x.amount || 0), 0);
+
+    /* Total Extra Earnings */
+    const totalExtraEarnings = () => {
+      return totalSundayDutyEarnings() + totalOvertimeEarnings() + totalExtraPayEarnings() + attendanceBonus() + totalOtherIncomeEarnings();
     };
 
-    const totalExtraIncome = () => {
-      const extraList = data.income.filter(x => (x.monthKey || data.currentMonth) === data.currentMonth);
-      return extraList.reduce((s, x) => s + Number(x.amount || 0), 0) + attendanceBonus();
-    };
+    /* Total Gross Earnings (Basic + Extra) */
+    const totalGrossEarnings = () => activeSalary() + totalExtraEarnings();
 
     /* Salary Advance Ledger Calculations */
     const totalAdvances = () => data.advances.reduce((s, a) => s + Number(a.amount || 0), 0);
@@ -1535,14 +2060,14 @@
     const deductibleLeaves = () => Math.max(0, Number(data.payrollLeaves || 0) - 2);
     const leaveDeduction = () => deductibleLeaves() * dailyRate();
 
+    /* Total Deductions */
+    const totalDeductions = () => {
+      return leaveDeduction() + currentMonthRecoveries() + Number(data.payrollOtherDeductions || 0);
+    };
+
     /* Net Payable Salary */
     const netPayableSalary = () => {
-      const base = activeSalary();
-      const extra = totalExtraIncome();
-      const lDed = leaveDeduction();
-      const aRec = currentMonthRecoveries();
-      const other = Number(data.payrollOtherDeductions || 0);
-      return base + extra - lDed - aRec - other;
+      return totalGrossEarnings() - totalDeductions();
     };
 
     function checkMonthRollover() {
@@ -1583,7 +2108,7 @@
         expenses: oldExpenses,
         income: oldIncome,
         totalExpenses: oldExpenses.reduce((s, e) => s + Number(e.amount || 0), 0),
-        totalExtraIncome: oldIncome.reduce((s, e) => s + Number(e.amount || 0), 0) + attendanceBonus(),
+        totalExtraIncome: totalExtraEarnings(),
         netPayable: netPayableSalary(),
         closedAt: new Date().toISOString()
       });
@@ -1629,7 +2154,6 @@
       'Carryover savings (previous months)': 'پچھلے مہینوں کی بچت',
       'Add expense': 'خرچ درج کریں',
       'Add extra income': 'اضافی آمدنی شامل کریں',
-      'View Payroll': 'پے رول دیکھیں',
       'Record an expense': 'نیا خرچ درج کریں',
       'Description': 'تفصیل',
       'Amount (PKR)': 'رقم (روپے)',
@@ -1637,6 +2161,7 @@
       'Date': 'تاریخ',
       'Save expense': 'خرچ محفوظ کریں',
       'Expense history': 'اخراجات کی تاریخ',
+      'Monthly Expense Summary': 'ماہانہ اخراجات کا خلاصہ',
       'Family expense tracker': 'خاندانی اخراجات کا ریکارڈ',
       'Who received the money?': 'رقم کس کو دی؟',
       'Reason': 'وجہ',
@@ -1646,69 +2171,59 @@
       'Salary & Payroll Management': 'تنخواہ اور پے رول کا انتظام',
       'Monthly Basic Salary': 'ماہانہ بنیادی تنخواہ',
       'Daily Salary (26 days basis)': 'روزانہ تنخواہ (26 دنوں کی بنیاد)',
-      'Leave Deductions & Rules': 'چھٹیوں کے قواعد اور کٹوتی',
+      'Standard Hourly Rate': 'معیاری فی گھنٹہ اجرت',
+      'Leaves This Month': '1. اس ماہ کی چھٹیاں',
       'Total Leaves Taken This Month': 'اس ماہ کل لی گئی چھٹیاں',
       'Deductible Leaves': 'کٹوتی والی چھٹیاں',
-      'Salary Advance Ledger': 'تنخواہ ایڈوانس کھاتہ',
+      'Sundays — Weekly Holiday Details': '2. اتوار — ہفتہ وار تعطیل کی ڈیوٹی',
+      'Sunday Duty Date': 'اتوار ڈیوٹی کی تاریخ',
+      'Hours Worked': 'ڈیوٹی کے گھنٹے',
+      'Duty Note / Reason': 'ڈیوٹی کی تفصیل / وجہ',
+      'Overtime — Extra Hours & Payment Record': '3. اوور ٹائم — اضافی گھنٹے اور معاوضہ',
+      'Overtime Date': 'اوور ٹائم کی تاریخ',
+      'Extra Hours': 'اضافی گھنٹے',
+      'Advance — Balance & Recovery': '4. ایڈوانس — بقایا اور واپسی',
       'Total Advances': 'کل ایڈوانس',
       'Total Recovered': 'کل وصول شدہ',
       'Outstanding Advance Balance': 'بقایا ایڈوانس',
       'Add New Advance': 'نیا ایڈوانس شامل کریں',
       'Advance Recovery for This Month': 'اس ماہ کی ایڈوانس کٹوتی',
       'Record Recovery': 'کٹوتی درج کریں',
-      'Advance & Recovery History': 'ایڈوانس اور واپسی کی تاریخ',
+      'Extra Pay — Bonus & Additional Earnings': '5. اضافی معاوضہ — بونس اور دیگر آمدنی',
       'Payroll Summary': 'پے رول کا خلاصہ',
-      'Basic Monthly Salary': 'بنیادی ماہانہ تنخواہ',
-      'Total Extra Income (Overtime, bonus, other)': 'کل اضافی آمدنی (اوور ٹائم، بونس، دیگر)',
+      'Sunday Duty Earnings': 'اتوار ڈیوٹی کا معاوضہ',
+      'Overtime Earnings': 'اوور ٹائم کا معاوضہ',
+      'Extra Pay & Bonus': 'اضافی معاوضہ اور بونس',
+      'Attendance Bonus': 'حاضری بونس',
+      'Total Gross Earnings': 'کل مجموعی کمائی',
       'Leave Deduction': 'چھٹیوں کی کٹوتی',
       'Advance Recovery': 'ایڈوانس کٹوتی',
       'Other Deductions': 'دیگر کٹوتیاں',
+      'Total Deductions': 'کل کٹوتیاں',
       'Net Payable Salary': 'خالص قابل ادا تنخواہ',
-      'Archive This Month Payroll': 'اس ماہ کا پے رول محفوظ کریں',
-      'Monthly Payroll History': 'ماہانہ پے رول کی تاریخ',
-      'Attendance Bonus': 'حاضری بونس',
-      'Allowed leave days used': 'استعمال شدہ اجازت شدہ چھٹیاں',
-      'Daily Rate': 'روزانہ اجرت',
-      'Save attendance bonus': 'حاضری بونس محفوظ کریں',
-      'Overtime calculator': 'اوور ٹائم کیلکولیٹر',
-      'Overtime hours': 'اوور ٹائم گھنٹے',
-      'Multiplier': 'ضرب (ریٹ)',
-      'Add overtime earning': 'اوور ٹائم رقم شامل کریں',
-      'Other extra income': 'دیگر اضافی آمدنی',
-      'Add other income': 'دیگر آمدنی شامل کریں',
-      'Extra income history': 'اضافی آمدنی کی تاریخ',
+      'Generate Salary Slip': 'سیلری سلپ تیار کریں',
+      'Salary Slip Preview': 'سیلری سلپ کا پیش منظر',
+      'Personal Details': 'ذاتی و ملازم تفصیلات',
+      'Employee Name': 'ملازم کا نام',
+      'Designation': 'عہدہ / ڈیزگنیشن',
+      'Download PDF': 'پی ڈی ایف ڈاؤن لوڈ کریں',
+      'Print Slip': 'سلپ پرنٹ کریں',
+      'Cancel': 'منسوخ کریں',
+      'Edit History': 'تبدیلیوں کی تاریخ',
+      'Backup Reminder': 'بیک اپ کی یاددہانی',
+      'Update SmartSalary': 'اسمارٹ سیلری اپ ڈیٹ کریں',
+      'Update': 'اپ ڈیٹ کریں',
+      'Skip': 'چھوڑیں',
+      'Next': 'اگلا',
       'Create a savings goal': 'نیا بچت کا ہدف بنائیں',
-      'Goal name': 'ہدف کا نام',
-      'Target amount': 'مطلوبہ رقم',
-      'Already saved': 'اب تک جمع رقم',
-      'Add goal': 'ہدف شامل کریں',
+      'What are you saving for?': 'آپ کس چیز کے لیے بچت کر رہے ہیں؟',
       'Your Savings Goals': 'آپ کے بچت کے اہداف',
-      'Select month': 'مہینہ منتخب کریں',
-      'Carryover savings by category': 'ہر مد کے حساب سے بچت',
-      'Data Backup & Restore': 'ڈیٹا بیک اپ اور بحالی',
-      'Export Backup (JSON)': 'بیک اپ ڈاؤن لوڈ کریں (JSON)',
-      'Import Backup': 'بیک اپ بحال کریں',
-      'Automatic Local Recovery Snapshots': 'خودکار مقامی بحالی اسنیپ شاٹس',
-      'Restore previous auto-backup': 'اسنیپ شاٹ بحال کریں',
-      'Privacy Policy': 'پرائیویسی پالیسی',
-      'Terms of Use': 'شرائط و ضوابط',
       'Menu & Preferences': 'مینو اور ترجیحات',
       'Language': 'زبان (Language)',
       'Offline Support': 'آف لائن سپورٹ',
       'App Guide': 'ایپ گائیڈ',
       'Settings': 'سیٹنگز',
       'About SmartSalary': 'اسمارٹ سیلری کے بارے میں',
-      'Budget Calculation Mode': 'بجٹ حساب کا طریقہ',
-      'Rupee Amount (PKR) [Default]': 'روپے کی رقم (PKR) [پہلے سے طے شدہ]',
-      'Percentage Mode (%)': 'فیصد موڈ (%)',
-      'Optional Budget Categories': 'اختیاری بجٹ کیٹیگریز',
-      'Save Preferences': 'ترجیحات محفوظ کریں',
-      'Customize Budget Categories': 'بجٹ کیٹیگریز ترتیب دیں',
-      'Customize Categories': 'کیٹیگریز تبدیل کریں',
-      'Save Budget': 'بجٹ محفوظ کریں',
-      'Start Guided Tour': 'رہنمائی شروع کریں',
-      'Skip Guide': 'گائیڈ چھوڑیں',
-      'Welcome to SmartSalary!': 'اسمارٹ سیلری میں خوش آمدید!',
       'Created with care by Hurraim Khan': 'بڑی محبت سے تیار کردہ از Hurraim Khan'
     };
 
@@ -1737,15 +2252,17 @@
     function render() {
       syncBudgetAmounts();
       const baseSalary = activeSalary();
-      const extraTotal = totalExtraIncome();
-      const totalIncome = baseSalary + extraTotal;
+      const dRate = dailyRate();
+      const hRate = hourlyRate();
+      const otRate = overtimeHourlyRate();
+      const totalIncome = totalGrossEarnings();
       const allExpenses = monthExpenses();
       const spentTotal = allExpenses.reduce((s, e) => s + Number(e.amount || 0), 0);
       const remainingBalance = totalIncome - spentTotal - currentMonthRecoveries();
 
       // Header Hero
       document.getElementById('incomeTotal').textContent = money(totalIncome);
-      document.getElementById('incomeBreakdown').textContent = `${monthLabel(data.currentMonth)} • ${data.salaryConfirmed ? 'Basic' : 'Demo Salary'} ${money(baseSalary)} • Extra ${money(extraTotal)}`;
+      document.getElementById('incomeBreakdown').textContent = `${monthLabel(data.currentMonth)} • Basic ${money(baseSalary)} • Extra ${money(totalExtraEarnings())}`;
 
       // Overview Metrics
       const totalAllocated = data.categories.reduce((s, c) => s + Number(c.amount || 0), 0);
@@ -1763,6 +2280,22 @@
       document.getElementById('mExpensesSub').textContent = `${allExpenses.length} entries this month`;
       document.getElementById('mRemaining').textContent = money(remainingBalance);
       document.getElementById('mRemainingSub').textContent = remainingBalance >= 0 ? 'Remaining cash' : 'Deficit / overspent';
+
+      // 6.6 Backup Reminder Banner
+      const banner = document.getElementById('backupReminderBanner');
+      let daysSinceBackup = null;
+      if (data.lastBackupDate) {
+        const last = new Date(data.lastBackupDate);
+        daysSinceBackup = Math.floor((new Date() - last) / (1000 * 60 * 60 * 24));
+      }
+      if (daysSinceBackup === null || daysSinceBackup >= 14) {
+        banner.classList.remove('hidden');
+        document.getElementById('backupReminderText').textContent = daysSinceBackup === null
+          ? 'You have not exported a backup yet. Export a JSON backup to keep your records safe offline.'
+          : `It has been ${daysSinceBackup} days since your last backup. Export a JSON backup to protect your records offline.`;
+      } else {
+        banner.classList.add('hidden');
+      }
 
       // Allocation Warning
       const warnBox = document.getElementById('allocationWarning');
@@ -1784,29 +2317,29 @@
           `<div class="row" style="margin-top:10px;padding-top:10px;border-top:1px solid var(--line);"><b>Total saved from previous months</b><b class="font-mono" style="color:var(--green);font-size:16px;">${money(carryTotal)}</b></div>`
         : '<p class="muted">No previous-month leftover saved yet. Any unspent budget will be moved here automatically when the month changes.</p>';
 
-      // Expenses Category Dropdown
-      document.getElementById('expCat').innerHTML = data.categories.map(c => `<option value="${esc(c.name)}">${esc(c.name)}</option>`).join('');
+      // Expenses Dropdown & Category Filter
+      const catOpts = data.categories.map(c => `<option value="${esc(c.name)}">${esc(c.name)}</option>`).join('');
+      document.getElementById('expCat').innerHTML = catOpts;
+      document.getElementById('expenseCategoryFilter').innerHTML = '<option value="ALL">All Categories</option>' + catOpts;
 
-      // Expense History
-      document.getElementById('expenseCount').textContent = `${allExpenses.length} expenses recorded`;
-      document.getElementById('expenseHistoryList').innerHTML = allExpenses.length
-        ? allExpenses.slice().reverse().map((e, idx) => {
-            const originalIndex = data.expenses.indexOf(e);
-            return `<div class="item row">
-              <div style="display:flex;align-items:center;gap:10px;">
-                <div class="cat-icon-badge" style="background:#0f172a;width:32px;height:32px;">${getCategoryIcon(e.category, 18)}</div>
-                <div>
-                  <b>${esc(e.title)}</b>
-                  <div class="muted">${esc(e.category)} • ${esc(e.date || 'Today')}</div>
-                </div>
-              </div>
-              <div style="display:flex;align-items:center;gap:8px;">
-                <b class="font-mono">${money(e.amount)}</b>
-                <button type="button" class="red sm" onclick="delExpense(${originalIndex})">✕</button>
-              </div>
-            </div>`;
-          }).join('')
-        : '<p class="muted">No expenses recorded this month.</p>';
+      // 6.2 Monthly Expense Summary
+      document.getElementById('monthlyExpenseSummaryTotal').textContent = money(spentTotal);
+      document.getElementById('monthlyExpenseSummaryBudget').textContent = money(totalAllocated);
+      document.getElementById('expenseCategorySummaryTableBody').innerHTML = data.categories.map(c => {
+        const spent = spentByCategory(c.name);
+        const rem = c.amount - spent;
+        const usedPct = c.amount > 0 ? (spent / c.amount * 100).toFixed(1) : '0';
+        return `<tr>
+          <td><b>${esc(c.name)}</b></td>
+          <td style="text-align:right;">${money(c.amount)}</td>
+          <td style="text-align:right;">${money(spent)}</td>
+          <td style="text-align:right;color:${rem < 0 ? 'var(--red)' : 'var(--green)'};font-weight:700;">${money(rem)}</td>
+          <td style="text-align:right;"><span class="badge-pill ${rem < 0 ? 'badge-red' : 'badge-green'}">${usedPct}%</span></td>
+        </tr>`;
+      }).join('');
+
+      // Expense History (Render with active search filters)
+      renderFilteredExpenses();
 
       // Family Extra Tracker
       const fc = familyCat();
@@ -1833,11 +2366,17 @@
       // Monthly Records
       renderRecords();
 
+      // Edit History Card
+      renderEditHistory();
+
       // Settings in 3-dot menu
       document.getElementById('modeAmount').checked = data.budgetMode === 'amount';
       document.getElementById('modePercent').checked = data.budgetMode === 'percent';
       document.getElementById('menuCarBike').checked = !!data.vehicles?.carBike;
       document.getElementById('menuFamilyExtra').checked = data.vehicles?.familyExtra !== false;
+      document.getElementById('menuEmpSummary').textContent = data.personalDetails?.name
+        ? `${data.personalDetails.name} • ${data.personalDetails.designation || 'Staff'}`
+        : 'Employee Name & Designation for Salary Slips.';
 
       updateBackupStatus();
       save();
@@ -1846,7 +2385,7 @@
 
     function renderCategoryCards() {
       const container = document.getElementById('catCardsGrid');
-      container.innerHTML = data.categories.map((c, idx) => {
+      container.innerHTML = data.categories.map(c => {
         const spent = spentByCategory(c.name);
         const remaining = c.amount - spent;
         const pct = c.amount > 0 ? Math.min(100, Math.round(spent / c.amount * 100)) : 0;
@@ -1878,18 +2417,81 @@
             <span style="width:${pct}%;background:${isOver ? 'var(--red)' : c.color};"></span>
           </div>
           <div class="btnrow" style="margin-top:10px;">
-            <button type="button" class="light sm" style="width:100%;" onclick="quickExpenseCategory('${esc(c.name)}')">＋ Add expense to this category</button>
+            <button type="button" class="light sm" style="width:100%;" onclick="quickExpenseCategory('${esc(c.name)}')">＋ Add expense</button>
           </div>
         </div>`;
       }).join('');
     }
 
+    /* 6.3 Search and Filter for Expenses */
+    function renderFilteredExpenses() {
+      const allExpenses = monthExpenses();
+      const query = (document.getElementById('expenseSearchInput')?.value || '').trim().toLowerCase();
+      const catFilter = document.getElementById('expenseCategoryFilter')?.value || 'ALL';
+      const dateFilter = document.getElementById('expenseDateFilter')?.value || '';
+
+      const filtered = allExpenses.filter(e => {
+        const matchQ = !query || e.title.toLowerCase().includes(query) || (e.category || '').toLowerCase().includes(query);
+        const matchC = catFilter === 'ALL' || e.category === catFilter;
+        const matchD = !dateFilter || e.date === dateFilter;
+        return matchQ && matchC && matchD;
+      });
+
+      document.getElementById('expenseCount').textContent = `Showing ${filtered.length} of ${allExpenses.length} expenses`;
+
+      const listContainer = document.getElementById('expenseHistoryList');
+      if (!allExpenses.length) {
+        listContainer.innerHTML = `
+          <div class="empty-state">
+            <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+            <p>No expenses recorded this month yet.</p>
+            <button type="button" class="primary sm" onclick="document.getElementById('expDesc').focus()">＋ Record First Expense</button>
+          </div>
+        `;
+        return;
+      }
+
+      if (!filtered.length) {
+        listContainer.innerHTML = '<p class="muted text-center" style="padding:16px;">No expenses match your search/filter criteria.</p>';
+        return;
+      }
+
+      listContainer.innerHTML = filtered.slice().reverse().map(e => {
+        const originalIndex = data.expenses.indexOf(e);
+        return `<div class="item row">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div class="cat-icon-badge" style="background:#0f172a;width:32px;height:32px;">${getCategoryIcon(e.category, 18)}</div>
+            <div>
+              <b>${esc(e.title)}</b>
+              <div class="muted">${esc(e.category)} • ${esc(e.date || 'Today')}</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <b class="font-mono">${money(e.amount)}</b>
+            <button type="button" class="red sm" onclick="delExpense(${originalIndex})">✕</button>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    document.getElementById('expenseSearchInput').oninput = renderFilteredExpenses;
+    document.getElementById('expenseCategoryFilter').onchange = renderFilteredExpenses;
+    document.getElementById('expenseDateFilter').onchange = renderFilteredExpenses;
+
+    /* SECTION 3: SALARY & PAYROLL */
     function renderPayroll() {
       const sal = activeSalary();
       const dRate = dailyRate();
+      const hRate = hourlyRate();
+      const otRate = overtimeHourlyRate();
+
       document.getElementById('payrollBasicDisplay').textContent = money(sal);
       document.getElementById('payrollDailyDisplay').textContent = money(dRate);
+      document.getElementById('payrollHourlyDisplay').textContent = money(hRate);
+      document.getElementById('sundayRateDisplay').textContent = money(hRate);
+      document.getElementById('otRatePreviewDisplay').textContent = money(otRate);
 
+      // 1. Leaves
       const totalL = Number(data.payrollLeaves || 0);
       const dedL = Math.max(0, totalL - 2);
       const lDedAmount = dedL * dRate;
@@ -1900,7 +2502,71 @@
       document.getElementById('payrollLeaveDeductionDisplay').textContent = money(lDedAmount);
       document.getElementById('payrollLeaveFormula').textContent = `Calculation: ${dedL} deductible days × ${money(dRate)} = ${money(lDedAmount)}`;
 
-      // Advance metrics
+      // 2. Sundays (Weekly Holiday Duties)
+      const sundaysList = currentMonthSundays();
+      const tSunHours = totalSundayDutyHours();
+      const tSunEarnings = totalSundayDutyEarnings();
+      document.getElementById('sundayDutyTotalBadge').textContent = `${tSunHours} hrs • ${money(tSunEarnings)}`;
+
+      const sunContainer = document.getElementById('sundayDutyList');
+      if (!sundaysList.length) {
+        sunContainer.innerHTML = `
+          <div class="empty-state">
+            <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <p>No Sunday duties recorded this month.</p>
+            <button type="button" class="primary sm" onclick="document.getElementById('sundayDutyHours').focus()">＋ Add Sunday Duty</button>
+          </div>
+        `;
+      } else {
+        sunContainer.innerHTML = sundaysList.map(s => {
+          const earned = Number(s.hours || 0) * hRate;
+          return `<div class="item row">
+            <div>
+              <span class="badge-pill badge-blue font-mono">${s.hours} Hours</span>
+              <strong style="margin-left:6px;">${esc(s.note || 'Sunday Duty')}</strong>
+              <div class="muted font-mono" style="font-size:12px;">${esc(s.date)} • @ ${money(hRate)}/hr</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <b class="font-mono" style="color:var(--green);">${money(earned)}</b>
+              <button type="button" class="light sm" onclick="editSundayDuty('${s.id}')">Edit</button>
+              <button type="button" class="red sm" onclick="delSundayDuty('${s.id}')">✕</button>
+            </div>
+          </div>`;
+        }).join('');
+      }
+
+      // 3. Overtime
+      const otList = currentMonthOvertime();
+      const tOtHours = totalOvertimeHours();
+      const tOtEarnings = totalOvertimeEarnings();
+      document.getElementById('otTotalBadge').textContent = `${tOtHours} hrs • ${money(tOtEarnings)}`;
+
+      const otContainer = document.getElementById('payrollOTList');
+      if (!otList.length) {
+        otContainer.innerHTML = `
+          <div class="empty-state">
+            <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>
+            <p>No overtime hours recorded this month.</p>
+            <button type="button" class="primary sm" onclick="document.getElementById('otHoursInput').focus()">＋ Add Overtime</button>
+          </div>
+        `;
+      } else {
+        otContainer.innerHTML = otList.map(x => `
+          <div class="item row">
+            <div>
+              <span class="badge-pill badge-green font-mono">${x.hours || 0} Hours</span>
+              <strong style="margin-left:6px;">${esc(x.title || 'Overtime')}</strong>
+              <div class="muted font-mono" style="font-size:12px;">${esc(x.date)} • 1.5× rate</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <b class="font-mono" style="color:var(--green);">${money(x.amount)}</b>
+              <button type="button" class="red sm" onclick="delIncome(${data.income.indexOf(x)})">✕</button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // 4. Advance
       const tAdv = totalAdvances();
       const tRec = totalRecoveries();
       const outBal = outstandingAdvance();
@@ -1910,57 +2576,115 @@
       document.getElementById('advanceRecoveredAll').textContent = money(tRec);
       document.getElementById('advanceOutstanding').textContent = money(outBal);
 
-      // Advance History
-      const combinedHistory = [
+      const combinedAdvHistory = [
         ...data.advances.map(a => ({ ...a, kind: 'advance' })),
         ...data.recoveries.map(r => ({ ...r, kind: 'recovery' }))
       ].sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 
-      document.getElementById('advanceHistoryList').innerHTML = combinedHistory.length
-        ? combinedHistory.map((item, i) => {
-            const isAdv = item.kind === 'advance';
-            return `<div class="item row">
-              <div>
-                <span class="badge-pill ${isAdv ? 'badge-gold' : 'badge-green'}">${isAdv ? 'Advance Issued' : 'Monthly Recovery'}</span>
-                <b style="margin-left:6px;">${esc(item.description || item.note || (isAdv ? 'Salary Advance' : 'Recovery'))}</b>
-                <div class="muted font-mono" style="font-size:11.5px;">${esc(item.date || '—')}</div>
-              </div>
-              <div style="display:flex;align-items:center;gap:8px;">
-                <b class="font-mono" style="color:${isAdv ? 'var(--navy)' : 'var(--green)'};">${isAdv ? '+' : '-'}${money(item.amount)}</b>
-                <button type="button" class="red sm" onclick="delAdvanceItem('${item.kind}', '${item.id}')">✕</button>
-              </div>
-            </div>`;
-          }).join('')
-        : '<p class="muted">No advance or recovery records yet.</p>';
+      const advHistContainer = document.getElementById('advanceHistoryList');
+      if (!combinedAdvHistory.length) {
+        advHistContainer.innerHTML = `
+          <div class="empty-state">
+            <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/></svg>
+            <p>No advances or repayments recorded.</p>
+          </div>
+        `;
+      } else {
+        advHistContainer.innerHTML = combinedAdvHistory.map(item => {
+          const isAdv = item.kind === 'advance';
+          return `<div class="item row">
+            <div>
+              <span class="badge-pill ${isAdv ? 'badge-gold' : 'badge-green'}">${isAdv ? 'Advance Issued' : 'Monthly Recovery'}</span>
+              <b style="margin-left:6px;">${esc(item.description || item.note || (isAdv ? 'Salary Advance' : 'Recovery'))}</b>
+              <div class="muted font-mono" style="font-size:11.5px;">${esc(item.date || '—')}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <b class="font-mono" style="color:${isAdv ? 'var(--navy)' : 'var(--green)'};">${isAdv ? '+' : '-'}${money(item.amount)}</b>
+              <button type="button" class="red sm" onclick="delAdvanceItem('${item.kind}', '${item.id}')">✕</button>
+            </div>
+          </div>`;
+        }).join('');
+      }
 
-      // Summary Card
-      const extraInc = totalExtraIncome();
+      // 5. Extra Pay
+      const extraPayItems = currentMonthExtraPay();
+      const tExtraPay = totalExtraPayEarnings();
+      document.getElementById('extraPayTotalBadge').textContent = money(tExtraPay);
+
+      const extraPayContainer = document.getElementById('extraPayList');
+      if (!extraPayItems.length) {
+        extraPayContainer.innerHTML = `
+          <div class="empty-state">
+            <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <p>No extra pay or bonuses recorded this month.</p>
+            <button type="button" class="primary sm" onclick="document.getElementById('extraPayAmount').focus()">＋ Add Extra Pay</button>
+          </div>
+        `;
+      } else {
+        extraPayContainer.innerHTML = extraPayItems.map(p => `
+          <div class="item row">
+            <div>
+              <span class="badge-pill badge-gold">Bonus</span>
+              <strong style="margin-left:6px;">${esc(p.reason || 'Extra Pay')}</strong>
+              <div class="muted font-mono" style="font-size:11.5px;">${esc(p.date || '—')}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <b class="font-mono" style="color:var(--green);">${money(p.amount)}</b>
+              <button type="button" class="red sm" onclick="delExtraPay('${p.id}')">✕</button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Payroll Summary Card
+      const attBonus = attendanceBonus();
+      const gross = totalGrossEarnings();
       const otherDed = Number(data.payrollOtherDeductions || 0);
-      const net = sal + extraInc - lDedAmount - curRec - otherDed;
+      const totalDed = totalDeductions();
+      const net = netPayableSalary();
 
       document.getElementById('sumBasic').textContent = money(sal);
-      document.getElementById('sumExtra').textContent = `+ ${money(extraInc)}`;
+      document.getElementById('sumSundays').textContent = `+ ${money(tSunEarnings)}`;
+      document.getElementById('sumOvertime').textContent = `+ ${money(tOtEarnings)}`;
+      document.getElementById('sumExtraPay').textContent = `+ ${money(tExtraPay)}`;
+      document.getElementById('sumAttendanceBonus').textContent = `+ ${money(attBonus)}`;
+      document.getElementById('sumTotalEarnings').textContent = money(gross);
+
       document.getElementById('sumLeave').textContent = `- ${money(lDedAmount)}`;
       document.getElementById('sumRecovery').textContent = `- ${money(curRec)}`;
       document.getElementById('sumOtherDeductions').value = otherDed;
+      document.getElementById('sumTotalDeductions').textContent = `- ${money(totalDed)}`;
       document.getElementById('sumNetPayable').textContent = money(net);
 
-      // Payroll archives
-      document.getElementById('payrollArchiveList').innerHTML = data.payrollArchives.length
-        ? data.payrollArchives.slice().reverse().map(p => `
-            <div class="item">
-              <div class="row">
-                <b>${esc(p.monthLabel)}</b>
-                <b class="font-mono" style="font-size:16px;color:var(--navy);">${money(p.netPayable)}</b>
-              </div>
-              <div class="muted font-mono" style="font-size:12px;">
-                Basic: ${money(p.basicSalary)} • Extra: +${money(p.extraIncome)} • Leave Ded: -${money(p.leaveDeduction)} • Advance Rec: -${money(p.advanceRecovery)}
-              </div>
-            </div>
-          `).join('')
-        : '<p class="muted">No archived payroll records yet. Click "Archive This Month Payroll" to save a snapshot.</p>';
+      // Saved Salary Slips list
+      renderSalarySlipsArchive();
     }
 
+    function renderSalarySlipsArchive() {
+      const container = document.getElementById('salarySlipsArchiveList');
+      const slips = data.salarySlips || [];
+      if (!slips.length) {
+        container.innerHTML = '<p class="muted">No salary slips generated yet. Click "Generate Salary Slip" to create a permanent monthly slip.</p>';
+        return;
+      }
+
+      container.innerHTML = slips.slice().reverse().map(slip => `
+        <div class="item row">
+          <div>
+            <span class="badge-pill badge-blue">${esc(slip.monthLabel)}</span>
+            <strong style="margin-left:6px;">${esc(slip.employeeName || 'Staff')}</strong>
+            <div class="muted font-mono" style="font-size:12px;">${esc(slip.designation || 'Employee')} • Created ${new Date(slip.generatedAt).toLocaleDateString()}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <b class="font-mono" style="color:var(--navy);font-size:15px;">${money(slip.netSalary)}</b>
+            <button type="button" class="light sm" onclick="openSalarySlipPreview('${slip.monthKey}')">View</button>
+            <button type="button" class="primary sm" onclick="downloadSlipPdfDirectly('${slip.monthKey}')">PDF</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    /* Extra Income Section */
     function renderExtraIncome() {
       const dRate = dailyRate();
       document.getElementById('incomeDailyRate').textContent = money(dRate);
@@ -1987,46 +2711,156 @@
         : '<p class="muted">No extra income recorded this month.</p>';
     }
 
+    const overtimePayment = () => {
+      const hrs = Number(document.getElementById('otHours')?.value || 0);
+      const mult = Number(document.getElementById('otMultiplier')?.value || 1.5);
+      return Math.max(0, hrs * hourlyRate() * mult);
+    };
+
+    /* 6.1 Savings Goals with Progress & 6.4 Low Savings Alert */
     function renderGoals() {
       const container = document.getElementById('goalsList');
-      container.innerHTML = data.goals.length
-        ? data.goals.map((g, i) => {
-            const pct = g.target > 0 ? Math.min(100, Math.round(g.saved / g.target * 100)) : 0;
-            const remaining = Math.max(0, g.target - g.saved);
-            return `<div class="card" style="margin-bottom:12px;">
-              <div class="row">
-                <b style="font-size:16px;">${esc(g.name)}</b>
-                <button type="button" class="red sm" onclick="delGoal(${i})">Remove</button>
-              </div>
-              <div class="row muted font-mono" style="margin:8px 0;">
-                <span>Saved: <b>${money(g.saved)}</b></span>
-                <span>Target: <b>${money(g.target)}</b></span>
-              </div>
-              <div class="progress">
-                <span style="width:${pct}%;background:var(--blue);"></span>
-              </div>
-              <div class="row muted" style="margin-top:6px;font-size:12.5px;">
-                <span>${pct}% complete</span>
-                <span class="font-mono">${money(remaining)} remaining</span>
-              </div>
-              <div class="btnrow" style="margin-top:10px;">
-                <button type="button" class="light sm" onclick="addGoalSavings(${i})">＋ Add savings</button>
-              </div>
-            </div>`;
-          }).join('')
-        : '<div class="card muted">No savings goals created yet. Add one above!</div>';
+      if (!data.goals || !data.goals.length) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+            <p>No savings goals set yet.</p>
+            <button type="button" class="primary sm" onclick="document.getElementById('goalName').focus()">＋ Create First Goal</button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = data.goals.map((g, i) => {
+        const pct = g.target > 0 ? Math.min(100, Math.round(g.saved / g.target * 100)) : 0;
+        const remaining = Math.max(0, g.target - g.saved);
+        const isLow = pct < 25;
+
+        return `<div class="card" style="margin-bottom:12px;">
+          <div class="row">
+            <b style="font-size:16px;">${esc(g.name)}</b>
+            <button type="button" class="red sm" onclick="delGoal(${i})">Remove</button>
+          </div>
+          
+          ${isLow ? `
+            <div style="margin:8px 0 4px;font-size:12px;color:#b45309;background:#fef3c7;padding:4px 8px;border-radius:6px;display:inline-flex;align-items:center;gap:4px;">
+              <span>⚠️ Low savings pace: Only ${pct}% saved so far. Consider setting aside funds this month.</span>
+            </div>
+          ` : ''}
+
+          <div class="row muted font-mono" style="margin:8px 0;">
+            <span>Saved: <b style="color:var(--navy);">${money(g.saved)}</b></span>
+            <span>Target: <b>${money(g.target)}</b></span>
+          </div>
+          <div class="progress">
+            <span style="width:${pct}%;background:${pct >= 100 ? 'var(--green)' : 'var(--blue)'};"></span>
+          </div>
+          <div class="row muted" style="margin-top:6px;font-size:12.5px;">
+            <span><b>${pct}%</b> complete</span>
+            <span class="font-mono">${money(remaining)} remaining</span>
+          </div>
+          <div class="btnrow" style="margin-top:10px;">
+            <button type="button" class="light sm" onclick="addGoalSavings(${i})">＋ Add savings</button>
+          </div>
+        </div>`;
+      }).join('');
     }
 
+    /* 6.5 Edit History Renderer */
+    function renderEditHistory() {
+      const container = document.getElementById('editHistoryList');
+      if (!container) return;
+      const history = data.editHistory || [];
+      if (!history.length) {
+        container.innerHTML = '<p class="muted" style="margin:4px 0;">No changes logged yet. Important modifications will be tracked here.</p>';
+        return;
+      }
+      container.innerHTML = history.slice(0, 20).map(item => `
+        <div class="item row" style="font-size:12.5px;">
+          <div>
+            <span class="badge-pill badge-gold">${esc(item.type)}</span>
+            <strong style="margin-left:6px;">${esc(item.description)}</strong>
+            <div class="muted font-mono" style="font-size:11px;">
+              ${new Date(item.timestamp).toLocaleString()} • Old: ${esc(item.oldValue)} → New: ${esc(item.newValue)}
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    document.getElementById('clearEditHistoryBtn').onclick = () => {
+      if (confirm('Clear edit history log?')) {
+        data.editHistory = [];
+        save();
+        renderEditHistory();
+      }
+    };
+
+    /* Monthly Records with Search Filter */
     function renderRecords() {
       const sel = document.getElementById('recordSelect');
-      let all = data.archives.slice().sort((a, b) => b.monthKey.localeCompare(a.monthKey));
-      if (!all.some(a => a.monthKey === data.currentMonth)) {
-        all.unshift({ monthKey: data.currentMonth, label: monthLabel(data.currentMonth), live: true });
-      }
-      sel.innerHTML = all.map(a => `<option value="${a.monthKey}">${a.label}${a.live ? ' (Current Active Month)' : ''}</option>`).join('');
-
-      const chosen = all.find(a => a.monthKey === sel.value) || all[0];
       const details = document.getElementById('recordDetails');
+      const searchInput = document.getElementById('recordsSearchInput');
+      const query = (searchInput?.value || '').trim().toLowerCase();
+
+      let all = (data.archives || []).slice().sort((a, b) => b.monthKey.localeCompare(a.monthKey));
+      if (!all.some(a => a.monthKey === data.currentMonth)) {
+        all.unshift({
+          monthKey: data.currentMonth,
+          label: monthLabel(data.currentMonth),
+          live: true,
+          salary: activeSalary(),
+          netPayable: netPayableSalary(),
+          employeeName: data.personalDetails?.name || ''
+        });
+      }
+
+      const filtered = all.filter(a => {
+        if (!query) return true;
+        const label = (a.label || monthLabel(a.monthKey) || '').toLowerCase();
+        const key = (a.monthKey || '').toLowerCase();
+        const parts = key.split('-');
+        const year = parts[0] || '';
+        const monthNum = parts[1] || '';
+        const slip = (data.salarySlips || []).find(s => s.monthKey === a.monthKey);
+        const empName = (slip?.employeeName || a.employeeName || (a.live ? data.personalDetails?.name : '') || '').toLowerCase();
+        const desig = (slip?.designation || a.designation || (a.live ? data.personalDetails?.designation : '') || '').toLowerCase();
+
+        return label.includes(query) ||
+               key.includes(query) ||
+               year.includes(query) ||
+               empName.includes(query) ||
+               desig.includes(query) ||
+               (query.length <= 2 && query === monthNum);
+      });
+
+      if (!filtered.length) {
+        sel.innerHTML = '<option value="">No matching records</option>';
+        details.innerHTML = `
+          <div class="empty-state" style="padding:28px 16px;text-align:center;background:#fef2f2;border:1px dashed #fca5a5;border-radius:10px;margin-top:10px;">
+            <div style="font-size:24px;margin-bottom:6px;">🔍</div>
+            <div style="font-weight:700;color:#991b1b;font-size:15px;">No monthly records match "${esc(query)}"</div>
+            <p class="muted" style="margin:6px 0 0;font-size:13px;">Try searching by month name (e.g. November), year (e.g. 2026), or employee name.</p>
+          </div>
+        `;
+        return;
+      }
+
+      const prevSelVal = sel.value;
+      sel.innerHTML = filtered.map(a => {
+        const slip = (data.salarySlips || []).find(s => s.monthKey === a.monthKey);
+        const emp = slip?.employeeName || a.employeeName || (a.live ? data.personalDetails?.name : '') || '';
+        const empTag = emp ? ` • ${emp}` : '';
+        return `<option value="${a.monthKey}">${a.label}${a.live ? ' (Current Active Month)' : ''}${empTag}</option>`;
+      }).join('');
+
+      if (filtered.some(a => a.monthKey === prevSelVal)) {
+        sel.value = prevSelVal;
+      } else {
+        sel.value = filtered[0].monthKey;
+      }
+
+      const chosen = filtered.find(a => a.monthKey === sel.value) || filtered[0];
       if (!chosen) {
         details.innerHTML = '<p class="muted">No records available.</p>';
         return;
@@ -2037,10 +2871,15 @@
         const inc = data.income.filter(x => (x.monthKey || data.currentMonth) === data.currentMonth);
         details.innerHTML = `
           <div class="row item"><span>Basic Monthly Salary</span><b class="font-mono">${money(activeSalary())}</b></div>
+          <div class="row item"><span>Sunday Duty Earnings</span><b class="font-mono" style="color:var(--green);">${money(totalSundayDutyEarnings())}</b></div>
+          <div class="row item"><span>Overtime Earnings</span><b class="font-mono" style="color:var(--green);">${money(totalOvertimeEarnings())}</b></div>
+          <div class="row item"><span>Extra Pay / Bonuses</span><b class="font-mono" style="color:var(--green);">${money(totalExtraPayEarnings())}</b></div>
           <div class="row item"><span>Total Expenses</span><b class="font-mono">${money(ex.reduce((s, x) => s + Number(x.amount || 0), 0))}</b></div>
-          <div class="row item"><span>Total Extra Income</span><b class="font-mono" style="color:var(--green);">${money(inc.reduce((s, x) => s + Number(x.amount || 0), 0) + attendanceBonus())}</b></div>
           <div class="row item"><span>Net Payable Salary</span><b class="font-mono" style="color:var(--navy);font-size:16px;">${money(netPayableSalary())}</b></div>
-          <h3 style="margin-top:14px;">Category Balances</h3>
+          <div class="btnrow" style="margin-top:10px;">
+            <button type="button" class="gold sm" onclick="openSalarySlipPreview('${data.currentMonth}')">View / Print Salary Slip</button>
+          </div>
+          <h3 style="margin-top:16px;">Category Balances</h3>
           ${data.categories.map(c => `
             <div class="item row">
               <span>${esc(c.name)} (Budget: ${money(c.amount)})</span>
@@ -2054,7 +2893,10 @@
           <div class="row item"><span>Total Expenses</span><b class="font-mono">${money(chosen.totalExpenses)}</b></div>
           <div class="row item"><span>Total Extra Income</span><b class="font-mono" style="color:var(--green);">${money(chosen.totalExtraIncome)}</b></div>
           <div class="row item"><span>Net Payable Salary</span><b class="font-mono" style="color:var(--navy);font-size:16px;">${money(chosen.netPayable || chosen.salary)}</b></div>
-          <h3 style="margin-top:14px;">Category Breakdown</h3>
+          <div class="btnrow" style="margin-top:10px;">
+            <button type="button" class="gold sm" onclick="openSalarySlipPreview('${chosen.monthKey}')">View / Print Salary Slip</button>
+          </div>
+          <h3 style="margin-top:16px;">Category Breakdown</h3>
           ${(chosen.categories || []).map(c => `
             <div class="item">
               <div class="row"><b>${esc(c.name)}</b><b class="font-mono">${money(c.remaining)} remaining</b></div>
@@ -2071,7 +2913,449 @@
         : '<p class="muted">No carryover savings yet.</p>';
     }
 
+    document.getElementById('recordsSearchInput').oninput = renderRecords;
     document.getElementById('recordSelect').onchange = renderRecords;
+
+    /* SECTION 8: SALARY SLIP GENERATION & OFFLINE PDF GENERATION */
+    function checkPersonalDetailsThen(callback) {
+      if (!data.personalDetails?.name || !data.personalDetails?.designation) {
+        document.getElementById('employeeNameInput').value = data.personalDetails?.name || '';
+        document.getElementById('employeeDesignationInput').value = data.personalDetails?.designation || '';
+        const modal = document.getElementById('personalDetailsModal');
+        modal.style.display = 'flex';
+        document.getElementById('savePersonalBtn').onclick = () => {
+          const name = document.getElementById('employeeNameInput').value.trim();
+          const desig = document.getElementById('employeeDesignationInput').value.trim();
+          if (!name) return alert('Please enter employee name.');
+          data.personalDetails = { name, designation: desig || 'Staff' };
+          save();
+          modal.style.display = 'none';
+          callback();
+        };
+        document.getElementById('skipPersonalBtn').onclick = () => {
+          modal.style.display = 'none';
+          callback();
+        };
+      } else {
+        callback();
+      }
+    }
+
+    function buildSalarySlipData(mKey) {
+      const isCur = !mKey || mKey === data.currentMonth;
+      const mLabel = isCur ? monthLabel(data.currentMonth) : (data.archives.find(a => a.monthKey === mKey)?.label || monthLabel(mKey));
+      const empName = data.personalDetails?.name || 'Employee';
+      const desig = data.personalDetails?.designation || 'Staff';
+
+      let basic = activeSalary();
+      let sunHours = totalSundayDutyHours();
+      let sunEarn = totalSundayDutyEarnings();
+      let otHours = totalOvertimeHours();
+      let otEarn = totalOvertimeEarnings();
+      let extraPay = totalExtraPayEarnings();
+      let attBonus = attendanceBonus();
+      let gross = totalGrossEarnings();
+      let lDed = leaveDeduction();
+      let advRec = currentMonthRecoveries();
+      let otherDed = Number(data.payrollOtherDeductions || 0);
+      let totDed = totalDeductions();
+      let net = netPayableSalary();
+
+      // If looking at an existing archived slip, load that snapshot
+      const existingSlip = (data.salarySlips || []).find(s => s.monthKey === (mKey || data.currentMonth));
+      if (existingSlip && !isCur) {
+        return existingSlip;
+      }
+
+      return {
+        id: 'slip_' + (mKey || data.currentMonth),
+        monthKey: mKey || data.currentMonth,
+        monthLabel: mLabel,
+        employeeName: empName,
+        designation: desig,
+        basicSalary: basic,
+        sundayHours: sunHours,
+        sundayEarnings: sunEarn,
+        overtimeHours: otHours,
+        overtimeEarnings: otEarn,
+        extraPay: extraPay,
+        attendanceBonus: attBonus,
+        totalEarnings: gross,
+        leaveDeduction: lDed,
+        advanceRecovery: advRec,
+        otherDeductions: otherDed,
+        totalDeductions: totDed,
+        netSalary: net,
+        generatedAt: new Date().toISOString()
+      };
+    }
+
+    let activeSlipData = null;
+
+    function openSalarySlipPreview(mKey) {
+      checkPersonalDetailsThen(() => {
+        activeSlipData = buildSalarySlipData(mKey);
+
+        document.getElementById('slipMonthHeading').textContent = `MONTHLY SALARY SLIP — ${activeSlipData.monthLabel.toUpperCase()}`;
+        document.getElementById('slipDateGenerated').textContent = `Generated: ${new Date(activeSlipData.generatedAt).toLocaleDateString()}`;
+        document.getElementById('slipEmpNameDisplay').textContent = activeSlipData.employeeName;
+        document.getElementById('slipEmpDesigDisplay').textContent = activeSlipData.designation;
+        document.getElementById('slipMonthPeriodDisplay').textContent = activeSlipData.monthLabel;
+
+        const tbody = document.getElementById('slipTableBody');
+        tbody.innerHTML = `
+          <tr>
+            <td style="text-align:center;">1</td>
+            <td><strong>Basic Monthly Salary</strong></td>
+            <td style="text-align:right;">${money(activeSlipData.basicSalary)}</td>
+          </tr>
+          <tr>
+            <td style="text-align:center;">2</td>
+            <td>Sunday Duty Earnings (${activeSlipData.sundayHours || 0} hrs worked)</td>
+            <td style="text-align:right;color:var(--green);">${money(activeSlipData.sundayEarnings)}</td>
+          </tr>
+          <tr>
+            <td style="text-align:center;">3</td>
+            <td>Overtime Earnings (${activeSlipData.overtimeHours || 0} hrs)</td>
+            <td style="text-align:right;color:var(--green);">${money(activeSlipData.overtimeEarnings)}</td>
+          </tr>
+          <tr>
+            <td style="text-align:center;">4</td>
+            <td>Extra Pay / Performance Bonus</td>
+            <td style="text-align:right;color:var(--green);">${money(activeSlipData.extraPay)}</td>
+          </tr>
+          <tr>
+            <td style="text-align:center;">5</td>
+            <td>Attendance Bonus (Allowed off bonus)</td>
+            <td style="text-align:right;color:var(--green);">${money(activeSlipData.attendanceBonus)}</td>
+          </tr>
+          <tr class="slip-total-row">
+            <td></td>
+            <td><strong>Total Gross Earnings</strong></td>
+            <td style="text-align:right;color:var(--green);">${money(activeSlipData.totalEarnings)}</td>
+          </tr>
+          <tr>
+            <td style="text-align:center;">6</td>
+            <td>Leave Deduction (Deductible leaves beyond allowed)</td>
+            <td style="text-align:right;color:var(--red);">- ${money(activeSlipData.leaveDeduction)}</td>
+          </tr>
+          <tr>
+            <td style="text-align:center;">7</td>
+            <td>Salary Advance Recovery</td>
+            <td style="text-align:right;color:var(--red);">- ${money(activeSlipData.advanceRecovery)}</td>
+          </tr>
+          <tr>
+            <td style="text-align:center;">8</td>
+            <td>Other Deductions (Tax / loan / other)</td>
+            <td style="text-align:right;color:var(--red);">- ${money(activeSlipData.otherDeductions)}</td>
+          </tr>
+          <tr class="slip-total-row" style="background:#fef2f2;">
+            <td></td>
+            <td><strong>Total Deductions</strong></td>
+            <td style="text-align:right;color:var(--red);">- ${money(activeSlipData.totalDeductions)}</td>
+          </tr>
+          <tr class="slip-net-row">
+            <td></td>
+            <td><strong>NET PAYABLE SALARY</strong></td>
+            <td style="text-align:right;color:#ffffff;font-size:16px;">${money(activeSlipData.netSalary)}</td>
+          </tr>
+        `;
+
+        document.getElementById('salarySlipModal').style.display = 'flex';
+      });
+    }
+
+    /* Save salary slip permanently without duplication */
+    function commitSalarySlip(slip) {
+      if (!data.salarySlips) data.salarySlips = [];
+      const idx = data.salarySlips.findIndex(s => s.monthKey === slip.monthKey);
+      if (idx >= 0) {
+        data.salarySlips[idx] = slip; // Update without duplicate
+      } else {
+        data.salarySlips.push(slip);
+      }
+      logEditHistory('Salary Slip', `Generated salary slip for ${slip.monthLabel}`, '—', money(slip.netSalary));
+      save();
+      renderSalarySlipsArchive();
+    }
+
+    /* PURE JAVASCRIPT VECTOR PDF 1.4 GENERATOR (100% OFFLINE, ZERO EXTERNAL LIBS) */
+    function generateSalarySlipPdf(slip) {
+      commitSalarySlip(slip);
+
+      const monthText = slip.monthLabel;
+      const empName = slip.employeeName || 'Staff';
+      const desig = slip.designation || 'Employee';
+
+      const rows = [
+        ['1', 'Basic Monthly Salary', money(slip.basicSalary)],
+        ['2', `Sunday Duty Earnings (${slip.sundayHours || 0} hrs)`, money(slip.sundayEarnings)],
+        ['3', `Overtime Earnings (${slip.overtimeHours || 0} hrs)`, money(slip.overtimeEarnings)],
+        ['4', 'Extra Pay / Performance Bonus', money(slip.extraPay)],
+        ['5', 'Attendance Bonus (Allowed off bonus)', money(slip.attendanceBonus)],
+        ['', 'TOTAL GROSS EARNINGS', money(slip.totalEarnings)],
+        ['6', 'Leave Deduction', `- ${money(slip.leaveDeduction)}`],
+        ['7', 'Salary Advance Recovery', `- ${money(slip.advanceRecovery)}`],
+        ['8', 'Other Deductions', `- ${money(slip.otherDeductions)}`],
+        ['', 'TOTAL DEDUCTIONS', `- ${money(slip.totalDeductions)}`],
+        ['', 'NET PAYABLE SALARY', money(slip.netSalary)]
+      ];
+
+      // Build PDF PostScript content commands
+      let c = [];
+      // Dark Navy Header Box: x=40, y=770, w=515, h=50
+      c.push('0.059 0.090 0.165 rg 40 770 515 50 re f');
+      // Gold line under header: y=767, h=3
+      c.push('0.961 0.620 0.043 rg 40 767 515 3 re f');
+      
+      // SmartSalary Brand Title (white)
+      c.push('1 1 1 rg BT /F2 18 Tf 50 788 Td (SmartSalary - MONTHLY SALARY SLIP) Tj ET');
+      // Month (gold)
+      c.push('0.961 0.620 0.043 rg BT /F2 12 Tf 430 788 Td (' + monthText.replace(/[()]/g, '') + ') Tj ET');
+
+      // Info Block Box: x=40, y=705, w=515, h=50
+      c.push('0.973 0.980 0.988 rg 40 705 515 50 re f');
+      c.push('0.886 0.910 0.941 RG 1 w 40 705 515 50 re S');
+
+      // Info text
+      c.push('0.059 0.090 0.165 rg');
+      c.push('BT /F2 10 Tf 50 735 Td (Employee Name: ) Tj /F1 10 Tf (' + empName.replace(/[()]/g, '') + ') Tj ET');
+      c.push('BT /F2 10 Tf 300 735 Td (Designation: ) Tj /F1 10 Tf (' + desig.replace(/[()]/g, '') + ') Tj ET');
+      c.push('BT /F2 10 Tf 50 715 Td (Salary Basis: ) Tj /F1 10 Tf (26 Working Days) Tj ET');
+      c.push('BT /F2 10 Tf 300 715 Td (Date Generated: ) Tj /F1 10 Tf (' + new Date().toLocaleDateString() + ') Tj ET');
+
+      // Table Header: x=40, y=675, w=515, h=22
+      c.push('0.945 0.961 0.976 rg 40 675 515 22 re f');
+      c.push('0.8 0.83 0.88 RG 1 w 40 675 515 22 re S');
+      c.push('0.059 0.090 0.165 rg');
+      c.push('BT /F2 10 Tf 48 682 Td (Sr.) Tj ET');
+      c.push('BT /F2 10 Tf 85 682 Td (Description) Tj ET');
+      c.push('BT /F2 10 Tf 450 682 Td (Amount) Tj ET');
+
+      // Table Rows
+      let curY = 653;
+      for (let i = 0; i < rows.length; i++) {
+        let [sr, desc, amt] = rows[i];
+        let isTotal = sr === '';
+        let isNet = desc.includes('NET');
+
+        if (isNet) {
+          c.push('0.059 0.090 0.165 rg 40 ' + (curY - 4) + ' 515 24 re f'); // Dark navy box
+          c.push('1 1 1 rg BT /F2 12 Tf 85 ' + (curY + 2) + ' Td (' + desc + ') Tj ET');
+          c.push('1 1 1 rg BT /F2 12 Tf 430 ' + (curY + 2) + ' Td (' + amt.replace(/[()]/g, '') + ') Tj ET');
+          curY -= 26;
+        } else if (isTotal) {
+          c.push('0.973 0.980 0.988 rg 40 ' + (curY - 3) + ' 515 20 re f');
+          c.push('0.886 0.910 0.941 RG 1 w 40 ' + (curY - 3) + ' 515 20 re S');
+          c.push('0.059 0.090 0.165 rg BT /F2 10 Tf 85 ' + (curY + 2) + ' Td (' + desc + ') Tj ET');
+          c.push('BT /F2 10 Tf 430 ' + (curY + 2) + ' Td (' + amt.replace(/[()]/g, '') + ') Tj ET');
+          curY -= 22;
+        } else {
+          c.push('0.886 0.910 0.941 RG 0.5 w 40 ' + (curY - 3) + ' 515 0.5 re S');
+          c.push('0.059 0.090 0.165 rg');
+          c.push('BT /F1 9.5 Tf 48 ' + (curY + 2) + ' Td (' + sr + ') Tj ET');
+          c.push('BT /F1 9.5 Tf 85 ' + (curY + 2) + ' Td (' + desc.replace(/[()]/g, '') + ') Tj ET');
+          c.push('BT /F2 9.5 Tf 430 ' + (curY + 2) + ' Td (' + amt.replace(/[()]/g, '') + ') Tj ET');
+          curY -= 20;
+        }
+      }
+
+      // Footer
+      c.push('0.886 0.910 0.941 RG 1 w 40 380 515 0.5 re S');
+      c.push('0.4 0.45 0.5 rg BT /F1 9 Tf 50 365 Td (SmartSalary 3.7.0 Free Offline - Completely offline & private) Tj ET');
+      c.push('0.059 0.090 0.165 rg BT /F2 9.5 Tf 440 365 Td (By Hurraim Khan) Tj ET');
+
+      let streamContent = c.join('\n');
+      let streamLen = streamContent.length;
+
+      let pdfHead = '%PDF-1.4\n';
+      let objs = [
+        '1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n',
+        '2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n',
+        '3 0 obj\n<< /Type /Page /Parent 2 0 R /Resources << /Font << /F1 4 0 R /F2 5 0 R >> >> /MediaBox [0 0 595.28 841.89] /Contents 6 0 R >>\nendobj\n',
+        '4 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>\nendobj\n',
+        '5 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>\nendobj\n',
+        '6 0 obj\n<< /Length ' + streamLen + ' >>\nstream\n' + streamContent + '\nendstream\nendobj\n'
+      ];
+
+      let body = pdfHead;
+      let xref = 'xref\n0 7\n0000000000 65535 f \n';
+      let pos = pdfHead.length;
+      for (let i = 0; i < objs.length; i++) {
+        let pad = ('0000000000' + pos).slice(-10);
+        xref += pad + ' 00000 n \n';
+        body += objs[i];
+        pos += objs[i].length;
+      }
+      let startxref = pos;
+      body += xref;
+      body += 'trailer\n<< /Size 7 /Root 1 0 R >>\nstartxref\n' + startxref + '\n%%EOF\n';
+
+      const blob = new Blob([body], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `SmartSalary_SalarySlip_${monthText.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    window.openSalarySlipPreview = openSalarySlipPreview;
+    window.downloadSlipPdfDirectly = mKey => {
+      const slip = buildSalarySlipData(mKey);
+      generateSalarySlipPdf(slip);
+    };
+
+    document.getElementById('payrollGenerateSlipMainBtn').onclick = () => openSalarySlipPreview(data.currentMonth);
+    document.getElementById('heroSlipBtn').onclick = () => openSalarySlipPreview(data.currentMonth);
+
+    document.getElementById('downloadPdfBtn').onclick = () => {
+      if (activeSlipData) {
+        generateSalarySlipPdf(activeSlipData);
+        document.getElementById('salarySlipModal').style.display = 'none';
+        alert('Salary slip PDF downloaded successfully!');
+      }
+    };
+
+    document.getElementById('printSlipBtn').onclick = () => {
+      if (activeSlipData) commitSalarySlip(activeSlipData);
+      window.print();
+    };
+
+    document.getElementById('cancelSlipBtn').onclick = () => {
+      document.getElementById('salarySlipModal').style.display = 'none';
+    };
+    document.getElementById('closeSlipBtn').onclick = () => {
+      document.getElementById('salarySlipModal').style.display = 'none';
+    };
+
+    /* SUNDAYS DUTY CONTROLS */
+    document.getElementById('sundayDutyHours').oninput = e => {
+      const h = Number(e.target.value || 0);
+      document.getElementById('sundayPaymentPreview').textContent = money(h * hourlyRate());
+    };
+
+    document.getElementById('saveSundayDutyBtn').onclick = () => {
+      const dateVal = document.getElementById('sundayDutyDate').value || new Date().toISOString().split('T')[0];
+      const hours = Number(document.getElementById('sundayDutyHours').value || 0);
+      const note = document.getElementById('sundayDutyNote').value.trim() || 'Sunday Duty';
+
+      if (hours <= 0) return alert('Please enter valid duty hours worked.');
+
+      if (!data.sundays) data.sundays = [];
+      const hRate = hourlyRate();
+      const amount = Math.round(hours * hRate);
+
+      data.sundays.push({
+        id: 'sun_' + Date.now(),
+        date: dateVal,
+        hours,
+        hourlyRate: hRate,
+        amount,
+        note,
+        monthKey: data.currentMonth
+      });
+
+      logEditHistory('Sunday Duty', `Added Sunday duty (${hours} hrs)`, '0', money(amount));
+      document.getElementById('sundayDutyHours').value = '';
+      document.getElementById('sundayDutyNote').value = '';
+      document.getElementById('sundayPaymentPreview').textContent = money(0);
+      save();
+      render();
+      alert('Sunday duty record added.');
+    };
+
+    window.delSundayDuty = id => {
+      if (confirm('Delete this Sunday duty record?')) {
+        const item = data.sundays.find(s => s.id === id);
+        if (item) logEditHistory('Sunday Duty', `Deleted Sunday duty (${item.hours} hrs)`, money(item.amount), '0');
+        data.sundays = data.sundays.filter(s => s.id !== id);
+        save();
+        render();
+      }
+    };
+
+    window.editSundayDuty = id => {
+      const item = data.sundays.find(s => s.id === id);
+      if (!item) return;
+      const newH = prompt('Enter updated hours worked:', item.hours);
+      if (newH !== null && Number(newH) > 0) {
+        const oldH = item.hours;
+        item.hours = Number(newH);
+        item.amount = Math.round(item.hours * hourlyRate());
+        logEditHistory('Sunday Duty', 'Edited Sunday hours', `${oldH} hrs`, `${item.hours} hrs`);
+        save();
+        render();
+      }
+    };
+
+    /* OVERTIME CONTROLS */
+    document.getElementById('otHoursInput').oninput = e => {
+      const h = Number(e.target.value || 0);
+      document.getElementById('otCalcPreview').textContent = money(h * overtimeHourlyRate());
+    };
+
+    document.getElementById('savePayrollOTBtn').onclick = () => {
+      const dateVal = document.getElementById('otDateInput').value || new Date().toISOString().split('T')[0];
+      const hours = Number(document.getElementById('otHoursInput').value || 0);
+      const note = document.getElementById('otNoteInput').value.trim() || 'Overtime';
+
+      if (hours <= 0) return alert('Please enter overtime hours.');
+      const amount = Math.round(hours * overtimeHourlyRate());
+
+      data.income.push({
+        id: 'ot_' + Date.now(),
+        title: note,
+        hours,
+        amount,
+        type: 'Overtime',
+        date: dateVal,
+        monthKey: data.currentMonth
+      });
+
+      logEditHistory('Overtime', `Added overtime (${hours} hrs)`, '0', money(amount));
+      document.getElementById('otHoursInput').value = '';
+      document.getElementById('otNoteInput').value = '';
+      document.getElementById('otCalcPreview').textContent = money(0);
+      save();
+      render();
+      alert('Overtime record added.');
+    };
+
+    /* EXTRA PAY CONTROLS */
+    document.getElementById('saveExtraPayBtn').onclick = () => {
+      const amount = Number(document.getElementById('extraPayAmount').value || 0);
+      const dateVal = document.getElementById('extraPayDate').value || new Date().toISOString().split('T')[0];
+      const reason = document.getElementById('extraPayReason').value.trim() || 'Performance Bonus';
+
+      if (amount <= 0) return alert('Please enter valid extra pay amount.');
+
+      if (!data.extraPay) data.extraPay = [];
+      data.extraPay.push({
+        id: 'ep_' + Date.now(),
+        date: dateVal,
+        amount,
+        reason,
+        monthKey: data.currentMonth
+      });
+
+      logEditHistory('Extra Pay', `Added extra pay: ${reason}`, '0', money(amount));
+      document.getElementById('extraPayAmount').value = '';
+      document.getElementById('extraPayReason').value = '';
+      save();
+      render();
+      alert('Extra pay / bonus recorded.');
+    };
+
+    window.delExtraPay = id => {
+      if (confirm('Delete this extra pay record?')) {
+        const item = data.extraPay.find(p => p.id === id);
+        if (item) logEditHistory('Extra Pay', `Deleted extra pay: ${item.reason}`, money(item.amount), '0');
+        data.extraPay = data.extraPay.filter(p => p.id !== id);
+        save();
+        render();
+      }
+    };
 
     /* Category Editor (Amount Mode vs Percentage Mode) */
     function openCategoryEditor() {
@@ -2212,7 +3496,6 @@
         }
       });
 
-      // Validation
       if (isPercent) {
         const totalPct = newCategories.reduce((s, c) => s + c.pct, 0);
         if (totalPct > 100.001) {
@@ -2228,6 +3511,7 @@
       }
 
       data.categories = newCategories;
+      logEditHistory('Budget', 'Updated category allocations', 'Previous allocations', `${newCategories.length} categories saved`);
       save();
       render();
       document.getElementById('categoryModal').style.display = 'none';
@@ -2245,8 +3529,10 @@
       if (val !== null) {
         const num = Number(val);
         if (num > 0) {
+          const oldVal = data.salary;
           data.salary = num;
           data.salaryConfirmed = true;
+          logEditHistory('Salary', 'Updated basic monthly salary', money(oldVal), money(num));
           syncBudgetAmounts();
           save();
           render();
@@ -2286,6 +3572,7 @@
         monthKey: data.currentMonth
       });
 
+      logEditHistory('Expense', `Recorded expense: ${title} (${category})`, '—', money(amount));
       document.getElementById('expDesc').value = '';
       document.getElementById('expAmt').value = '';
       save();
@@ -2294,6 +3581,8 @@
 
     window.delExpense = idx => {
       if (confirm('Delete this expense?')) {
+        const item = data.expenses[idx];
+        if (item) logEditHistory('Expense', `Deleted expense: ${item.title}`, money(item.amount), '0');
         data.expenses.splice(idx, 1);
         save();
         render();
@@ -2323,6 +3612,7 @@
         reason
       });
 
+      logEditHistory('Family Payment', `Family payment to ${who}`, '—', money(amount));
       document.getElementById('familyWho').value = '';
       document.getElementById('familyAmount').value = '';
       document.getElementById('familyReason').value = '';
@@ -2334,9 +3624,11 @@
     /* Payroll Leaves */
     document.getElementById('savePayrollLeavesBtn').onclick = () => {
       const l = Number(document.getElementById('payrollLeavesInput').value || 0);
+      const oldL = data.payrollLeaves;
       data.payrollLeaves = Math.max(0, l);
       if (!data.attendance) data.attendance = {};
       data.attendance.leaveUsed = Math.min(2, l);
+      logEditHistory('Leaves', 'Updated leave count', `${oldL} days`, `${l} days`);
       save();
       render();
       alert('Leave count saved.');
@@ -2367,6 +3659,7 @@
         description: desc
       });
 
+      logEditHistory('Advance', `Issued advance: ${desc}`, '0', money(amount));
       document.getElementById('advAmount').value = '';
       document.getElementById('advDesc').value = '';
       save();
@@ -2394,6 +3687,7 @@
         monthKey: data.currentMonth
       });
 
+      logEditHistory('Advance Recovery', `Deducted advance recovery: ${note}`, '0', money(amount));
       document.getElementById('recAmount').value = '';
       document.getElementById('recNote').value = '';
       save();
@@ -2428,7 +3722,10 @@
         monthKey: data.currentMonth,
         monthLabel: monthLabel(data.currentMonth),
         basicSalary: activeSalary(),
-        extraIncome: totalExtraIncome(),
+        sundayEarnings: totalSundayDutyEarnings(),
+        overtimeEarnings: totalOvertimeEarnings(),
+        extraPay: totalExtraPayEarnings(),
+        extraIncome: totalExtraEarnings(),
         leaveDeduction: dedL,
         advanceRecovery: rec,
         otherDeductions: Number(data.payrollOtherDeductions || 0),
@@ -2474,6 +3771,7 @@
       data.income.push({
         id: 'ot_' + Date.now(),
         title: `Overtime (${hrs} hrs)`,
+        hours: hrs,
         amount: Math.round(amt),
         type: 'Overtime',
         date: new Date().toISOString().split('T')[0],
@@ -2483,7 +3781,7 @@
       document.getElementById('otHours').value = '';
       save();
       render();
-      alert('Overtime earning added to extra income.');
+      alert('Overtime earning added.');
     };
 
     document.getElementById('saveOtherIncomeBtn').onclick = () => {
@@ -2515,7 +3813,7 @@
       }
     };
 
-    /* Goals */
+    /* 10. SAVINGS GOALS (Editable placeholder e.g. Car, Bike, House) */
     document.getElementById('saveGoalBtn').onclick = () => {
       const name = document.getElementById('goalName').value.trim();
       const target = Number(document.getElementById('goalTarget').value);
@@ -2523,7 +3821,9 @@
 
       if (!name || target <= 0) return alert('Enter goal name and target amount.');
 
+      if (!data.goals) data.goals = [];
       data.goals.push({ id: 'goal_' + Date.now(), name, target, saved });
+      logEditHistory('Goal', `Created goal: ${name}`, '0', money(target));
       document.getElementById('goalName').value = '';
       document.getElementById('goalTarget').value = '';
       document.getElementById('goalSaved').value = '0';
@@ -2533,6 +3833,8 @@
 
     window.delGoal = idx => {
       if (confirm('Remove this savings goal?')) {
+        const item = data.goals[idx];
+        if (item) logEditHistory('Goal', `Removed goal: ${item.name}`, money(item.target), '0');
         data.goals.splice(idx, 1);
         save();
         render();
@@ -2545,6 +3847,7 @@
         const num = Number(val);
         if (num > 0) {
           data.goals[idx].saved += num;
+          logEditHistory('Goal Savings', `Added savings to ${data.goals[idx].name}`, '—', money(num));
           save();
           render();
         }
@@ -2552,16 +3855,22 @@
     };
 
     /* Backups & Restore */
-    document.getElementById('exportBackupBtn').onclick = () => {
+    function triggerExportBackup() {
+      data.lastBackupDate = new Date().toISOString();
       const backupData = JSON.stringify(data, null, 2);
       const blob = new Blob([backupData], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `SmartSalary-3.6.0-Free-Backup-${data.currentMonth}.json`;
+      a.download = `SmartSalary-3.7.0-Free-Backup-${data.currentMonth}.json`;
       a.click();
       URL.revokeObjectURL(url);
-    };
+      save();
+      render();
+    }
+
+    document.getElementById('exportBackupBtn').onclick = triggerExportBackup;
+    document.getElementById('quickExportBannerBtn').onclick = triggerExportBackup;
 
     document.getElementById('importBackupBtn').onclick = () => {
       document.getElementById('backupFileInput').click();
@@ -2576,6 +3885,7 @@
           const imported = JSON.parse(reader.result);
           if (!imported || !Array.isArray(imported.categories)) throw new Error('Invalid format');
           data = { ...defaults, ...imported };
+          data.version = '3.7.0';
           data.salaryConfirmed = imported.salaryConfirmed !== undefined ? imported.salaryConfirmed : !!imported.salary;
           data.budgetMode = imported.budgetMode || 'amount';
           checkMonthRollover();
@@ -2591,7 +3901,7 @@
 
     document.getElementById('restoreSnapshotBtn').onclick = () => {
       try {
-        const snaps = JSON.parse(localStorage.getItem('ss360_autobackups') || '[]');
+        const snaps = JSON.parse(localStorage.getItem('ss370_autobackups') || '[]');
         if (!snaps.length) return alert('No recovery snapshots available.');
         const list = snaps.map((s, i) => `${i + 1}. ${new Date(s.savedAt).toLocaleString()}`).join('\n');
         const pick = Number(prompt('Select snapshot number to restore:\n' + list, '1'));
@@ -2608,7 +3918,7 @@
     };
 
     function updateBackupStatus() {
-      const snaps = JSON.parse(localStorage.getItem('ss360_autobackups') || '[]');
+      const snaps = JSON.parse(localStorage.getItem('ss370_autobackups') || '[]');
       const el = document.getElementById('backupStatusText');
       if (el) {
         el.textContent = `Local recovery snapshots available: ${snaps.length} of 7. Last snapshot: ${snaps[0] ? new Date(snaps[0].savedAt).toLocaleString() : 'Not created yet'}.`;
@@ -2633,6 +3943,26 @@
       render();
     };
 
+    // Personal details from menu
+    document.getElementById('editPersonalFromMenuBtn').onclick = () => {
+      menuModal.style.display = 'none';
+      document.getElementById('employeeNameInput').value = data.personalDetails?.name || '';
+      document.getElementById('employeeDesignationInput').value = data.personalDetails?.designation || '';
+      const pModal = document.getElementById('personalDetailsModal');
+      pModal.style.display = 'flex';
+      document.getElementById('savePersonalBtn').onclick = () => {
+        data.personalDetails = {
+          name: document.getElementById('employeeNameInput').value.trim(),
+          designation: document.getElementById('employeeDesignationInput').value.trim() || 'Staff'
+        };
+        save();
+        pModal.style.display = 'none';
+        render();
+      };
+      document.getElementById('skipPersonalBtn').onclick = () => pModal.style.display = 'none';
+      document.getElementById('closePersonalBtn').onclick = () => pModal.style.display = 'none';
+    };
+
     // Mutual exclusivity for Car/Bike and Family Extra
     const carCb = document.getElementById('menuCarBike');
     const famCb = document.getElementById('menuFamilyExtra');
@@ -2647,7 +3977,6 @@
       const hasFam = famCb.checked;
       data.vehicles = { carBike: hasCar, familyExtra: hasFam };
 
-      // Ensure categories match toggles
       const ensureCategory = (name, on) => {
         const idx = data.categories.findIndex(c => c.name.toLowerCase() === name.toLowerCase());
         if (on && idx < 0) {
@@ -2677,56 +4006,119 @@
       alert('Preferences saved.');
     };
 
-    /* Interactive Guided Tour */
+    /* 9. UPDATED 16-STEP INTERACTIVE GUIDE */
     const guideSteps = [
       {
         tab: 'overview',
         focus: 'mSalary',
-        tag: 'Step 1 of 7 • Overview Dashboard',
-        title: 'Your Complete Financial Summary',
-        desc: 'Review your monthly salary, total allocated budget, expenses, and available cash balance at a glance.'
+        tag: 'Step 1 of 16 • Overview Dashboard',
+        title: 'Complete Financial Summary',
+        desc: 'Review monthly basic salary, total allocated budget, expenses, and net remaining cash balance at a glance.'
       },
       {
         tab: 'overview',
         focus: 'catCardsGrid',
-        tag: 'Step 2 of 7 • Budget Categories',
-        title: 'Visual Category Cards',
-        desc: 'Categories are immediately visible with clean SVG icons, spent amounts, remaining balances, and progress bars.'
+        tag: 'Step 2 of 16 • Budget Categories',
+        title: 'Visual Category Cards & Allocation',
+        desc: 'Budget categories are immediately visible with vector SVG icons, spent amounts, remaining balances, and progress bars in Rupee or % modes.'
       },
       {
-        tab: 'expenses',
-        focus: 'sec-expenses',
-        tag: 'Step 3 of 7 • Daily Expenses',
-        title: 'Track Every Rupee',
-        desc: 'Easily log daily spending with descriptions, amounts, and dates. Includes a dedicated Family Extra tracker if enabled.'
+        tab: 'payroll',
+        focus: 'payrollBasicDisplay',
+        tag: 'Step 3 of 16 • Personal Details & Wage Rate',
+        title: 'Employee Name & Standard Wage Basis',
+        desc: 'Configure your Employee Name and Designation for professional salary slip generation. Standard wage basis is 26 working days (Hourly = Daily ÷ 9).'
       },
       {
         tab: 'payroll',
         focus: 'sec-payroll',
-        tag: 'Step 4 of 7 • Salary & Payroll',
+        tag: 'Step 4 of 16 • Salary & Payroll Overview',
         title: 'Priority Payroll System',
-        desc: 'Calculate daily salary based on 26 working days, deduct leaves beyond 2 free days, manage salary advance ledger, and review net pay.'
+        desc: 'Unified payroll engine with separate professional cards for Leaves, Sunday Duties, Overtime, Advances, and Extra Pay.'
       },
       {
-        tab: 'income',
-        focus: 'sec-income',
-        tag: 'Step 5 of 7 • Extra Income & Overtime',
-        title: 'Attendance & Extra Earnings',
-        desc: 'Receive attendance bonus for unused allowed leave days, calculate 1.5× overtime, and track freelance earnings.'
+        tab: 'payroll',
+        focus: 'payrollLeavesInput',
+        tag: 'Step 5 of 16 • Leaves & 2-Free-Leave Rule',
+        title: 'Leave Deductions',
+        desc: 'Two (2) leaves per month are permitted without deduction. Deductions apply only to extra leaves beyond two at your daily rate.'
+      },
+      {
+        tab: 'payroll',
+        focus: 'sundayDutyHours',
+        tag: 'Step 6 of 16 • Sundays — Manual Hours Entry',
+        title: 'Weekly Holiday Duties',
+        desc: 'Enter Sunday duty hours manually (e.g. 8, 12, 16h). No automatic assignment and no double multiplier. Payment = Hours × Standard Hourly Rate.'
+      },
+      {
+        tab: 'payroll',
+        focus: 'otHoursInput',
+        tag: 'Step 7 of 16 • Overtime Record',
+        title: 'Overtime Payment Record',
+        desc: 'Log overtime hours with date and description. Automatically calculated at 1.5× standard hourly rate.'
+      },
+      {
+        tab: 'payroll',
+        focus: 'advanceOutstanding',
+        tag: 'Step 8 of 16 • Advance & Repayment Ledger',
+        title: 'Salary Advance Balance',
+        desc: 'Track advance requests and monthly recoveries. Outstanding balances automatically carry forward across months.'
+      },
+      {
+        tab: 'payroll',
+        focus: 'extraPayAmount',
+        tag: 'Step 9 of 16 • Extra Pay & Bonuses',
+        title: 'Incentives & Bonuses',
+        desc: 'Record performance bonuses, festival allowances, and special project pay directly into your monthly earnings.'
+      },
+      {
+        tab: 'payroll',
+        focus: 'payrollGenerateSlipMainBtn',
+        tag: 'Step 10 of 16 • Salary Slip & Offline PDF',
+        title: 'Generate Professional Salary Slip',
+        desc: 'Generate clean Excel-style salary slips and download genuine vector PDF documents completely offline without internet or server.'
+      },
+      {
+        tab: 'expenses',
+        focus: 'expDesc',
+        tag: 'Step 11 of 16 • Daily Expenses Tracking',
+        title: 'Record Every Expense',
+        desc: 'Easily log daily spending with descriptions, amounts, and dates. Includes a dedicated Family Extra tracker if enabled.'
+      },
+      {
+        tab: 'expenses',
+        focus: 'monthlyExpenseSummaryTotal',
+        tag: 'Step 12 of 16 • Monthly Expense Summary',
+        title: 'Category-Wise Expense Breakdown',
+        desc: 'Review total monthly spending alongside category-wise budgets, spent amounts, remaining funds, and % utilized.'
+      },
+      {
+        tab: 'expenses',
+        focus: 'expenseSearchInput',
+        tag: 'Step 13 of 16 • Search & Filter',
+        title: 'Search Transactions Instantly',
+        desc: 'Filter expenses by title keywords, budget category, or specific calendar date.'
       },
       {
         tab: 'goals',
-        focus: 'sec-goals',
-        tag: 'Step 6 of 7 • Savings Goals & Records',
-        title: 'Build Savings & Review History',
-        desc: 'Create targets for electronics or emergencies. Past months are automatically archived with carryover savings.'
+        focus: 'goalName',
+        tag: 'Step 14 of 16 • Savings Goals & Progress',
+        title: 'Track Targets & Low Savings Alerts',
+        desc: 'Create savings targets for vehicles or electronics. Track visual progress and receive gentle alerts if behind schedule.'
+      },
+      {
+        tab: 'backup',
+        focus: 'editHistoryCard',
+        tag: 'Step 15 of 16 • Edit History & Recovery',
+        title: 'Audit Trail & Change Tracking',
+        desc: 'Review timestamps and previous values for salary edits, budget modifications, Sunday duties, and advances.'
       },
       {
         tab: 'backup',
         focus: 'sec-backup',
-        tag: 'Step 7 of 7 • Three-Dot Menu & Safety',
-        title: '100% Offline Control',
-        desc: 'Switch between Rupee Amount and Percentage modes, toggle English/Urdu, and export regular JSON backups anytime.'
+        tag: 'Step 16 of 16 • Backup & Offline Storage',
+        title: '100% Offline Data Safety',
+        desc: 'All data is stored locally in your browser. Export regular JSON backups and restore snapshots anytime with 0 cloud dependencies.'
       }
     ];
 
@@ -2734,13 +4126,19 @@
 
     function clearGuide() {
       document.querySelectorAll('.guide-focus').forEach(el => el.classList.remove('guide-focus'));
-      document.getElementById('guideDimOverlay')?.remove();
-      document.getElementById('guidePanelBox')?.remove();
+      const dim = document.getElementById('guideDimOverlay');
+      if (dim) dim.remove();
+      const panel = document.getElementById('guidePanelBox');
+      if (panel) panel.remove();
+      document.body.style.overflow = '';
     }
 
     function finishGuide() {
       clearGuide();
-      localStorage.setItem('ss360_guide_done', '1');
+      localStorage.setItem('ss370_v370_confirmed', '1');
+      localStorage.setItem('ss370_guide_done', '1');
+      tab('overview');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function launchGuide() {
@@ -2762,8 +4160,8 @@
             Created with care by <img src="Hurraim_Khan_Profile_Round(1).png" alt="Hurraim Khan" class="creator-avatar" style="width:24px;height:24px;"> <strong>Hurraim Khan</strong>
           </span>
         </div>
-        <h3 id="guideTitle" style="margin:6px 0;font-size:17px;"></h3>
-        <p class="muted" id="guideDesc" style="margin:4px 0 10px;font-size:13.5px;line-height:1.5;"></p>
+        <h3 id="guideTitle" style="margin:6px 0;font-size:16px;"></h3>
+        <p class="muted" id="guideDesc" style="margin:4px 0 10px;font-size:13px;line-height:1.5;"></p>
         <div class="guide-dots" id="guideDots"></div>
         <div class="guide-actions">
           <button type="button" class="light sm" id="guideSkipBtn" data-i18n="Skip Guide">Skip Guide</button>
@@ -2790,7 +4188,6 @@
         panel.querySelector('#guideTitle').textContent = step.title;
         panel.querySelector('#guideDesc').textContent = step.desc;
 
-        // Dots
         panel.querySelector('#guideDots').innerHTML = guideSteps.map((_, i) =>
           `<div class="guide-dot ${i === currentGuideStep ? 'active' : ''}"></div>`
         ).join('');
@@ -2822,53 +4219,168 @@
       renderStep();
     }
 
-    // Welcome Modal trigger
+    /* 4. RESTORED UPDATE SCREEN & ONBOARDING EXPERIENCE */
+    const updateModal = document.getElementById('updateModal');
     const welcomeModal = document.getElementById('welcomeModal');
-    if (!localStorage.getItem('ss360_guide_done')) {
-      welcomeModal.style.display = 'flex';
+    const isUpdateConfirmed = localStorage.getItem('ss370_v370_confirmed');
+
+    function updateSalaryNotices() {
+      const upNotice = document.getElementById('updateSalaryNotice');
+      if (upNotice) {
+        if (data.salaryConfirmed) {
+          upNotice.innerHTML = `🛡️ You previously set your salary to <strong>Rs ${Number(data.salary).toLocaleString()}</strong>. We are keeping your existing salary and personal records unchanged.`;
+          upNotice.style.background = '#f0fdf4';
+          upNotice.style.borderColor = '#bbf7d0';
+          upNotice.style.color = '#166534';
+        } else {
+          upNotice.innerHTML = `💡 Demo starting salary: <strong>Rs 50,000</strong> (Editable). Your saved details and records will remain safe and will not be erased.`;
+          upNotice.style.background = '#eff6ff';
+          upNotice.style.borderColor = '#bfdbfe';
+          upNotice.style.color = '#1e40af';
+        }
+      }
+
+      const welEl = document.getElementById('welcomeSalaryDisplay');
+      if (welEl) {
+        if (data.salaryConfirmed) {
+          welEl.innerHTML = `
+            <div style="font-size:13.5px;line-height:1.5;font-weight:700;color:#166534;">
+              You previously set your salary to Rs ${Number(data.salary).toLocaleString()}. We are keeping your existing salary and personal records unchanged.
+            </div>
+          `;
+          welEl.style.background = '#f0fdf4';
+          welEl.style.borderColor = '#bbf7d0';
+        } else {
+          welEl.innerHTML = `
+            <div style="font-size:14px;font-weight:800;color:var(--navy);">Demo starting salary: Rs 50,000</div>
+            <div style="font-size:12px;color:var(--ink-muted);font-weight:normal;margin-top:4px;">This is only a starting demo/default value. You can edit and save your salary anytime.</div>
+          `;
+          welEl.style.background = '#ecfdf5';
+          welEl.style.borderColor = '#a7f3d0';
+        }
+      }
     }
 
-    document.getElementById('startGuideBtn').onclick = () => {
-      welcomeModal.style.display = 'none';
-      launchGuide();
-    };
-    document.getElementById('skipGuideBtn').onclick = () => {
-      welcomeModal.style.display = 'none';
-      finishGuide();
-    };
+    function startUpdateFlow() {
+      updateSalaryNotices();
+      document.getElementById('startUpdateBtn').style.display = 'inline-block';
+      const progContainer = document.getElementById('updateProgressContainer');
+      progContainer.style.display = 'none';
+      document.getElementById('updateProgressFill').style.width = '0%';
+      document.getElementById('updateProgressPct').textContent = '0%';
+      updateModal.style.display = 'flex';
+
+      const startBtn = document.getElementById('startUpdateBtn');
+      startBtn.onclick = () => {
+        startBtn.style.display = 'none';
+        const fill = document.getElementById('updateProgressFill');
+        const pctEl = document.getElementById('updateProgressPct');
+        const statusEl = document.getElementById('updateProgressStatus');
+        progContainer.style.display = 'block';
+
+        let progress = 0;
+        const totalDuration = 5000; // 5 seconds
+        const intervalTime = 100;
+        const step = 100 / (totalDuration / intervalTime);
+
+        const timer = setInterval(() => {
+          progress = Math.min(100, progress + step);
+          fill.style.width = progress + '%';
+          pctEl.textContent = Math.round(progress) + '%';
+
+          if (progress < 25) {
+            statusEl.textContent = 'Verifying saved records and personal details...';
+          } else if (progress < 50) {
+            statusEl.textContent = 'Confirming offline storage and settings...';
+          } else if (progress < 75) {
+            statusEl.textContent = 'Configuring Sunday duty & payroll engine...';
+          } else if (progress < 95) {
+            statusEl.textContent = 'Preparing SmartSalary 3.7.0 features...';
+          } else {
+            statusEl.textContent = 'Update confirmation complete! (100%)';
+          }
+
+          if (progress >= 100) {
+            clearInterval(timer);
+            setTimeout(() => {
+              updateModal.style.display = 'none';
+              
+              // Sequence: Welcome -> Personal Details (if empty) -> App Guide -> Dashboard
+              updateSalaryNotices();
+              welcomeModal.style.display = 'flex';
+
+              document.getElementById('startGuideBtn').onclick = () => {
+                welcomeModal.style.display = 'none';
+                checkPersonalDetailsThen(() => launchGuide());
+              };
+
+              document.getElementById('skipGuideBtn').onclick = () => {
+                welcomeModal.style.display = 'none';
+                finishGuide();
+              };
+            }, 400);
+          }
+        }, intervalTime);
+      };
+    }
+
+    if (!isUpdateConfirmed) {
+      startUpdateFlow();
+    }
 
     document.getElementById('openGuideBtn').onclick = () => {
       menuModal.style.display = 'none';
       launchGuide();
     };
 
+    const replayBtn = document.getElementById('replayUpdateBtn');
+    if (replayBtn) {
+      replayBtn.onclick = () => {
+        menuModal.style.display = 'none';
+        startUpdateFlow();
+      };
+    }
+
     // Service Worker Registration
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js').then(reg => {
-          document.getElementById('pwaStatusBox').textContent = 'PWA Status: Registered & Cached for 100% Offline Use';
+        navigator.serviceWorker.register('./sw.js').then(() => {
+          document.getElementById('pwaStatusBox').textContent = 'PWA Status: Registered & Cached for 100% Offline Use (v3.7.0)';
         }).catch(() => {
           document.getElementById('pwaStatusBox').textContent = 'PWA Status: Ready for Offline Use';
         });
       });
     }
 
-    // Expose helpers for testing and console inspection
+    // Expose helpers for testing and verification
     window.data = data;
     window.activeSalary = activeSalary;
     window.dailyRate = dailyRate;
     window.hourlyRate = hourlyRate;
+    window.overtimeHourlyRate = overtimeHourlyRate;
     window.deductibleLeaves = deductibleLeaves;
     window.leaveDeduction = leaveDeduction;
+    window.totalSundayDutyHours = totalSundayDutyHours;
+    window.totalSundayDutyEarnings = totalSundayDutyEarnings;
+    window.totalOvertimeHours = totalOvertimeHours;
+    window.totalOvertimeEarnings = totalOvertimeEarnings;
+    window.totalExtraPayEarnings = totalExtraPayEarnings;
+    window.attendanceBonus = attendanceBonus;
+    window.totalExtraEarnings = totalExtraEarnings;
+    window.totalGrossEarnings = totalGrossEarnings;
     window.totalAdvances = totalAdvances;
     window.totalRecoveries = totalRecoveries;
     window.outstandingAdvance = outstandingAdvance;
-    window.totalExtraIncome = totalExtraIncome;
+    window.totalDeductions = totalDeductions;
     window.netPayableSalary = netPayableSalary;
     window.spentByCategory = spentByCategory;
     window.syncBudgetAmounts = syncBudgetAmounts;
+    window.buildSalarySlipData = buildSalarySlipData;
+    window.generateSalarySlipPdf = generateSalarySlipPdf;
     window.render = render;
     window.applyLanguage = applyLanguage;
+    window.guideSteps = guideSteps;
+    window.startUpdateFlow = startUpdateFlow;
     window.launchGuide = launchGuide;
     window.finishGuide = finishGuide;
 
